@@ -18,7 +18,7 @@ const NavBar = () => {
   const location = useLocation(); // для определения активного пункта
 
   return (
-    <nav className="nav-bar">
+    <nav className="bottom-nav">
       {navItems.map((item) => {
         const isActive = location.pathname === item.path;
 

@@ -1,28 +1,29 @@
-/* BottomNav — фиксированная панель навигации внизу экрана */
-.nav-bar {
+/* Фиксированная нижняя панель навигации */
+.bottom-nav {
   position: fixed;
   bottom: 10px;
   left: 10px;
   right: 10px;
-  max-width: 340px; /* как в твоём макете */
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 40px;
+  max-width: 340px; /* как в твоём макете 340×70 */
+  margin: 0 auto; /* центрируем по горизонтали */
+  background: #ffffff; /* белый фон */
+  border-radius: 40px; /* скругление углов */
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 12px 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-  backdrop-filter: blur(12px);
-  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* лёгкая тень */
+  z-index: 1000; /* всегда поверх контента */
+  backdrop-filter: blur(10px); /* размытие фона (стеклянный эффект) */
 
-  /* Плавное появление снизу при загрузке */
-  animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  /* Анимация появления снизу при загрузке страницы */
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
+/* Анимация slideUp (плавное появление) */
 @keyframes slideUp {
   from {
-    transform: translateY(80px);
+    transform: translateY(100px);
     opacity: 0;
   }
   to {
@@ -36,53 +37,54 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  color: #888888;
+  color: #888888; /* серый цвет неактивного */
   font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-  font-weight: 700;
-  font-size: 11px;
-  text-decoration: none;
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  padding: 8px 12px;
+  font-weight: bold;
+  font-size: 12px;
+  text-decoration: none; /* убираем подчёркивание ссылки */
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* плавные переходы */
+  padding: 8px;
   border-radius: 20px;
-  min-width: 60px;
+  position: relative;
+  min-width: 60px; /* чтобы не сжимались при малом экране */
 }
 
 /* Иконка */
 .nav-icon {
-  font-size: 28px !important; /* MUI icons */
+  font-size: 28px !important; /* размер иконок MUI */
   margin-bottom: 4px;
-  transition: all 0.35s ease;
+  transition: all 0.3s ease; /* плавное изменение при hover/active */
 }
 
-/* Hover-эффект (на десктопе и тач-устройствах) */
+/* Hover-эффект (на десктопе или долгом тапе) */
 .nav-item:hover {
-  color: #476cee;
-  background: rgba(71, 108, 238, 0.08);
-  transform: translateY(-4px);
+  color: #476cee; /* основной синий цвет */
+  background: rgba(71, 108, 238, 0.1);
+  transform: translateY(-4px); /* лёгкий подъём вверх */
 }
 
-/* Активный пункт */
+/* Активный пункт меню */
 .nav-item.active {
   color: #476cee;
-  background: rgba(71, 108, 238, 0.12);
+  background: rgba(71, 108, 238, 0.15);
 }
 
+/* Тень под иконкой активного пункта */
 .nav-item.active .nav-icon {
-  filter: drop-shadow(0 0 8px rgba(71, 108, 238, 0.35));
+  filter: drop-shadow(0 0 8px rgba(71, 108, 238, 0.4));
 }
 
-/* Pressed-эффект (при тапе) — через :active */
+/* Эффект нажатия (при тапе/клике) — через :active */
 .nav-item:active {
-  transform: scale(0.88);
-  transition: transform 0.15s ease;
+  transform: scale(0.85); /* сжимается */
+  transition: transform 0.15s ease; /* быстрый отклик */
 }
 
 .nav-item:active .nav-icon {
-  transform: scale(1.12);
+  transform: scale(1.1); /* иконка чуть увеличивается */
 }
 
-/* Метка под иконкой */
+/* Текст под иконкой */
 .nav-label {
   margin-top: 2px;
   letter-spacing: -0.2px;
