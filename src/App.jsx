@@ -7,7 +7,7 @@ const App = () => {
 
     // Отправляем сырую init data на бекенд
     fetch('https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net/', {
-      method: 'POST',
+      method: 'GET',
       headers: {
         Authorization: `tma ${initDataRaw}`,
       },
