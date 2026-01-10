@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
 import { retrieveRawInitData } from '@tma.js/sdk'
 
+const initDataRaw = retrieveRawInitData()
+
 const App = () => {
   useEffect(() => {
-    const initDataRaw = retrieveRawInitData()
 
     // Отправляем сырую init data на бекенд
     fetch('https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net/', {
