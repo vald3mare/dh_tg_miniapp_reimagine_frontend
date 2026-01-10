@@ -1,4 +1,4 @@
-/* Фиксированный навбар — белый полупрозрачный овал */
+/* Основной навбар — стеклянный овал */
 .bottom-nav {
   position: fixed;
   bottom: 10px;
@@ -7,18 +7,17 @@
   width: 340px;
   height: 70px;
   background: rgba(255, 255, 255, 0.88);
-  border-radius: 30px;                /* Все скругления 30px */
+  border-radius: 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 6px;                     /* Минимальные отступы — чтобы круг доходил до края */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  padding: 0 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   z-index: 1000;
 
-  /* Плавное появление снизу */
-  animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes slideUp {
@@ -26,7 +25,7 @@
   to   { transform: translate(-50%, 0);    opacity: 1; }
 }
 
-/* Пункт меню — все одинаковой ширины */
+/* Пункт меню */
 .nav-item {
   position: relative;
   display: flex;
@@ -38,71 +37,79 @@
   font-weight: 600;
   font-size: 11px;
   text-decoration: none;
-  transition: color 0.45s ease, transform 0.25s ease;
+  transition: color 0.3s ease, transform 0.2s ease;
   padding: 8px 10px;
   min-width: 60px;
-  flex: 1;                            /* Равномерное распределение ширины */
-  max-width: 80px;                    /* Не даём расширяться */
+  flex: 1;
+  max-width: 80px;
   z-index: 2;
 }
 
-/* Фон активного пункта — круг с тем же скруглением 30px */
+/* Фон активного пункта — круг 30px */
 .nav-item::before {
   content: '';
   position: absolute;
-  inset: 0;                           /* Не выходим за границы пункта */
+  inset: -4px -8px;
   background: #476cee;
-  border-radius: 30px;                /* То же скругление */
+  border-radius: 30px;
   opacity: 0;
-  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transform: scale(0.9);
+  transform: scale(0.85);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: -1;
-  box-shadow: 0 4px 16px rgba(71, 108, 238, 0.45);
+  box-shadow: 0 6px 20px rgba(71, 108, 238, 0.5);
 }
 
-/* Активный пункт — показываем круг с лёгким масштабом */
+/* Активный пункт — круг появляется с bounce */
 .nav-item.active::before {
   opacity: 1;
-  transform: scale(1.05);             /* Лёгкое увеличение для "пузыря" */
+  transform: scale(1);
 }
 
-/* Крайние пункты — круг примыкает к краю навбара без вылезания */
+/* Крайние пункты — круг примыкает к краю */
 .nav-item:first-child.active::before,
 .nav-item:last-child.active::before {
-  width: calc(100% + 12px);           /* Расширяем ровно настолько, чтобы коснуться края */
-  left: -6px;                         /* Сдвигаем влево/вправо */
-  right: -6px;
+  width: calc(100% + 16px);
+  left: -8px;
+  right: -8px;
 }
 
-/* Иконка */
+/* Иконка — с выраженной анимацией */
 .nav-item svg {
   font-size: 28px !important;
   margin-bottom: 4px;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Hover — лёгкий подъём */
+/* Hover — подъём + лёгкое увеличение */
 .nav-item:hover {
   color: #476cee;
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 }
 
-/* Активный пункт — белый текст/иконка */
+/* Активный пункт — белый текст/иконка + лёгкий bounce */
 .nav-item.active {
   color: white;
 }
 
 .nav-item.active svg {
   color: white;
+  animation: bounceActive 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* Нажатие — подпрыгивание иконки + сжатие */
+@keyframes bounceActive {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2) translateY(-6px); }
+  100% { transform: scale(1.1) translateY(0); }
+}
+
+/* Нажатие — подпрыгивание + сжатие + возврат */
 .nav-item:active {
-  transform: scale(0.92);
+  transform: scale(0.88);
+  transition: transform 0.18s ease-out;
 }
 
 .nav-item:active svg {
-  transform: translateY(-8px) scale(1.18);
+  transform: translateY(-10px) scale(1.25);
   transition: transform 0.18s ease-out;
 }
 
@@ -110,6 +117,7 @@
 .nav-item span {
   margin-top: 2px;
   letter-spacing: -0.2px;
+  transition: color 0.35s ease;
 }
 
 /* Отступ под навбар */
