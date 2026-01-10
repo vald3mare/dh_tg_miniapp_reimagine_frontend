@@ -1,26 +1,27 @@
-/* Фиксированная нижняя панель навигации */
+/* Основной контейнер навбара — белый полупрозрачный овал с размытием */
 .bottom-nav {
   position: fixed;
   bottom: 10px;
   left: 10px;
   right: 10px;
-  max-width: 340px; /* как в твоём макете 340×70 */
-  margin: 0 auto; /* центрируем по горизонтали */
-  background: #ffffff; /* белый фон */
-  border-radius: 40px; /* скругление углов */
+  max-width: 340px;                 /* Точно как в макете 340×70 */
+  margin: 0 auto;                   /* Центрируем */
+  height: 70px;                     /* Высота по макету */
+  background: rgba(255, 255, 255, 0.85); /* Полупрозрачный белый */
+  border-radius: 40px;              /* Скругление углов */
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 12px 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* лёгкая тень */
-  z-index: 1000; /* всегда поверх контента */
-  backdrop-filter: blur(10px); /* размытие фона (стеклянный эффект) */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); /* Более выраженная тень */
+  backdrop-filter: blur(12px);      /* Сильное размытие (стекло) */
+  border: 1px solid rgba(255, 255, 255, 0.18); /* Лёгкая обводка для глубины */
+  z-index: 1000;
 
-  /* Анимация появления снизу при загрузке страницы */
-  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  /* Плавное появление снизу */
+  animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* Анимация slideUp (плавное появление) */
+/* Анимация появления */
 @keyframes slideUp {
   from {
     transform: translateY(100px);
@@ -37,55 +38,58 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #888888; /* серый цвет неактивного */
-  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-  font-weight: bold;
-  font-size: 12px;
-  text-decoration: none; /* убираем подчёркивание ссылки */
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* плавные переходы */
-  padding: 8px;
+  justify-content: center;
+  color: #888888;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  text-decoration: none;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding: 8px 12px;
   border-radius: 20px;
-  position: relative;
-  min-width: 60px; /* чтобы не сжимались при малом экране */
+  min-width: 70px; /* Чтобы текст не сжимался */
 }
 
 /* Иконка */
-.nav-icon {
-  font-size: 28px !important; /* размер иконок MUI */
+.nav-item svg {
+  font-size: 28px !important;
   margin-bottom: 4px;
-  transition: all 0.3s ease; /* плавное изменение при hover/active */
+  transition: all 0.35s ease;
 }
 
-/* Hover-эффект (на десктопе или долгом тапе) */
+/* Hover (на десктопе или долгом тапе) */
 .nav-item:hover {
-  color: #476cee; /* основной синий цвет */
-  background: rgba(71, 108, 238, 0.1);
-  transform: translateY(-4px); /* лёгкий подъём вверх */
-}
-
-/* Активный пункт меню */
-.nav-item.active {
   color: #476cee;
-  background: rgba(71, 108, 238, 0.15);
+  background: rgba(71, 108, 238, 0.08);
+  transform: translateY(-4px);
 }
 
-/* Тень под иконкой активного пункта */
-.nav-item.active .nav-icon {
-  filter: drop-shadow(0 0 8px rgba(71, 108, 238, 0.4));
+/* Активный пункт — голубой фон + выделение */
+.nav-item.active {
+  color: #ffffff;
+  background: #476cee; /* Основной синий из твоего макета */
+  box-shadow: 0 4px 15px rgba(71, 108, 238, 0.4);
 }
 
-/* Эффект нажатия (при тапе/клике) — через :active */
+.nav-item.active svg {
+  filter: brightness(1.2); /* Иконка светлее */
+}
+
+/* Эффект нажатия (тап/клик) */
 .nav-item:active {
-  transform: scale(0.85); /* сжимается */
-  transition: transform 0.15s ease; /* быстрый отклик */
-}
-
-.nav-item:active .nav-icon {
-  transform: scale(1.1); /* иконка чуть увеличивается */
+  transform: scale(0.92);
+  transition: transform 0.12s ease;
 }
 
 /* Текст под иконкой */
-.nav-label {
+.nav-item span {
   margin-top: 2px;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
+}
+
+/* Отступ под навбаром для контента */
+.app-container {
+  min-height: 100vh;
+  padding-bottom: 100px; /* Высота навбара + запас */
+  box-sizing: border-box;
 }
