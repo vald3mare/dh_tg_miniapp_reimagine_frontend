@@ -7,16 +7,17 @@
   width: 340px;
   height: 70px;
   background: rgba(255, 255, 255, 0.88);
-  border-radius: 30px;                  /* Все скругления 30px */
+  border-radius: 30px;                /* Все скругления 30px */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 8px;                       /* Минимальные отступы по бокам */
+  padding: 0 6px;                     /* Минимальные отступы — чтобы круг доходил до края */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   z-index: 1000;
 
+  /* Плавное появление снизу */
   animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
@@ -37,11 +38,11 @@
   font-weight: 600;
   font-size: 11px;
   text-decoration: none;
-  transition: color 0.4s ease;
-  padding: 8px 12px;
-  min-width: 60px;                      /* Фиксированная ширина — крайние не шире */
-  flex: 1;                              /* Равномерно растягиваются */
-  max-width: 80px;                      /* Не даём расширяться слишком сильно */
+  transition: color 0.45s ease, transform 0.25s ease;
+  padding: 8px 10px;
+  min-width: 60px;
+  flex: 1;                            /* Равномерное распределение ширины */
+  max-width: 80px;                    /* Не даём расширяться */
   z-index: 2;
 }
 
@@ -49,41 +50,41 @@
 .nav-item::before {
   content: '';
   position: absolute;
-  inset: -4px -8px;                     /* Расширяем круг влево/вправо до края навбара */
+  inset: 0;                           /* Не выходим за границы пункта */
   background: #476cee;
-  border-radius: 30px;                  /* Точно такое же скругление */
+  border-radius: 30px;                /* То же скругление */
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(0.9);
   z-index: -1;
   box-shadow: 0 4px 16px rgba(71, 108, 238, 0.45);
 }
 
-/* Активный пункт — показываем круг */
+/* Активный пункт — показываем круг с лёгким масштабом */
 .nav-item.active::before {
   opacity: 1;
+  transform: scale(1.05);             /* Лёгкое увеличение для "пузыря" */
 }
 
-/* Крайние пункты — круг полностью примыкает к краю навбара */
-.nav-item:first-child.active::before {
-  left: -12px;                          /* Выходим за левый край */
-  right: -4px;
-}
-
+/* Крайние пункты — круг примыкает к краю навбара без вылезания */
+.nav-item:first-child.active::before,
 .nav-item:last-child.active::before {
-  right: -12px;                         /* Выходим за правый край */
-  left: -4px;
+  width: calc(100% + 12px);           /* Расширяем ровно настолько, чтобы коснуться края */
+  left: -6px;                         /* Сдвигаем влево/вправо */
+  right: -6px;
 }
 
 /* Иконка */
 .nav-item svg {
   font-size: 28px !important;
   margin-bottom: 4px;
-  transition: transform 0.35s ease;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Hover */
+/* Hover — лёгкий подъём */
 .nav-item:hover {
   color: #476cee;
+  transform: translateY(-3px);
 }
 
 /* Активный пункт — белый текст/иконка */
@@ -95,13 +96,14 @@
   color: white;
 }
 
-/* Нажатие */
+/* Нажатие — подпрыгивание иконки + сжатие */
 .nav-item:active {
   transform: scale(0.92);
 }
 
 .nav-item:active svg {
-  transform: translateY(-6px) scale(1.15);
+  transform: translateY(-8px) scale(1.18);
+  transition: transform 0.18s ease-out;
 }
 
 /* Текст */
