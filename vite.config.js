@@ -13,5 +13,13 @@ export default defineConfig({
   //     key: readFileSync(resolve('certs/tma.internal-key.pem')),
   //   },
   // },
-  plugins: [react(), basicSsl()]
+  plugins: [react(), basicSsl()],
+  optimizeDeps: {
+    include: [
+      '@emotion/react',
+      '@emotion/styled',
+      '@mui/material/Tooltip', // если используешь Tooltip или другие проблемные компоненты
+      '@mui/icons-material',   // на всякий случай
+    ],
+  }
 })
