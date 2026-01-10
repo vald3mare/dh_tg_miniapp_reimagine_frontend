@@ -1,95 +1,109 @@
-/* Основной контейнер навбара — белый полупрозрачный овал с размытием */
+/* Основной контейнер — стеклянный овал */
 .bottom-nav {
   position: fixed;
   bottom: 10px;
-  left: 10px;
-  right: 10px;
-  max-width: 340px;                 /* Точно как в макете 340×70 */
-  margin: 0 auto;                   /* Центрируем */
-  height: 70px;                     /* Высота по макету */
-  background: rgba(255, 255, 255, 0.85); /* Полупрозрачный белый */
-  border-radius: 40px;              /* Скругление углов */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 340px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 40px;
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); /* Более выраженная тень */
-  backdrop-filter: blur(12px);      /* Сильное размытие (стекло) */
-  border: 1px solid rgba(255, 255, 255, 0.18); /* Лёгкая обводка для глубины */
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   z-index: 1000;
 
-  /* Плавное появление снизу */
-  animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* Анимация появления */
 @keyframes slideUp {
-  from {
-    transform: translateY(100px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translate(-50%, 100px); opacity: 0; }
+  to   { transform: translate(-50%, 0);    opacity: 1; }
 }
 
 /* Один пункт меню */
 .nav-item {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   color: #888888;
   font-family: 'Manrope', system-ui, sans-serif;
   font-weight: 600;
   font-size: 11px;
   text-decoration: none;
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: color 0.4s ease, transform 0.25s ease;
   padding: 8px 12px;
-  border-radius: 20px;
-  min-width: 70px; /* Чтобы текст не сжимался */
+  min-width: 60px;
+  z-index: 2;
+}
+
+/* Фон-обводка активного пункта (голубой "пузырь") */
+.nav-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #476cee;
+  border-radius: 30px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: -1;
+  box-shadow: 0 4px 16px rgba(71, 108, 238, 0.45);
+}
+
+/* Активный пункт — показываем "пузырь" */
+.nav-item.active::before {
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* Иконка */
 .nav-item svg {
   font-size: 28px !important;
   margin-bottom: 4px;
-  transition: all 0.35s ease;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Hover (на десктопе или долгом тапе) */
+/* Hover */
 .nav-item:hover {
   color: #476cee;
-  background: rgba(71, 108, 238, 0.08);
-  transform: translateY(-4px);
+  transform: translateY(-3px);
 }
 
-/* Активный пункт — голубой фон + выделение */
+/* Активный пункт — белый текст/иконка */
 .nav-item.active {
-  color: #ffffff;
-  background: #476cee; /* Основной синий из твоего макета */
-  box-shadow: 0 4px 15px rgba(71, 108, 238, 0.4);
+  color: white;
 }
 
 .nav-item.active svg {
-  filter: brightness(1.2); /* Иконка светлее */
+  transform: scale(1.1); /* лёгкое увеличение иконки */
 }
 
-/* Эффект нажатия (тап/клик) */
+/* Эффект нажатия — подпрыгивание иконки + сжатие */
 .nav-item:active {
   transform: scale(0.92);
-  transition: transform 0.12s ease;
 }
 
-/* Текст под иконкой */
+.nav-item:active svg {
+  transform: translateY(-6px) scale(1.15);
+  transition: transform 0.18s ease-out;
+}
+
+/* Текст */
 .nav-item span {
   margin-top: 2px;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
+  transition: color 0.4s ease;
 }
 
-/* Отступ под навбаром для контента */
+/* Отступ под навбар */
 .app-container {
   min-height: 100vh;
-  padding-bottom: 100px; /* Высота навбара + запас */
+  padding-bottom: 100px;
   box-sizing: border-box;
 }
