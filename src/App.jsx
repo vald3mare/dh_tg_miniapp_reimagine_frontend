@@ -6,7 +6,7 @@ const App = () => {
     const initDataRaw = retrieveRawInitData()
 
     // Отправляем сырую init data на бекенд
-    fetch('https://example.com/api', {
+    fetch('https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net/', {
       method: 'POST',
       headers: {
         Authorization: `tma ${initDataRaw}`,
