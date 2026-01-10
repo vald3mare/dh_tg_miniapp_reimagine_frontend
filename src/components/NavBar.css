@@ -1,4 +1,4 @@
-/* Основной контейнер — стеклянный овал */
+/* Фиксированный навбар — белый полупрозрачный овал */
 .bottom-nav {
   position: fixed;
   bottom: 10px;
@@ -7,11 +7,11 @@
   width: 340px;
   height: 70px;
   background: rgba(255, 255, 255, 0.88);
-  border-radius: 30px;
+  border-radius: 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 12px;                    /* Уменьшили боковые отступы */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -25,80 +25,83 @@
   to   { transform: translate(-50%, 0);    opacity: 1; }
 }
 
-/* Один пункт меню */
+/* Пункт меню */
 .nav-item {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   color: #888888;
   font-family: 'Manrope', system-ui, sans-serif;
   font-weight: 600;
   font-size: 11px;
   text-decoration: none;
-  transition: color 0.4s ease, transform 0.25s ease;
-  padding: 8px 12px;
+  transition: color 0.4s ease;
+  padding: 8px 10px;
   min-width: 60px;
   z-index: 2;
 }
 
-/* Фон-обводка активного пункта (голубой "пузырь") */
+/* Фон активного пункта — круг, который примыкает к краю */
 .nav-item::before {
   content: '';
   position: absolute;
   inset: 0;
   background: #476cee;
-  border-radius: 30px;
+  border-radius: 40px;                /* То же скругление, что у всего навбара */
   opacity: 0;
-  transform: scale(0.8);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.4s ease;
   z-index: -1;
   box-shadow: 0 4px 16px rgba(71, 108, 238, 0.45);
 }
 
-/* Активный пункт — показываем "пузырь" */
+/* Когда пункт активный — показываем круг */
 .nav-item.active::before {
   opacity: 1;
-  transform: scale(1);
+}
+
+/* У крайних пунктов круг "выходит" на самый край навбара */
+.nav-item:first-child.active::before,
+.nav-item:last-child.active::before {
+  inset: 0 -12px;                     /* Расширяем круг влево/вправо до края */
+  border-radius: 40px 40px 40px 40px; /* Оставляем скругление только с нужной стороны */
 }
 
 /* Иконка */
 .nav-item svg {
   font-size: 28px !important;
   margin-bottom: 4px;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.35s ease;
 }
 
 /* Hover */
 .nav-item:hover {
   color: #476cee;
-  transform: translateY(-3px);
 }
 
-/* Активный пункт — белый текст/иконка */
+/* Активный пункт — белый текст и иконка */
 .nav-item.active {
   color: white;
 }
 
 .nav-item.active svg {
-  transform: scale(1.1); /* лёгкое увеличение иконки */
+  color: white;
 }
 
-/* Эффект нажатия — подпрыгивание иконки + сжатие */
+/* Нажатие */
 .nav-item:active {
   transform: scale(0.92);
 }
 
 .nav-item:active svg {
   transform: translateY(-6px) scale(1.15);
-  transition: transform 0.18s ease-out;
 }
 
 /* Текст */
 .nav-item span {
   margin-top: 2px;
   letter-spacing: -0.2px;
-  transition: color 0.4s ease;
 }
 
 /* Отступ под навбар */
