@@ -3,106 +3,106 @@ import { retrieveRawInitData } from '@tma.js/sdk';
 
 export const UserContext = createContext(null);
 
-const API_URL = 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net/';
+const API_URL = 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net';
 
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [initData, setInitData] = useState(null); // raw initData (trusted после бека)
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [initData, setInitData] = useState(null);
 
   useEffect(() => {
-    // Ждем инициализации Telegram.WebApp (300ms должно быть достаточно)
-    const initTimer = setTimeout(() => {
+    let cancelled = false;
+
+    const init = async () => {
       try {
+        // 1️⃣ Получаем initData ОДИН РАЗ
         let initDataRaw = retrieveRawInitData();
-        alert('retrieveRawInitData: ' + (initDataRaw ? 'OK (' + initDataRaw.length + ' chars)' : 'NULL'));
-        
+
         if (!initDataRaw && window.Telegram?.WebApp?.initData) {
           initDataRaw = window.Telegram.WebApp.initData;
-          alert('Using window.Telegram.WebApp.initData');
         }
 
         if (!initDataRaw) {
-          alert('No initData available');
-          setError('Не удалось получить данные Telegram');
-          setIsLoading(false);
-          return;
+          throw new Error('Не удалось получить initData');
         }
 
-        alert('initData OK, sending to server...');
-
-        // Сохраняем initData для использования в других компонентах
-        setInitData(initDataRaw);
-
-        fetch(API_URL, {
+        // 2️⃣ Валидируем initData на беке
+        const res = await fetch(API_URL, {
           method: 'POST',
           headers: {
             Authorization: `tma ${initDataRaw}`,
           },
-        })
-      .then(res => {
-        if (!res.ok) throw new Error(`Сервер ответил ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        alert('✅ Auth success!');
-        setUser(data);
-      })
-      .catch(err => {
-        alert('❌ Auth error: ' + err.message);
-        setError(err.message);
-      })
-      .finally(() => setIsLoading(false));
-      } catch (err) {
-        console.error('UserContext init error:', err);
-        setError(err.message);
-        setIsLoading(false);
-      }
-    }, 300); // 300ms для инициализации Telegram.WebApp
+        });
 
-    return () => clearTimeout(initTimer);
+        if (!res.ok) {
+          throw new Error(`Auth failed: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        if (cancelled) return;
+
+        // 3️⃣ Сохраняем ОДИН РАЗ
+        setInitData(initDataRaw); // теперь это trusted initData
+        setUser(data);
+      } catch (err) {
+        if (!cancelled) {
+          console.error('User init error:', err);
+          setError(err.message);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    init();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const refreshUser = () => {
-    let initDataRaw = retrieveRawInitData();
-    if (!initDataRaw && window.Telegram?.WebApp?.initData) {
-      initDataRaw = window.Telegram.WebApp.initData;
-    }
-    
-    if (!initDataRaw) {
-      setError('Не удалось получить данные Telegram');
-      return;
-    }
+  /**
+   * ❗️refreshUser НЕ дергает retrieveRawInitData
+   * Использует уже валидированную initData
+   */
+  const refreshUser = async () => {
+    if (!initData) return;
 
     setIsLoading(true);
-    fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `tma ${initDataRaw}`,
-      },
-    })
-      .then(res => {
-        if (!res.ok) throw new Error(`Сервер ответил ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        setUser(data);
-        addLog('✅ Данные обновлены');
-      })
-      .catch(err => {
-        addLog('❌ Ошибка при обновлении: ' + err.message);
-        setError(err.message);
-      })
-      .finally(() => setIsLoading(false));
+    setError(null);
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `tma ${initData}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Refresh failed: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setUser(data);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const value = {
     user,
+    initData,              // 🔐 trusted initData
     isLoading,
     error,
     isAuthenticated: !!user,
-    initData, // Передаем инит дату которая уже валидна
     refreshUser,
   };
 
