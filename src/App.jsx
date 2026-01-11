@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import NavBar from './components/NavBar'
 import Home from './pages/Home';
 import Services from './pages/Services';
+import Profile from './pages/Profile';
 
 
 const App = () => {
@@ -12,9 +13,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />
-        {/* Добавляй новые страницы сюда */}
-        {/* <Route path="/tariffs" element={<Tariffs />} /> */}
-        {/* <Route path="/profile" element={<Profile />} /> */}
+        <Route path="/profile" element={<Profile />} />
       </Routes>
 
       {/* Навбар всегда внизу */}
