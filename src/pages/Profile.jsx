@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { retrieveRawInitData } from '@tma.js/sdk';
 import { UserContext } from '../context/UserContext';
 import BottomNav from '../components/NavBar';
 
@@ -43,7 +44,11 @@ const Profile = () => {
   }
 
   const handleBuyPremium = async () => {
-    const initData = window.Telegram?.WebApp?.initData;
+    let initData = retrieveRawInitData();
+    if (!initData && window.Telegram?.WebApp?.initData) {
+      initData = window.Telegram.WebApp.initData;
+    }
+
     if (!initData) {
       alert('❌ initData недоступна');
       return;
@@ -88,7 +93,11 @@ const Profile = () => {
       return;
     }
 
-    const initData = window.Telegram?.WebApp?.initData;
+    let initData = retrieveRawInitData();
+    if (!initData && window.Telegram?.WebApp?.initData) {
+      initData = window.Telegram.WebApp.initData;
+    }
+
     if (!initData) {
       alert('❌ initData недоступна');
       return;
