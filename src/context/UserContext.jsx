@@ -40,11 +40,41 @@ export function UserProvider({ children }) {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const refreshUser = () => {
+    const initDataRaw = retrieveRawInitData();
+    if (!initDataRaw) {
+      setError('Не удалось получить данные Telegram');
+      return;
+    }
+
+    setIsLoading(true);
+    fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `tma ${initDataRaw}`,
+      },
+    })
+      .then(res => {
+        if (!res.ok) throw new Error(`Сервер ответил ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        setUser(data);
+        console.log('Данные обновлены:', data);
+      })
+      .catch(err => {
+        console.error('Ошибка при обновлении:', err);
+        setError(err.message);
+      })
+      .finally(() => setIsLoading(false));
+  };
+
   const value = {
     user,
     isLoading,
     error,
     isAuthenticated: !!user,
+    refreshUser,
   };
 
   return (

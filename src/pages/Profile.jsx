@@ -9,8 +9,7 @@ const Profile = () => {
   const [isCancelingSubscription, setIsCancelingSubscription] = useState(false);
 
   useEffect(() => {
-    const startParam = window.Telegram.WebApp.initDataUnsafe.start_param;
-    if (startParam === 'payment_success') {
+    if (window.Telegram?.WebApp?.initDataUnsafe?.start_param === 'payment_success') {
       alert("✅ Оплата прошла успешно! Обновляю профиль...");
       refreshUser();
     }
@@ -29,7 +28,7 @@ const Profile = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'tma ' + window.Telegram.WebApp.initData,
+            'Authorization': 'tma ' + (window.Telegram?.WebApp?.initData || ''),
           },
           body: JSON.stringify({
             amount: 1,
@@ -47,7 +46,7 @@ const Profile = () => {
 
       if (data.confirmation_url) {
         // Открываем ссылку на оплату в ЮKassa
-        window.Telegram.WebApp.openLink(data.confirmation_url);
+        window.Telegram?.WebApp?.openLink(data.confirmation_url);
       } else {
         alert('❌ Ошибка: не получена ссылка на оплату');
       }
@@ -72,7 +71,7 @@ const Profile = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'tma ' + window.Telegram.WebApp.initData,
+            'Authorization': 'tma ' + (window.Telegram?.WebApp?.initData || ''),
           }
         }
       );
