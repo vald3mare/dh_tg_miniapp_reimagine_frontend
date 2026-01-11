@@ -9,6 +9,7 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [initData, setInitData] = useState(null);
 
   useEffect(() => {
     // Ждем инициализации Telegram.WebApp
@@ -24,6 +25,9 @@ export function UserProvider({ children }) {
         setIsLoading(false);
         return;
       }
+
+      // Сохраняем initData для использования в других компонентах
+      setInitData(initDataRaw);
 
       fetch(API_URL, {
         method: 'POST',
@@ -85,6 +89,7 @@ export function UserProvider({ children }) {
     isLoading,
     error,
     isAuthenticated: !!user,
+    initData, // Передаем инит дату которая уже валидна
     refreshUser,
   };
 

@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { retrieveRawInitData } from '@tma.js/sdk';
 import { UserContext } from '../context/UserContext';
 import BottomNav from '../components/NavBar';
 
 const Profile = () => {
-  const { user, isLoading, error, refreshUser } = useContext(UserContext);
+  const { user, isLoading, error, refreshUser, initData } = useContext(UserContext);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [isCancelingSubscription, setIsCancelingSubscription] = useState(false);
 
@@ -44,11 +43,6 @@ const Profile = () => {
   }
 
   const handleBuyPremium = async () => {
-    let initData = retrieveRawInitData();
-    if (!initData && window.Telegram?.WebApp?.initData) {
-      initData = window.Telegram.WebApp.initData;
-    }
-
     if (!initData) {
       alert('❌ initData недоступна');
       return;
@@ -91,11 +85,6 @@ const Profile = () => {
   const handleCancelSubscription = async () => {
     if (!window.confirm('Вы уверены?')) {
       return;
-    }
-
-    let initData = retrieveRawInitData();
-    if (!initData && window.Telegram?.WebApp?.initData) {
-      initData = window.Telegram.WebApp.initData;
     }
 
     if (!initData) {
