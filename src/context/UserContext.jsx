@@ -9,55 +9,42 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [debugLogs, setDebugLogs] = useState([]);
-
-  const addLog = (msg) => {
-    console.log(msg);
-    setDebugLogs(prev => [...prev, msg].slice(-10)); // Хранит последние 10 логов
-  };
 
   useEffect(() => {
-    // Пробуем оба варианта получения initData
-    let initDataRaw = retrieveRawInitData();
-    
-    addLog('🔍 retrieveRawInitData(): ' + (initDataRaw ? 'got' : 'null'));
-    addLog('🔍 window.Telegram.WebApp.initData: ' + (window.Telegram?.WebApp?.initData ? 'got' : 'null'));
-    
-    // Если TMA.js вернула пусто, используем window.Telegram напрямую
-    if (!initDataRaw && window.Telegram?.WebApp?.initData) {
-      initDataRaw = window.Telegram.WebApp.initData;
-      addLog('✅ Используем window.Telegram.WebApp.initData');
-    }
+    // Ждем инициализации Telegram.WebApp
+    const initTimer = setTimeout(() => {
+      let initDataRaw = retrieveRawInitData();
+      
+      if (!initDataRaw && window.Telegram?.WebApp?.initData) {
+        initDataRaw = window.Telegram.WebApp.initData;
+      }
 
-    if (!initDataRaw) {
-      addLog('❌ initDataRaw is empty or undefined');
-      setError('Не удалось получить данные Telegram');
-      setIsLoading(false);
-      return;
-    }
+      if (!initDataRaw) {
+        setError('Не удалось получить данные Telegram');
+        setIsLoading(false);
+        return;
+      }
 
-    addLog('✅ Итоговая initData length: ' + initDataRaw.length);
-    addLog('✅ Первые 80 символов: ' + initDataRaw.substring(0, 80) + '...');
-
-    fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `tma ${initDataRaw}`,
-      },
-    })
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `tma ${initDataRaw}`,
+        },
+      })
       .then(res => {
         if (!res.ok) throw new Error(`Сервер ответил ${res.status}`);
         return res.json();
       })
       .then(data => {
         setUser(data);
-        addLog('✅ Успешная авторизация');
       })
       .catch(err => {
-        addLog('❌ Ошибка авторизации: ' + err.message);
         setError(err.message);
       })
       .finally(() => setIsLoading(false));
+    }, 100); // Даем Telegram.WebApp 100ms на инициализацию
+
+    return () => clearTimeout(initTimer);
   }, []);
 
   const refreshUser = () => {
@@ -99,7 +86,6 @@ export function UserProvider({ children }) {
     error,
     isAuthenticated: !!user,
     refreshUser,
-    debugLogs,
   };
 
   return (
