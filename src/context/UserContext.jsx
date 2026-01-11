@@ -9,15 +9,35 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [debugLogs, setDebugLogs] = useState([]);
+
+  const addLog = (msg) => {
+    console.log(msg);
+    setDebugLogs(prev => [...prev, msg].slice(-10)); // Хранит последние 10 логов
+  };
 
   useEffect(() => {
-    const initDataRaw = retrieveRawInitData();
+    // Пробуем оба варианта получения initData
+    let initDataRaw = retrieveRawInitData();
+    
+    addLog('🔍 retrieveRawInitData(): ' + (initDataRaw ? 'got' : 'null'));
+    addLog('🔍 window.Telegram.WebApp.initData: ' + (window.Telegram?.WebApp?.initData ? 'got' : 'null'));
+    
+    // Если TMA.js вернула пусто, используем window.Telegram напрямую
+    if (!initDataRaw && window.Telegram?.WebApp?.initData) {
+      initDataRaw = window.Telegram.WebApp.initData;
+      addLog('✅ Используем window.Telegram.WebApp.initData');
+    }
 
     if (!initDataRaw) {
+      addLog('❌ initDataRaw is empty or undefined');
       setError('Не удалось получить данные Telegram');
       setIsLoading(false);
       return;
     }
+
+    addLog('✅ Итоговая initData length: ' + initDataRaw.length);
+    addLog('✅ Первые 80 символов: ' + initDataRaw.substring(0, 80) + '...');
 
     fetch(API_URL, {
       method: 'POST',
@@ -31,17 +51,21 @@ export function UserProvider({ children }) {
       })
       .then(data => {
         setUser(data);
-        console.log('Успешная авторизация:', data);
+        addLog('✅ Успешная авторизация');
       })
       .catch(err => {
-        console.error('Ошибка авторизации:', err);
+        addLog('❌ Ошибка авторизации: ' + err.message);
         setError(err.message);
       })
       .finally(() => setIsLoading(false));
   }, []);
 
   const refreshUser = () => {
-    const initDataRaw = retrieveRawInitData();
+    let initDataRaw = retrieveRawInitData();
+    if (!initDataRaw && window.Telegram?.WebApp?.initData) {
+      initDataRaw = window.Telegram.WebApp.initData;
+    }
+    
     if (!initDataRaw) {
       setError('Не удалось получить данные Telegram');
       return;
@@ -60,10 +84,10 @@ export function UserProvider({ children }) {
       })
       .then(data => {
         setUser(data);
-        console.log('Данные обновлены:', data);
+        addLog('✅ Данные обновлены');
       })
       .catch(err => {
-        console.error('Ошибка при обновлении:', err);
+        addLog('❌ Ошибка при обновлении: ' + err.message);
         setError(err.message);
       })
       .finally(() => setIsLoading(false));
@@ -75,6 +99,7 @@ export function UserProvider({ children }) {
     error,
     isAuthenticated: !!user,
     refreshUser,
+    debugLogs,
   };
 
   return (

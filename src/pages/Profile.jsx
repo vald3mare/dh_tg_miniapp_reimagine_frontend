@@ -4,7 +4,7 @@ import { UserContext } from '../context/UserContext';
 import BottomNav from '../components/NavBar';
 
 const Profile = () => {
-  const { user, isLoading, error, refreshUser } = useContext(UserContext);
+  const { user, isLoading, error, refreshUser, debugLogs } = useContext(UserContext);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [isCancelingSubscription, setIsCancelingSubscription] = useState(false);
 
@@ -161,6 +161,26 @@ const Profile = () => {
         >
           {isCancelingSubscription ? '⏳ Отмена...' : '❌ Отменить подписку'}
         </button>
+      )}
+
+      {/* DEBUG LOGS */}
+      {debugLogs.length > 0 && (
+        <div style={{
+          marginTop: '20px',
+          padding: '10px',
+          backgroundColor: '#f0f0f0',
+          borderRadius: '8px',
+          fontSize: '12px',
+          fontFamily: 'monospace',
+          maxHeight: '150px',
+          overflowY: 'auto',
+          color: '#333'
+        }}>
+          <strong>🔍 Debug logs:</strong>
+          {debugLogs.map((log, i) => (
+            <div key={i} style={{ marginTop: '4px' }}>{log}</div>
+          ))}
+        </div>
       )}
 
       <BottomNav />
