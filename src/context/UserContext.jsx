@@ -14,38 +14,51 @@ export function UserProvider({ children }) {
   useEffect(() => {
     // Ждем инициализации Telegram.WebApp (300ms должно быть достаточно)
     const initTimer = setTimeout(() => {
-      let initDataRaw = retrieveRawInitData();
-      
-      if (!initDataRaw && window.Telegram?.WebApp?.initData) {
-        initDataRaw = window.Telegram.WebApp.initData;
-      }
+      try {
+        let initDataRaw = retrieveRawInitData();
+        alert('retrieveRawInitData: ' + (initDataRaw ? 'OK (' + initDataRaw.length + ' chars)' : 'NULL'));
+        
+        if (!initDataRaw && window.Telegram?.WebApp?.initData) {
+          initDataRaw = window.Telegram.WebApp.initData;
+          alert('Using window.Telegram.WebApp.initData');
+        }
 
-      if (!initDataRaw) {
-        setError('Не удалось получить данные Telegram');
-        setIsLoading(false);
-        return;
-      }
+        if (!initDataRaw) {
+          alert('No initData available');
+          setError('Не удалось получить данные Telegram');
+          setIsLoading(false);
+          return;
+        }
 
-      // Сохраняем initData для использования в других компонентах
-      setInitData(initDataRaw);
+        alert('initData OK, sending to server...');
 
-      fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          Authorization: `tma ${initDataRaw}`,
-        },
-      })
+        // Сохраняем initData для использования в других компонентах
+        setInitData(initDataRaw);
+
+        fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            Authorization: `tma ${initDataRaw}`,
+          },
+        })
       .then(res => {
         if (!res.ok) throw new Error(`Сервер ответил ${res.status}`);
         return res.json();
       })
       .then(data => {
+        alert('✅ Auth success!');
         setUser(data);
       })
       .catch(err => {
+        alert('❌ Auth error: ' + err.message);
         setError(err.message);
       })
       .finally(() => setIsLoading(false));
+      } catch (err) {
+        console.error('UserContext init error:', err);
+        setError(err.message);
+        setIsLoading(false);
+      }
     }, 300); // 300ms для инициализации Telegram.WebApp
 
     return () => clearTimeout(initTimer);
