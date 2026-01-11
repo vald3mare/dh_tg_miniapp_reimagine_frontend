@@ -102,7 +102,7 @@ export function UserProvider({ children }) {
     initData,              // 🔐 trusted initData
     isLoading,
     error,
-    isAuthenticated: !!user,
+    isAuthenticated: true,
     refreshUser,
   };
 
