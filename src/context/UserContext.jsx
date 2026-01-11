@@ -12,7 +12,7 @@ export function UserProvider({ children }) {
   const [initData, setInitData] = useState(null);
 
   useEffect(() => {
-    // Ждем инициализации Telegram.WebApp
+    // Ждем инициализации Telegram.WebApp (300ms должно быть достаточно)
     const initTimer = setTimeout(() => {
       let initDataRaw = retrieveRawInitData();
       
@@ -46,7 +46,7 @@ export function UserProvider({ children }) {
         setError(err.message);
       })
       .finally(() => setIsLoading(false));
-    }, 100); // Даем Telegram.WebApp 100ms на инициализацию
+    }, 300); // 300ms для инициализации Telegram.WebApp
 
     return () => clearTimeout(initTimer);
   }, []);
