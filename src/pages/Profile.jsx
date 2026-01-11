@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { UserContext } from './UserContext';
+import { UserContext } from '../context/UserContext';
 
 const API_URL = 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net';
 
