@@ -1,25 +1,25 @@
-import React, { useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom';
-import NavBar from './components/NavBar'
-import Home from './pages/Home';
-import Services from './pages/Services';
-import Profile from './pages/Profile';
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import BottomNav from './components/BottomNav/BottomNav'
 
+import Home from './pages/Home'
+import Services from './pages/Services'
+import Profile from './pages/Profile'
 
 const App = () => {
   return (
     <div className="app-container">
-      {/* Основной контент страниц */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />
         <Route path="/profile" element={<Profile />} />
+        {/* если нужно */}
+        {/* <Route path="/tariffs" element={<Tariffs />} /> */}
       </Routes>
 
-      {/* Навбар всегда внизу */}
-      <NavBar />
+      <BottomNav />
     </div>
-  );
+  )
 }
 
 export default App
