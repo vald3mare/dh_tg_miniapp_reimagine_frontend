@@ -27,7 +27,7 @@ const BottomNav = () => {
 
   return (
     <div className="bottom-nav-wrapper">
-      <div className="bottom-nav">
+      <nav className="bottom-nav" aria-label="Основная навигация">
         <div
           className="bottom-nav-active"
           style={{ transform: `translateX(${activeIndex * 100}%)` }}
@@ -42,13 +42,14 @@ const BottomNav = () => {
               key={tab.path}
               className={`bottom-nav-item ${isActive ? 'active' : ''}`}
               onClick={() => navigate(tab.path)}
+              aria-current={isActive ? 'page' : undefined}
             >
               <Icon className="icon" />
               <span>{tab.label}</span>
             </button>
           )
         })}
-      </div>
+      </nav>
     </div>
   )
 }

@@ -11,49 +11,72 @@
 .bottom-nav {
   position: relative;
   width: calc(100% - 32px);
-  max-width: 480px;
-  height: 70px;
+  max-width: 520px;
+
+  height: 54px;
   background: #f1f2f4;
-  border-radius: 28px;
+  border-radius: 30px;
+
   display: flex;
-  overflow: hidden;
+  padding: 4px;
+  box-sizing: border-box;
 }
+
 
 .bottom-nav-active {
   position: absolute;
   top: 4px;
   left: 4px;
-  width: calc(25% - 8px);
-  height: calc(100% - 8px);
+
+  width: 25%;
+  height: calc(100% - 8px);  /* ↓ компактнее */
+
   background: linear-gradient(180deg, #5b86ff, #4c7dff);
-  border-radius: 24px;
-  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  border-radius: 30px;
+
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+  will-change: transform;
 }
+
 
 .bottom-nav-item {
   flex: 1;
   border: none;
   background: none;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+
+  font-size: 11px;           /* ↓ было 11.5 */
+  line-height: 1;
+
   color: #8e8e93;
   cursor: pointer;
   z-index: 1;
+
+  transition: transform 0.25s ease, color 0.25s ease;
 }
 
+
 .bottom-nav-item .icon {
-  font-size: 22px;
-  margin-bottom: 2px;
+  font-size: 20px;           /* ↓ было 21 */
+  margin-bottom: 1px;        /* ↓ было 1–2 */
+
+  transition: transform 0.25s ease;
 }
+
 
 .bottom-nav-item.active {
   color: #ffffff;
   font-weight: 600;
+
+  transform: scale(1.06);    /* чуть спокойнее */
 }
 
 .bottom-nav-item.active .icon {
+  transform: scale(1.08);
   color: #ffffff;
 }
+
