@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import PetsIcon from '@mui/icons-material/Pets';
@@ -16,26 +16,56 @@ const navItems = [
 const NavBar = () => {
   const location = useLocation();
   const [mounted, setMounted] = useState(false);
+  const [bouncing, setBouncing] = useState(false);
+
+  const itemRefs = useRef([]);
+  const [indicatorLeft, setIndicatorLeft] = useState(0);
+
+  const indicatorSize = 72; // размер синего круга
+
+  const activeIndex = navItems.findIndex(item => item.path === location.pathname);
+  const currentIndex = activeIndex !== -1 ? activeIndex : 0;
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const activeIndex = navItems.findIndex(item => item.path === location.pathname);
-  const currentIndex = activeIndex !== -1 ? activeIndex : 0;
+  // Обновление позиции индикатора (точно по центру активного пункта)
+  useLayoutEffect(() => {
+    const updateIndicator = () => {
+      if (itemRefs.current[currentIndex]) {
+        const item = itemRefs.current[currentIndex];
+        const { offsetLeft, offsetWidth } = item;
+        const center = offsetLeft + offsetWidth / 2;
+        const newLeft = center - indicatorSize / 2;
+        setIndicatorLeft(newLeft);
+      }
+    };
+
+    updateIndicator();
+  }, [currentIndex, mounted]);
+
+  // Анимация bounce при смене активного пункта
+  useEffect(() => {
+    if (mounted) {
+      setBouncing(true);
+    }
+  }, [currentIndex]);
 
   return (
-    <nav
-      className={`bottom-nav ${mounted ? 'mounted' : ''}`}
-      style={{ '--active-index': currentIndex }}
-    >
-      <div className="indicator" />
+    <nav className={`bottom-nav ${mounted ? 'mounted' : ''}`}>
+      <div
+        className={`indicator ${bouncing ? 'bouncing' : ''}`}
+        style={{ left: indicatorLeft }}
+        onAnimationEnd={() => setBouncing(false)}
+      />
 
       {navItems.map((item, index) => {
         const isActive = index === currentIndex;
 
         return (
           <NavLink
+            ref={el => (itemRefs.current[index] = el)}
             key={item.key}
             to={item.path}
             className={`nav-item ${isActive ? 'active' : ''}`}
