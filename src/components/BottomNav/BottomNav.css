@@ -14,7 +14,7 @@
   max-width: 340px;
 
   height: 70px;
-  background: #f1f2f4;
+  background: #ffffff;
   border-radius: 30px;
 
   display: flex;
@@ -52,7 +52,7 @@
   font-size: 11px;           /* ↓ было 11.5 */
   line-height: 1;
 
-  color: #8e8e93;
+  /*color: #8e8e93;*/
   cursor: pointer;
   z-index: 1;
 
