@@ -7,7 +7,7 @@ const API_URL = 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net
 
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [initData, setInitData] = useState(null); // raw initData (trusted после бека)
+  const [initData, setInitData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,7 +16,6 @@ export function UserProvider({ children }) {
 
     const init = async () => {
       try {
-        // 1️⃣ Получаем initData ОДИН РАЗ
         let initDataRaw = retrieveRawInitData();
 
         if (!initDataRaw && window.Telegram?.WebApp?.initData) {
@@ -43,8 +42,7 @@ export function UserProvider({ children }) {
 
         if (cancelled) return;
 
-        // 3️⃣ Сохраняем ОДИН РАЗ
-        setInitData(initDataRaw); // теперь это trusted initData
+        setInitData(initDataRaw);
         setUser(data);
       } catch (err) {
         if (!cancelled) {
@@ -65,10 +63,6 @@ export function UserProvider({ children }) {
     };
   }, []);
 
-  /**
-   * ❗️refreshUser НЕ дергает retrieveRawInitData
-   * Использует уже валидированную initData
-   */
   const refreshUser = async () => {
     if (!initData) return;
 
@@ -99,7 +93,7 @@ export function UserProvider({ children }) {
 
   const value = {
     user,
-    initData,              // 🔐 trusted initData
+    initData,
     isLoading,
     error,
     isAuthenticated: true,

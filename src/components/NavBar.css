@@ -7,7 +7,7 @@
   width: 340px;
   height: 70px;
   background: rgba(255, 255, 255, 0.88);
-  border-radius: 30px;
+  border-radius: 35px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,13 +16,47 @@
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.18);
   z-index: 1000;
+  opacity: 0;
+  transform: translateX(-50%) translateY(100px);
+}
 
+/* Анимация появления */
+.bottom-nav.mounted {
   animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes slideUp {
-  from { transform: translate(-50%, 100px); opacity: 0; }
-  to   { transform: translate(-50%, 0);    opacity: 1; }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Движущийся синий индикатор */
+.indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 72px;   /* чуть больше для лучшего покрытия */
+  height: 72px;
+  background: #476cee;
+  border-radius: 50%;
+  transform: 
+    translateX(calc(var(--active-index) * 82px + 12px)) 
+    translateY(-50%) 
+    scale(0.9);  /* старт с небольшого сжатия */
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 20px rgba(71, 108, 238, 0.5);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* При переходе — лёгкое увеличение + bounce (за счёт overshoot в bezier) */
+.bottom-nav.mounted .indicator {
+  transform: 
+    translateX(calc(var(--active-index) * 82px + 12px)) 
+    translateY(-50%) 
+    scale(1);
 }
 
 /* Пункт меню */
@@ -45,50 +79,22 @@
   z-index: 2;
 }
 
-/* Фон активного пункта — круг 30px */
-.nav-item::before {
-  content: '';
-  position: absolute;
-  inset: -4px -8px;
-  background: #476cee;
-  border-radius: 30px;
-  opacity: 0;
-  transform: scale(0.85);
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: -1;
-  box-shadow: 0 6px 20px rgba(71, 108, 238, 0.5);
-}
-
-/* Активный пункт — круг появляется с bounce */
-.nav-item.active::before {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Крайние пункты — круг примыкает к краю */
-.nav-item:first-child.active::before,
-.nav-item:last-child.active::before {
-  width: calc(100% + 16px);
-  left: -8px;
-  right: -8px;
-}
-
-/* Иконка — с выраженной анимацией */
-.nav-item svg {
-  font-size: 28px !important;
-  margin-bottom: 4px;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* Hover — подъём + лёгкое увеличение */
+/* Hover */
 .nav-item:hover {
   color: #476cee;
   transform: translateY(-4px);
 }
 
-/* Активный пункт — белый текст/иконка + лёгкий bounce */
+/* Активный пункт */
 .nav-item.active {
   color: white;
+}
+
+/* Иконки */
+.nav-item svg {
+  font-size: 28px !important;
+  margin-bottom: 4px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
 }
 
 .nav-item.active svg {
@@ -98,19 +104,17 @@
 
 @keyframes bounceActive {
   0%   { transform: scale(1); }
-  50%  { transform: scale(1.2) translateY(-6px); }
-  100% { transform: scale(1.1) translateY(0); }
+  50%  { transform: scale(1.25) translateY(-6px); }
+  100% { transform: scale(1.1); }
 }
 
-/* Нажатие — подпрыгивание + сжатие + возврат */
+/* Нажатие */
 .nav-item:active {
   transform: scale(0.88);
-  transition: transform 0.18s ease-out;
 }
 
 .nav-item:active svg {
   transform: translateY(-10px) scale(1.25);
-  transition: transform 0.18s ease-out;
 }
 
 /* Текст */
