@@ -5,7 +5,6 @@ const PROFILE_ENDPOINT = 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f
 
 export function AuthInitializer() {
   useEffect(() => {
-    // Выполняем только один раз при монтировании
     const initDataRaw = retrieveRawInitData();
 
     if (!initDataRaw) {
@@ -19,24 +18,16 @@ export function AuthInitializer() {
       headers: {
         'Authorization': `tma ${initDataRaw}`
       },
-      // body: JSON.stringify({ /* если нужно что-то передать в теле */ }),
-      // credentials: 'include', // если нужны куки / сессия
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Ошибка ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Профиль успешно получен / авторизация прошла:', data);
-        // Здесь можно сохранить токен, данные пользователя и т.д.
-        // setUser(data);
-      })
-      .catch(err => {
-        console.error('Ошибка при отправке initData в профиль:', err);
-      });
-
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Ошибка ${response.status}`);
+      }
+      return response.json();
+    })
+    .catch((err) => {
+      console.log(err)
+    });
   }, []);
   // Этот компонент ничего не рендерит, он только отправляет запрос
   return null;
