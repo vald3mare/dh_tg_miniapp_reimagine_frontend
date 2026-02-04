@@ -1,108 +1,43 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { retrieveRawInitData } from '@tma.js/sdk';
 
-export const UserContext = createContext(null);
+const PROFILE_ENDPOINT = 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net';
 
-const API_URL = 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net';
-
-export function UserProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [initData, setInitData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+export function AuthInitializer() {
   useEffect(() => {
-    let cancelled = false;
+    // Выполняем только один раз при монтировании
+    const initDataRaw = retrieveRawInitData();
 
-    const init = async () => {
-      try {
-        let initDataRaw = retrieveRawInitData();
+    if (!initDataRaw) {
+      console.warn('initDataRaw не найдена. Вы не в Telegram Mini App?');
+      return;
+    }
 
-        if (!initDataRaw && window.Telegram?.WebApp?.initData) {
-          initDataRaw = window.Telegram.WebApp.initData;
+    // Отправляем данные на сервер
+    fetch(PROFILE_ENDPOINT, {
+      method: 'GET',
+      headers: {
+        'Authorization': `tma ${initDataRaw}`
+      },
+      // body: JSON.stringify({ /* если нужно что-то передать в теле */ }),
+      // credentials: 'include', // если нужны куки / сессия
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Ошибка ${response.status}`);
         }
-
-        if (!initDataRaw) {
-          throw new Error('Не удалось получить initData');
-        }
-
-        // 2️⃣ Валидируем initData на беке
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            Authorization: `tma ${initDataRaw}`,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error(`Auth failed: ${res.status}`);
-        }
-
-        const data = await res.json();
-
-        if (cancelled) return;
-
-        setInitData(initDataRaw);
-        setUser(data);
-      } catch (err) {
-        if (!cancelled) {
-          console.error('User init error:', err);
-          setError(err.message);
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    init();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const refreshUser = async () => {
-    if (!initData) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          Authorization: `tma ${initData}`,
-        },
+        return response.json();
+      })
+      .then(data => {
+        console.log('Профиль успешно получен / авторизация прошла:', data);
+        // Здесь можно сохранить токен, данные пользователя и т.д.
+        // setUser(data);
+      })
+      .catch(err => {
+        console.error('Ошибка при отправке initData в профиль:', err);
       });
 
-      if (!res.ok) {
-        throw new Error(`Refresh failed: ${res.status}`);
-      }
-
-      const data = await res.json();
-      setUser(data);
-    } catch (err) {
-      console.error(err);
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const value = {
-    user,
-    initData,
-    isLoading,
-    error,
-    isAuthenticated: true,
-    refreshUser,
-  };
-
-  return (
-    <UserContext.Provider value={value}>
-      {children}
-    </UserContext.Provider>
-  );
+  }, []);
+  // Этот компонент ничего не рендерит, он только отправляет запрос
+  return null;
 }
