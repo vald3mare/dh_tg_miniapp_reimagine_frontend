@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { AuthInitializer } from '../context/UserContext';
+import React, { useEffect, useState } from 'react';
+import { retrieveRawInitData } from '@tma.js/sdk';
 
 const Profile = () => {
   const [initData, setInitData] = useState(null);
@@ -8,7 +8,7 @@ const Profile = () => {
     const initDataRaw = retrieveRawInitData();
     setInitData(initDataRaw);
   }, []);
-  
+
   return (
     <div>
       <h1>Профиль пользователя</h1>
