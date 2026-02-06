@@ -1,7 +1,7 @@
 import React from 'react';
 import { retrieveRawInitData } from '@tma.js/sdk';
 
-const HeaderUserPreview = () => {
+const UserPreview = () => {
   const initDataRaw = retrieveRawInitData();
 
   return (
@@ -14,3 +14,5 @@ const HeaderUserPreview = () => {
     </div>
   );
 }
+
+export default UserPreview;
