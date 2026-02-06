@@ -8,8 +8,9 @@ import { AuthInitializer } from './context/UserContext.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-        <AuthInitializer />
-        <App />
+        <AuthInitializer>
+          <App />
+        </AuthInitializer>
     </BrowserRouter>
   </StrictMode>
 );
