@@ -16,7 +16,6 @@ const App = () => {
         {/* если нужно */}
         {/* <Route path="/tariffs" element={<Tariffs />} /> */}
       </Routes>
-
       <BottomNav />
     </div>
   )

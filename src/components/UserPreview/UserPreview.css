@@ -1,0 +1,39 @@
+.user-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.user-preview__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-preview__icon {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  object-fit: cover;
+  position: relative;
+  border: none;
+}
+
+.user-preview__name {
+  margin-left: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+}
+
+.user-preview__name::after {
+  content: ' >';
+  color: #666;
+}
+
+.user-preview__city {
+  font-size: 14px;
+  font-weight: medium;
+  color: #666;
+}

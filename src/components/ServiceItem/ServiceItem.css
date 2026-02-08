@@ -1,0 +1,20 @@
+/* src/components/ServiceItem/ServiceItem.css */
+.service-item {
+  width: 165px;
+  height: 180px;
+  border-radius: 15px; /* Закругленные углы как на картинке */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  /* Добавь padding или другие стили по мере доработки */
+}
+
+/* Если добавишь имя: */
+.service-item__name {
+  font-size: 18px;
+  color: black; /* Или white, в зависимости от задника */
+  margin: 0;
+}
