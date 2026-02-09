@@ -1,6 +1,6 @@
 /* src/components/ServiceItem/ServiceItem.css */
 .service-item {
-  width: 165px;
+  width: 48%;
   height: 180px;
   border-radius: 15px; /* Закругленные углы как на картинке */
   background-size: cover;
