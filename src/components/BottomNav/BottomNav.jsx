@@ -10,7 +10,7 @@ import './BottomNav.css'
 
 const TABS = [
   { path: '/', label: 'Главная', icon: HomeIcon },
-  { path: '/services', label: 'Услуги', icon: PetsIcon },
+  { path: '/catalog', label: 'Каталог', icon: PetsIcon },
   { path: '/tariffs', label: 'Тарифы', icon: CreditCardIcon },
   { path: '/profile', label: 'Профиль', icon: PersonIcon },
 ]

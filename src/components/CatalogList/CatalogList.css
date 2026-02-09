@@ -1,4 +1,4 @@
-.services-list {
+.catalog-list {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -7,7 +7,7 @@
   margin-top: 25px;
 }
 
-.services-list__header {
+.catalog-list__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,19 +15,19 @@
   margin-bottom: 20px;
 }
 
-.services-list__title {
+.catalog-list__title {
   font-size: 24px;
   font-weight: bold;
   margin: 0;
 }
 
-.services-list__link {
+.catalog-list__link {
   font-size: 16px;
   color: gray;
   text-decoration: none;
 }
 
-.services-list__items {
+.catalog-list__items {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

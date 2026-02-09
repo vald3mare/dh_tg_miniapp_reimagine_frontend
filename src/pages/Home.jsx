@@ -1,7 +1,7 @@
 import { Slider } from '../components/Slider/Slider';
 import Header from '../components/Header/Header';
 import SliderItem from '../components/SliderItem/SliderItem';
-import ServicesList from '../components/ServicesList/ServicesList';
+import CatalogList from '../components/CatalogList/CatalogList';
 
 const Home = () => {
   return (
@@ -16,10 +16,9 @@ const Home = () => {
           buttonLink="https://example.com"
         />
         <SliderItem name="Item 2" price="200" />
-        <SliderItem name="Item 3" price="300" />
       </Slider>
-      <ServicesList 
-        services={[
+      <CatalogList 
+        catalog={[
           { id: 1, name: 'Услуга 1', backgroundImage: '/path/to/your-svg.svg' },
           { id: 2, name: 'Услуга 2', backgroundImage: '/path/to/another-svg.svg' },
           { id: 3, name: 'Услуга 3', backgroundImage: '/path/to/another-svg.svg' },
@@ -30,8 +29,6 @@ const Home = () => {
         expanded={false}
         showTitle={true}
       />
-      <h1>Главная страница</h1>
-      <p>Это заглушка для главной</p>
     </div>
   );
 };

@@ -1,9 +1,8 @@
-import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import BottomNav from './components/BottomNav/BottomNav'
 
 import Home from './pages/Home'
-import Services from './pages/Services'
+import Catalog from './pages/Catalog'
 import Profile from './pages/Profile'
 
 const App = () => {
@@ -11,7 +10,7 @@ const App = () => {
     <div className="app-container">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
+        <Route path="/catalog" element={<Catalog />} />
         <Route path="/profile" element={<Profile />} />
         {/* если нужно */}
         {/* <Route path="/tariffs" element={<Tariffs />} /> */}
