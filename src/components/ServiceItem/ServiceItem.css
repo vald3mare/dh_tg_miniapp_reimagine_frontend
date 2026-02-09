@@ -1,15 +1,14 @@
 /* src/components/ServiceItem/ServiceItem.css */
 .service-item {
-  width: 48%;
+  width: 49%;
   height: 180px;
-  border-radius: 15px; /* Закругленные углы как на картинке */
+  border-radius: 15px;
   background-size: cover;
   background-position: center;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  /* Добавь padding или другие стили по мере доработки */
 }
 
 /* Если добавишь имя: */
