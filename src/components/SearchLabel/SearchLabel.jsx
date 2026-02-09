@@ -4,7 +4,7 @@ import './SearchLabel.css'
 const SearchLabel = () => {
     return (
         <div className='search-label'>
-            <label htmlFor=""></label>
+            <input className='search-label__input' type="text" placeholder='' />
         </div>
     );
 }

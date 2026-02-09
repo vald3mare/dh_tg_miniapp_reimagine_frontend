@@ -15,7 +15,9 @@ const Header = () => {
                     <Notify />
                 </div>
             </div>
-            <SearchLabel />
+            <div className='header__container header__container_last'>
+                <SearchLabel />
+            </div>
       </header>
     );
 }
