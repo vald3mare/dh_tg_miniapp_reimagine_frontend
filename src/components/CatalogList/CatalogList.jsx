@@ -13,11 +13,11 @@ const CatalogList = ({ catalog = [], expanded = false, showTitle = true }) => {
         </div>
       )}
       <div className="catalog-list__items">
-        {displayedcatalog.map((catalog) => (
+        {displayedcatalog.map((item) => (
           <CatalogItem
-            key={catalog.id}
-            name={catalog.name}
-            backgroundImage={catalog.backgroundImage}
+            key={item.id}
+            name={item.name}
+            backgroundImage={item.image_url}
           />
         ))}
       </div>
