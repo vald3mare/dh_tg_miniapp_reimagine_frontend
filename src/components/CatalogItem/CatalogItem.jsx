@@ -1,6 +1,6 @@
 import './CatalogItem.css';
 
-const CatalogItem = ({ name, backgroundImage }) => {
+const CatalogItem = ({ key, name, price, description, backgroundImage }) => {
   return (
     <div 
       className="catalog-item"
@@ -9,8 +9,10 @@ const CatalogItem = ({ name, backgroundImage }) => {
         backgroundColor: backgroundImage ? 'lightgray' : 'lightgray', // Цвет фона, если изображения нет
       }}
     >
-      {/* Если нужно отобразить имя, раскомментируй: */}
-      {/* <h3 className="catalog-item__name">{name}</h3> */}
+      <h3 className="catalog-item__name">{name}</h3>
+      <p className='catalog-item_description'>{description}</p>
+      <p className='catalog-item_price'>{price}</p>
+      <p className='catalog-item_key'>{key}</p>
     </div>
   );
 };

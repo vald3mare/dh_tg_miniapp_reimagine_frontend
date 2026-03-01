@@ -18,6 +18,8 @@ const CatalogList = ({ catalog = [], expanded = false, showTitle = true }) => {
             key={item.id}
             name={item.name}
             backgroundImage={item.image_url}
+            description={item.description}
+            price={item.price}
           />
         ))}
       </div>

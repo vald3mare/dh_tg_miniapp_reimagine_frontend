@@ -1,4 +1,3 @@
-// components/slider/Slider.jsx
 import { useEffect, useState, Children, cloneElement } from 'react';
 import { SliderContext } from './SliderContext';
 import SliderList from './SliderList';
