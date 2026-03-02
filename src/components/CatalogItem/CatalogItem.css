@@ -6,14 +6,56 @@
   background-size: cover;
   background-position: center;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column; /* Изменено на column для лучшего размещения контента */
+  justify-content: flex-end; /* Контент внизу для мини-версии */
+  align-items: flex-start;
+  padding: 15px;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
-/* Если добавишь имя: */
+.catalog-item.expanded {
+  width: 80vw; /* Или фиксированная ширина, например, 600px */
+  max-width: 600px;
+  height: auto;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 30px;
+  cursor: default;
+  position: relative;
+}
+
 .catalog-item__name {
   font-size: 18px;
-  color: black; /* Или white, в зависимости от задника */
+  color: black; 
+  margin: 0 0 10px 0;
+}
+
+.catalog-item_description {
+  font-size: 14px;
+  color: black;
+  margin: 0 0 5px 0;
+}
+
+.catalog-item_price {
+  font-size: 16px;
+  color: black;
   margin: 0;
+}
+
+.catalog-item__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: black;
+  cursor: pointer;
+}
+
+.catalog-item__additional {
+  margin-top: 20px;
+  font-size: 16px;
+  color: black;
 }
