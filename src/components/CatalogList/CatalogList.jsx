@@ -1,50 +1,60 @@
 import './CatalogList.css';
 import CatalogItem from '../CatalogItem/CatalogItem';
 import { useState } from 'react';
-import { motion, AnimatePresence } from "motion/react"
+import { motion, AnimatePresence } from "framer-motion";
 
 const CatalogList = ({ catalog = [], expanded = false, showTitle = true }) => {
   const [selectedId, setSelectedId] = useState(null);
-  const displayedCatalog = expanded ? catalog : catalog.slice(0, 4);
+
+  // Нормализация данных из БД (ID → id, image_url → backgroundImage и т.д.)
+  const normalizedCatalog = catalog.map(item => ({
+    id: item.ID || item.id,
+    name: item.name || 'Без названия',
+    description: item.description || '',
+    price: item.price != null ? String(item.price) : '',
+    backgroundImage: item.image_url || '',
+    type: item.type || '',
+  }));
+
+  const displayedCatalog = expanded ? normalizedCatalog : normalizedCatalog.slice(0, 2);
 
   return (
     <div className="catalog-list">
       {showTitle && (
         <div className="catalog-list__header">
           <h2 className="catalog-list__title">Наши услуги</h2>
-          <a href="/catalog" className="catalog-list__link">Каталог &gt;</a>
+          <a href="/catalog" className="catalog-list__link">Каталог</a>
         </div>
       )}
+
       <div className="catalog-list__items">
         {displayedCatalog.map((item) => (
-          selectedId !== item.id ? (
-            <CatalogItem
-              key={item.id}
-              id={item.id}
-              name={item.name}
-              backgroundImage={item.image_url}
-              description={item.description}
-              price={item.price}
-              onClick={() => setSelectedId(item.id)}
-            />
-          ) : null
+          <CatalogItem
+            key={item.id}
+            id={item.id}
+            name={item.name}
+            backgroundImage={item.backgroundImage}
+            description={item.description}
+            price={item.price}
+            onClick={() => setSelectedId(item.id)}
+            isExpanded={false}
+          />
         ))}
       </div>
-      <AnimatePresence>
+
+      <AnimatePresence mode="popLayout">
         {selectedId && (
           <motion.div
             className="backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
             onClick={() => setSelectedId(null)}
             style={{
               position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: 'rgba(0, 0, 0, 0.5)',
+              inset: 0,
+              background: 'rgba(0,0,0,0.6)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -53,12 +63,12 @@ const CatalogList = ({ catalog = [], expanded = false, showTitle = true }) => {
           >
             <motion.div
               onClick={(e) => e.stopPropagation()}
-              style={{ position: 'relative' }}
+              style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh', overflow: 'auto' }}
             >
               <CatalogItem
-                key={selectedId}
+                key={`expanded-${selectedId}`}
                 id={selectedId}
-                {...catalog.find((item) => item.id === selectedId)}
+                {...normalizedCatalog.find(i => i.id === selectedId)}
                 isExpanded={true}
                 onClose={() => setSelectedId(null)}
               />
