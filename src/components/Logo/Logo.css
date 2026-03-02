@@ -1,0 +1,30 @@
+.logo{
+    margin-top: 40px;
+    /* margin: 0; */
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    color: white;
+}
+
+.logo__title {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    font-size: 32px;
+}
+
+.logo__title span {
+    display: inline-block;
+}
+
+.logo__title::after {
+    content: '';
+    padding: 0;
+    height: 2px;
+    background: white;
+    border-radius: 5px;
+    display: block;
+}

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 // S3/CDN URLs for fast dynamic load (replace with your actual URLs)
-const logoUrl = 'https://s3.twcstorage.ru/dh-s3-storage/icons8-paw-100%201.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=DU4DIJF90JE0CWTDNNQF%2F20260301%2Fru-1%2Fs3%2Faws4_request&X-Amz-Date=20260301T173307Z&X-Amz-Expires=3900&X-Amz-Signature=98281e2dbccf82c1a7d9d7bd27f708465937d3d7e0ce05254083bee4cdcc767a&X-Amz-SignedHeaders=host&response-content-type=image%2Fjpeg&x-id=GetObject';
-const dogUrl = 'https://s3.twcstorage.ru/dh-s3-storage/Dog.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=DU4DIJF90JE0CWTDNNQF%2F20260301%2Fru-1%2Fs3%2Faws4_request&X-Amz-Date=20260301T173302Z&X-Amz-Expires=3900&X-Amz-Signature=584bf7e1b5f0cd2cc01a9916cb7d61a184f88050e808bf3cb43771b61b7eb431&X-Amz-SignedHeaders=host&response-content-type=image%2Fjpeg&x-id=GetObject';
+const logoUrl = 'https://s3.twcstorage.ru/dh-s3-storage/icons8-paw-100%201.svg';
+const dogUrl = 'https://s3.twcstorage.ru/dh-s3-storage/Dog.png';
 
 const Welcome = () => {
   const navigate = useNavigate();

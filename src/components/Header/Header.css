@@ -7,7 +7,7 @@
 .header__container{
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
 }
 
 .header__container_last {
