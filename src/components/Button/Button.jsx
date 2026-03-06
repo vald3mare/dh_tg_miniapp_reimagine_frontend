@@ -1,16 +1,23 @@
 import './Button.css';
 import { motion } from "motion/react"
+import React from 'react'
 
-const childVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
-};
+const Button = (props) => {
+  const {
+    text = '',
+    className = '',
+    childVariants = '',
+  } = props
 
-const Button = ({text}) => {
   return (
-    <motion.div className='welcome-btn' variants={childVariants}>
-        <button className='welcome-btn__button'>{text}</button>
-    </motion.div>
+    <>
+      <motion.button 
+        className={className}
+        variants={childVariants}
+      >
+        {text}
+      </motion.button>
+    </>
   )
 }
 

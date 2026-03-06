@@ -16,19 +16,26 @@ const containerVariants = {
     },
 };
 
+const childVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+};
+
 const WelcomeDemo = () => {
   return (
-    <motion.div className='welcome-page'
+      <motion.div className='welcome-page'
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-    >   
+      >   
         <Logo/>
         <Greeting />
-        <Button text="Заказчикам"/>
-        <Button text="Исполнителям"/>
+        <div className='welcome-page__btn-container'>
+          <Button text="Заказчикам" className="welcome-btn__button" variants={childVariants}/>
+          <Button text="Исполнителям" className="welcome-btn__button" variants={childVariants}/>
+        </div>
         {/* Кнопка 2 */}
-    </motion.div>
+      </motion.div>
   )
 }
 

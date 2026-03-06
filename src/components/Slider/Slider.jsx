@@ -1,7 +1,7 @@
 import { useEffect, useState, Children, cloneElement } from 'react';
 import { SliderContext } from './SliderContext';
 import SliderList from './SliderList';
-import Arrows from './Arrows';
+//import Arrows from './Arrows';
 import Dots from './Dots';
 import './Slider.css';
 

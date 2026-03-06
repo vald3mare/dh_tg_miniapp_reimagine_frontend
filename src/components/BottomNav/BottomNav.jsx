@@ -22,7 +22,9 @@ const BottomNav = () => {
 
   useEffect(() => {
     const index = TABS.findIndex(t => t.path === location.pathname)
-    if (index !== -1) setActiveIndex(index)
+    if (index !== -1) {
+      setActiveIndex(index)
+    }
   }, [location.pathname])
 
   return (
