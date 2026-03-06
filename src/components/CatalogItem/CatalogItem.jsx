@@ -21,27 +21,27 @@ const CatalogItem = (props) => {
           backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
           backgroundColor: backgroundImage ? 'lightgray' : 'lightgray',
         }}
-        layoutId={`item-${id}`} // Shared ID для морфинга
+        layoutId={`item-${id}`}
         layout
         onClick={!isExpanded ? onClick : undefined}
-        transition={{ duration: 0.4, type: 'spring' }} // Spring для bouncy вылета
+        transition={{ duration: 0.3, type: 'spring' }}
       >
-        <motion.h3 className="catalog-item__name" layout>
+        <h3 className="catalog-item__name">
           {name}
-        </motion.h3>
-        <motion.p className="catalog-item__description" layout>
+        </h3>
+        <p className="catalog-item__description">
           {isExpanded ? description : `${description.slice(0, 100)}...`}
-        </motion.p>
-        <motion.p className="catalog-item__price" layout>
+        </p>
+        <p className="catalog-item__price">
           {price}
-        </motion.p>
+        </p>
         {isExpanded && (
           <>
             <motion.button
               className="catalog-item__close"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.3 }}
+              transition={{ delay: 0.2, duration: 0.2 }}
               onClick={onClose}
             >
               ×
@@ -50,7 +50,7 @@ const CatalogItem = (props) => {
               className="catalog-item__additional"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
+              transition={{ delay: 0.2, duration: 0.3 }}
             >
               {fullDescription.split('\n').map((line, index) => (
                 <p key={index} className='catalog-item__additional-description'>{line.trim() || <br />}</p>

@@ -1,16 +1,3 @@
-// CatalogList.jsx
-// Этот компонент отображает список карточек каталога. Он использует Framer Motion для анимаций.
-// Ключевые особенности (адаптировано под Framer Motion App Store демо):
-// - Grid для .catalog-list__items в CSS обеспечивает фиксированные слоты.
-// - При клике: Оригинальная карточка удаляется из списка (filter), вызывая анимированный reflow (layout на контейнере).
-// - AnimatePresence для плавного выхода удалённой карточки и входа expanded.
-// - Shared layoutId для "выпархивания" карточки в центр с расширением.
-// - Все карточки фиксированного размера, сетка перестраивается плавно без скачков.
-// - Backdrop для оверлея, expanded в центре.
-// - Адаптивность через media queries.
-// - Нормализация данных из БД.
-// - Если expanded=true, показывает все; иначе — первые 2.
-
 import './CatalogList.css';
 import CatalogItem from '../CatalogItem/CatalogItem';
 import { useState } from 'react';
@@ -47,35 +34,21 @@ const CatalogList = (props) => {
         </div>
       )}
 
-      <motion.div 
-        className="catalog-list__items" 
-        layout // Анимирует reflow сетки при удалении карточки
-      >
-        <AnimatePresence>
-          {displayedCatalog
-            .filter(item => item.id !== selectedId) // Удаляем выбранную для избежания дубликата, reflow анимируется
-            .map((item) => (
-              <motion.div
-                key={item.id}
-                layout // Для плавного сдвига остальных карточек
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }} // Анимация выхода удалённой карточки
-                transition={{ duration: 0.3, type: 'spring' }} // Spring для "живого" эффекта
-              >
-                <CatalogItem
-                  id={item.id}
-                  name={item.name}
-                  backgroundImage={item.backgroundImage}
-                  description={item.description}
-                  fullDescription={item.fullDescription}
-                  price={item.price}
-                  onClick={() => setSelectedId(item.id)}
-                  isExpanded={false}
-                />
-              </motion.div>
-            ))}
-        </AnimatePresence>
+      <motion.div className="catalog-list__items" layout> 
+        {displayedCatalog.map((item) => (
+          <motion.div key={item.id} layout>
+            <CatalogItem
+              id={item.id}
+              name={item.name}
+              backgroundImage={item.backgroundImage}
+              description={item.description}
+              fullDescription={item.fullDescription}
+              price={item.price}
+              onClick={() => setSelectedId(item.id)}
+              isExpanded={false}
+            />
+          </motion.div>
+        ))}
       </motion.div>
 
       <AnimatePresence>
@@ -86,7 +59,7 @@ const CatalogList = (props) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.3 }}
             onClick={() => setSelectedId(null)}
             style={{
               position: 'fixed',
@@ -100,7 +73,7 @@ const CatalogList = (props) => {
           >
             <motion.div
               onClick={(e) => e.stopPropagation()}
-              style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh', overflow: 'auto' }}
+              style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh', overflow: 'hidden' }}
             >
               <CatalogItem
                 id={selectedId}
