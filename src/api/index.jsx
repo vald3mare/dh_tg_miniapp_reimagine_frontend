@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL ?? '';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net';
 
 /**
  * Все обращения к бэкенду идут через этот файл.
