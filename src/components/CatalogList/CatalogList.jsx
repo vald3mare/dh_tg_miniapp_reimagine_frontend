@@ -39,11 +39,10 @@ const CatalogList = (props) => {
     try {
       const data = await createPayment(itemId, initDataRaw);
       if (data.confirmation_url) {
-        // В TMA открываем через встроенный браузер Telegram, в браузере — новая вкладка
         if (window.Telegram?.WebApp?.openLink) {
           window.Telegram.WebApp.openLink(data.confirmation_url);
         } else {
-          window.open(data.confirmation_url, '_blank');
+          window.location.href = data.confirmation_url;
         }
       }
     } catch (err) {
