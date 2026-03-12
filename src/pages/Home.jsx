@@ -31,7 +31,7 @@ const Home = () => {
   return (
     <div className='home-page'>
       <Header />
-      <Slider autoPlay={true} autoPlayTime={5000}>
+      <Slider autoPlay={false} autoPlayTime={5000}>
         <SliderItem 
           image="https://st5.depositphotos.com/1594920/69257/i/450/depositphotos_692576270-stock-photo-head-shot-happy-panting-golden.jpg"
           title="Заголовок УТП"

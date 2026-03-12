@@ -31,7 +31,7 @@
   width: 25%;
   height: calc(100% - 8px);  /* ↓ компактнее */
 
-  background: linear-gradient(180deg, #5b86ff, #4c7dff);
+  background: #EA6CCB;
   border-radius: 30px;
 
   transition: transform 0.35s cubic-bezier(.4,0,.2,1);

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { retrieveRawInitData } from '@tma.js/sdk';
+import ProfileBLock from '../components/Profileblock/Profileblock';
 
 const Profile = () => {
   const [initData, setInitData] = useState(null);
@@ -10,11 +11,9 @@ const Profile = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Профиль пользователя</h1>
-      <p>Это заглушка для страницы профиля</p>
-      <p>{initData}</p>
-    </div>
+    <>
+      <ProfileBLock />
+    </>
   );
 };
 

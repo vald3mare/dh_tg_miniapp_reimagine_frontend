@@ -6,17 +6,18 @@ import Home from './pages/Home'
 import Catalog from './pages/Catalog'
 //import Profile from './pages/Profile'
 //import Welcome from './pages/Welcome'
-import WelcomeDemo from './pages/welcome-demo'
+import Welcome from './pages/Welcome'
 import Test from './components/test/Test'
+import Profile from './components/Profileblock/Profileblock'
 
 const App = () => {
   return (
     <div className="app-container">
       <Routes>
-        <Route path="/" element={<WelcomeDemo />} />
+        <Route path="/" element={<Welcome />} />
         <Route path="/home" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
-        <Route path="/profile" element={<Test />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
       <BottomNav />
     </div>
