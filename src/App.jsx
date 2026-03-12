@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useUser } from './context/UserContext';
+import CartDrawer from './components/CartDrawer/CartDrawer';
 
 import BottomNav from './components/BottomNav/BottomNav';
 import ExecutorBottomNav from './components/ExecutorBottomNav/ExecutorBottomNav';
@@ -81,6 +82,7 @@ const App = () => {
         isExecutor ? <ExecutorBottomNav /> :
                      <BottomNav />
       )}
+      <CartDrawer />
     </div>
   );
 };

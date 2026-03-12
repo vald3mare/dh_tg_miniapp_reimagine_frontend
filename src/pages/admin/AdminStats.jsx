@@ -40,6 +40,16 @@ const AdminStats = () => {
             </div>
 
             <div className="admin-section">
+              <p className="admin-section__title">Финансы</p>
+              <StatRow
+                label="Общий доход"
+                value={`${(stats.payments?.total_revenue ?? 0).toLocaleString('ru-RU')} ₽`}
+              />
+              <StatRow label="Успешных платежей" value={stats.payments?.succeeded ?? 0} />
+              <StatRow label="Всего платежей" value={stats.payments?.total ?? 0} />
+            </div>
+
+            <div className="admin-section">
               <p className="admin-section__title">Заявки</p>
               <StatRow label="Всего" value={stats.orders?.total ?? 0} />
               <StatRow label="Открытые" value={stats.orders?.open ?? 0} />
@@ -47,23 +57,36 @@ const AdminStats = () => {
               <StatRow label="Выполнены" value={stats.orders?.done ?? 0} />
             </div>
 
-            <div className="admin-section">
-              <p className="admin-section__title">Платежи</p>
-              <StatRow label="Всего" value={stats.payments?.total ?? 0} />
-              <StatRow label="Успешных" value={stats.payments?.succeeded ?? 0} />
-            </div>
-
-            <div className="admin-section">
-              <p className="admin-section__title">Каталог</p>
-              <StatRow label="Услуг в каталоге" value={stats.catalog?.total ?? 0} />
-            </div>
-
             {stats.top_services?.length > 0 && (
               <div className="admin-section">
-                <p className="admin-section__title">Топ услуг (по оплатам)</p>
+                <p className="admin-section__title">Топ услуг</p>
                 {stats.top_services.map((s, i) => (
-                  <StatRow key={i} label={s.Name} value={`${s.Count} шт`} />
+                  <StatRow key={i} label={s.name} value={`${s.count} шт`} />
                 ))}
+              </div>
+            )}
+
+            {stats.recent_payments?.length > 0 && (
+              <div className="admin-section">
+                <p className="admin-section__title">Последние транзакции</p>
+                {stats.recent_payments.map(p => (
+                  <div className="admin-stat-row" key={p.id}>
+                    <span className="admin-stat-row__label" style={{ flex: 1 }}>
+                      {p.description || `Платёж #${p.id}`}
+                      <span style={{ display: 'block', fontSize: 11, color: '#aaa' }}>{p.created_at}</span>
+                    </span>
+                    <span className={`admin-stat-row__value ${p.status === 'succeeded' ? '' : 'admin-stat-row__value--muted'}`}>
+                      {p.status === 'succeeded' ? '+' : ''}{p.amount} ₽
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {(!stats.recent_payments || stats.recent_payments.length === 0) && (
+              <div className="admin-section">
+                <p className="admin-section__title">Транзакции</p>
+                <p className="admin-empty">Платежей пока нет</p>
               </div>
             )}
           </>

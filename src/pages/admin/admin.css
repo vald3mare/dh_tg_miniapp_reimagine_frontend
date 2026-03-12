@@ -37,6 +37,7 @@
 
 .admin-stat-row__label { color: #555; }
 .admin-stat-row__value { font-weight: 600; color: #1a1a1a; }
+.admin-stat-row__value--muted { color: #aaa; }
 
 /* List items */
 .admin-list-item {

@@ -7,7 +7,8 @@ const ExecutorProfilePage = () => {
     <PageTransition>
       <div className="home-page">
         <Header />
-        <ExecutorProfile />
+        {/* Профиль без дублирования аватара/имени — это уже в Header */}
+        <ExecutorProfile hideUserCard />
       </div>
     </PageTransition>
   );

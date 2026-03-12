@@ -12,7 +12,7 @@ const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [grantModal, setGrantModal] = useState(null); // user object
+  const [grantModal, setGrantModal] = useState(null);
   const [selectedAch, setSelectedAch] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -42,7 +42,9 @@ const AdminUsers = () => {
       await admin.grantAchievement(grantModal.ID, parseInt(selectedAch), initDataRaw);
       setGrantModal(null);
     } catch (e) {
-      alert(e.message);
+      window.Telegram?.WebApp?.showAlert
+        ? window.Telegram.WebApp.showAlert(e.message)
+        : alert(e.message);
     } finally {
       setSaving(false);
     }
@@ -58,24 +60,24 @@ const AdminUsers = () => {
         <div className="admin-section">
           {users.length === 0 && !loading && <p className="admin-empty">Нет пользователей</p>}
           {users.map(user => {
-            const name = [user.FirstName, user.LastName].filter(Boolean).join(' ') || `ID ${user.TelegramID}`;
+            const name = [user.first_name, user.last_name].filter(Boolean).join(' ') || `ID ${user.telegram_id}`;
             return (
               <div className="admin-list-item" key={user.ID} style={{ flexWrap: 'wrap', gap: 8 }}>
                 <div className="admin-list-item__info">
                   <div className="admin-list-item__name">{name}</div>
-                  <div className="admin-list-item__sub">@{user.Username || '—'} · tg:{user.TelegramID}</div>
+                  <div className="admin-list-item__sub">@{user.username || '—'} · tg:{user.telegram_id}</div>
                 </div>
                 <select
                   className="admin-input admin-input--small"
                   style={{ width: 'auto' }}
-                  value={user.Role || 'customer'}
+                  value={user.role || 'customer'}
                   onChange={e => handleRoleChange(user.ID, e.target.value)}
                 >
                   {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
                 <button className="admin-btn admin-btn--outline admin-btn--sm"
                   onClick={() => { setGrantModal(user); setSelectedAch(''); }}>
-                  🏆 Ачивка
+                  🏆
                 </button>
               </div>
             );
@@ -91,13 +93,13 @@ const AdminUsers = () => {
               onClick={e => e.stopPropagation()}>
               <p className="admin-modal__title">Выдать ачивку</p>
               <p style={{ margin: 0, fontSize: 13, color: '#555' }}>
-                {[grantModal.FirstName, grantModal.LastName].filter(Boolean).join(' ')}
+                {[grantModal.first_name, grantModal.last_name].filter(Boolean).join(' ')}
               </p>
               <select className="admin-input" value={selectedAch}
                 onChange={e => setSelectedAch(e.target.value)}>
                 <option value="">Выберите ачивку...</option>
                 {achievements.map(a => (
-                  <option key={a.ID} value={a.ID}>{a.IconEmoji} {a.Name}</option>
+                  <option key={a.ID} value={a.ID}>{a.icon_emoji} {a.name}</option>
                 ))}
               </select>
               <div className="admin-row">

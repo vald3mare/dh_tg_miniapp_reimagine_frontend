@@ -12,6 +12,7 @@ const AdminAchievements = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
 
@@ -25,12 +26,12 @@ const AdminAchievements = () => {
   const openCreate = () => { setForm(EMPTY_FORM); setModal('create'); };
   const openEdit = (item) => {
     setForm({
-      key: item.Key || '',
-      name: item.Name || '',
-      description: item.Description || '',
-      icon_emoji: item.IconEmoji || '🏆',
-      condition_type: item.ConditionType || 'orders_completed',
-      threshold: item.Threshold ?? '',
+      key: item.key || '',
+      name: item.name || '',
+      description: item.description || '',
+      icon_emoji: item.icon_emoji || '🏆',
+      condition_type: item.condition_type || 'orders_completed',
+      threshold: item.threshold ?? '',
     });
     setModal(item);
   };
@@ -47,15 +48,17 @@ const AdminAchievements = () => {
       setModal(null);
       load();
     } catch (e) {
-      alert(e.message);
+      window.Telegram?.WebApp?.showAlert
+        ? window.Telegram.WebApp.showAlert(e.message)
+        : alert(e.message);
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Удалить ачивку?')) return;
     await admin.deleteAchievement(id, initDataRaw);
+    setDeleteTarget(null);
     load();
   };
 
@@ -73,16 +76,16 @@ const AdminAchievements = () => {
           {items.length === 0 && !loading && <p className="admin-empty">Нет ачивок</p>}
           {items.map(item => (
             <div className="admin-list-item" key={item.ID}>
-              <span style={{ fontSize: 24 }}>{item.IconEmoji}</span>
+              <span style={{ fontSize: 24 }}>{item.icon_emoji}</span>
               <div className="admin-list-item__info">
-                <div className="admin-list-item__name">{item.Name}</div>
+                <div className="admin-list-item__name">{item.name}</div>
                 <div className="admin-list-item__sub">
-                  {item.ConditionType === 'manual' ? 'Вручную' : `≥ ${item.Threshold} заказов`}
-                  {' · '}{item.Key}
+                  {item.condition_type === 'manual' ? 'Вручную' : `≥ ${item.threshold} заказов`}
+                  {' · '}{item.key}
                 </div>
               </div>
               <button className="admin-btn admin-btn--outline admin-btn--sm" onClick={() => openEdit(item)}>✏️</button>
-              <button className="admin-btn admin-btn--danger admin-btn--sm" onClick={() => handleDelete(item.ID)}>🗑</button>
+              <button className="admin-btn admin-btn--danger admin-btn--sm" onClick={() => setDeleteTarget(item)}>🗑</button>
             </div>
           ))}
         </div>
@@ -96,9 +99,9 @@ const AdminAchievements = () => {
               onClick={e => e.stopPropagation()}>
               <p className="admin-modal__title">{modal === 'create' ? 'Новая ачивка' : 'Редактировать'}</p>
               <div className="admin-form">
-                <input className="admin-input" placeholder="Ключ (уникальный, en)*" value={form.key}
+                <input className="admin-input" placeholder="Ключ (уникальный, en)" value={form.key}
                   onChange={e => setForm(f => ({ ...f, key: e.target.value }))} disabled={modal !== 'create'} />
-                <input className="admin-input" placeholder="Название*" value={form.name}
+                <input className="admin-input" placeholder="Название" value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                 <input className="admin-input" placeholder="Описание" value={form.description}
                   onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
@@ -119,6 +122,23 @@ const AdminAchievements = () => {
                     {saving ? 'Сохраняем...' : 'Сохранить'}
                   </button>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {deleteTarget && (
+          <motion.div className="admin-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setDeleteTarget(null)}>
+            <motion.div className="admin-modal" initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }}
+              onClick={e => e.stopPropagation()}>
+              <p className="admin-modal__title">Удалить ачивку?</p>
+              <p style={{ margin: 0, fontSize: 14, color: '#555' }}>«{deleteTarget.name}»</p>
+              <div className="admin-row" style={{ marginTop: 4 }}>
+                <button className="admin-btn admin-btn--outline" style={{ flex: 1 }} onClick={() => setDeleteTarget(null)}>Отмена</button>
+                <button className="admin-btn admin-btn--danger" style={{ flex: 1 }} onClick={() => handleDelete(deleteTarget.ID)}>Удалить</button>
               </div>
             </motion.div>
           </motion.div>

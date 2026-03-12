@@ -6,9 +6,11 @@ import { motion } from 'framer-motion';
 const UserPreview = () => {
   const { user } = useUser();
 
-  const displayName = user ? `${user.FirstName || ''} ${user.LastName || ''}`.trim() || user.Username || 'Имя пользователя' : 'Имя пользователя';
-  const displayId = user ? user.TelegramID || 'ID пользователя' : 'ID пользователя';
-  const photoSrc = user?.PhotoURL || ellipse;
+  const displayName = user
+    ? (`${user.first_name || ''} ${user.last_name || ''}`).trim() || user.username || 'Имя пользователя'
+    : 'Имя пользователя';
+  const displayId = user ? (user.username ? `@${user.username}` : user.telegram_id || '') : '';
+  const photoSrc = user?.photo_url || ellipse;
 
   return (
     <div className="user-preview">

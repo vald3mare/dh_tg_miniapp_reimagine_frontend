@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '../../context/UserContext';
+import { useCart } from '../../context/CartContext';
 import { createPayment } from '../../api';
 import Rectangle from '../../assets/Rectangle.svg';
 
@@ -15,6 +16,7 @@ const CatalogList = (props) => {
   } = props;
 
   const { initDataRaw } = useUser();
+  const { addToCart } = useCart();
   const [selectedId, setSelectedId] = useState(null);
   const [payingId, setPayingId] = useState(null);
 
@@ -80,6 +82,7 @@ const CatalogList = (props) => {
               isPaying={payingId === item.id}
               onClick={() => setSelectedId(item.id)}
               onBuy={() => handleBuy(item.id)}
+              onAddToCart={() => addToCart({ id: item.id, name: item.name, price: parseFloat(item.price) || 0, image: item.backgroundImage })}
             />
           </motion.div>
         ))}
@@ -120,6 +123,7 @@ const CatalogList = (props) => {
                 isPaying={payingId === selectedId}
                 onClose={() => setSelectedId(null)}
                 onBuy={() => handleBuy(selectedId)}
+                onAddToCart={() => { addToCart({ id: selectedItem.id, name: selectedItem.name, price: parseFloat(selectedItem.price) || 0, image: selectedItem.backgroundImage }); setSelectedId(null); }}
               />
             </motion.div>
           </motion.div>

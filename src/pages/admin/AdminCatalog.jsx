@@ -12,6 +12,7 @@ const AdminCatalog = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(null); // null | 'create' | item-object
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
 
@@ -25,12 +26,12 @@ const AdminCatalog = () => {
   const openCreate = () => { setForm(EMPTY_FORM); setModal('create'); };
   const openEdit = (item) => {
     setForm({
-      name: item.Name || '',
-      description: item.Description || '',
-      full_description: item.FullDescription || '',
-      price: item.Price ?? '',
-      image_url: item.ImageURL || '',
-      type: item.Type || 'service',
+      name: item.name || '',
+      description: item.description || '',
+      full_description: item.full_description || '',
+      price: item.price ?? '',
+      image_url: item.image_url || '',
+      type: item.type || 'service',
     });
     setModal(item);
   };
@@ -47,15 +48,17 @@ const AdminCatalog = () => {
       setModal(null);
       load();
     } catch (e) {
-      alert(e.message);
+      window.Telegram?.WebApp?.showAlert
+        ? window.Telegram.WebApp.showAlert(e.message)
+        : alert(e.message);
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Удалить услугу?')) return;
     await admin.deleteCatalogItem(id, initDataRaw);
+    setDeleteTarget(null);
     load();
   };
 
@@ -74,16 +77,17 @@ const AdminCatalog = () => {
           {items.map(item => (
             <div className="admin-list-item" key={item.ID}>
               <div className="admin-list-item__info">
-                <div className="admin-list-item__name">{item.Name}</div>
-                <div className="admin-list-item__sub">{item.Price}₽ · {item.Type}</div>
+                <div className="admin-list-item__name">{item.name || '—'}</div>
+                <div className="admin-list-item__sub">{item.price}₽ · {item.type}</div>
               </div>
               <button className="admin-btn admin-btn--outline admin-btn--sm" onClick={() => openEdit(item)}>✏️</button>
-              <button className="admin-btn admin-btn--danger admin-btn--sm" onClick={() => handleDelete(item.ID)}>🗑</button>
+              <button className="admin-btn admin-btn--danger admin-btn--sm" onClick={() => setDeleteTarget(item)}>🗑</button>
             </div>
           ))}
         </div>
       </div>
 
+      {/* Модал создания/редактирования */}
       <AnimatePresence>
         {modal && (
           <motion.div className="admin-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -92,7 +96,7 @@ const AdminCatalog = () => {
               onClick={e => e.stopPropagation()}>
               <p className="admin-modal__title">{modal === 'create' ? 'Новая услуга' : 'Редактировать'}</p>
               <div className="admin-form">
-                <input className="admin-input" placeholder="Название*" value={form.name}
+                <input className="admin-input" placeholder="Название" value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                 <input className="admin-input" placeholder="Краткое описание" value={form.description}
                   onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
@@ -110,6 +114,24 @@ const AdminCatalog = () => {
                     {saving ? 'Сохраняем...' : 'Сохранить'}
                   </button>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Модал подтверждения удаления */}
+      <AnimatePresence>
+        {deleteTarget && (
+          <motion.div className="admin-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setDeleteTarget(null)}>
+            <motion.div className="admin-modal" initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }}
+              onClick={e => e.stopPropagation()}>
+              <p className="admin-modal__title">Удалить услугу?</p>
+              <p style={{ margin: 0, fontSize: 14, color: '#555' }}>«{deleteTarget.name}» будет удалена</p>
+              <div className="admin-row" style={{ marginTop: 4 }}>
+                <button className="admin-btn admin-btn--outline" style={{ flex: 1 }} onClick={() => setDeleteTarget(null)}>Отмена</button>
+                <button className="admin-btn admin-btn--danger" style={{ flex: 1 }} onClick={() => handleDelete(deleteTarget.ID)}>Удалить</button>
               </div>
             </motion.div>
           </motion.div>

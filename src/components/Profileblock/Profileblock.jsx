@@ -10,10 +10,10 @@ const ProfileBlock = () => {
   if (loading) return <ProfileBlockSkeleton />;
 
   const displayName = user
-    ? `${user.FirstName || ''} ${user.LastName || ''}`.trim() || user.Username || 'Имя пользователя'
+    ? (`${user.first_name || ''} ${user.last_name || ''}`).trim() || user.username || 'Имя пользователя'
     : 'Имя пользователя';
-  const nickname = user?.Username ? `@${user.Username}` : '';
-  const photoSrc = user?.PhotoURL || ellipse;
+  const nickname = user?.username ? `@${user.username}` : '';
+  const photoSrc = user?.photo_url || ellipse;
 
   return (
     <motion.div

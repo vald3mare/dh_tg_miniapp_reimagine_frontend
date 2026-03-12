@@ -4,7 +4,7 @@ import { fetchAchievements } from '../../api';
 import AchievementCard from '../AchievementCard/AchievementCard';
 import './ExecutorProfile.css';
 
-const ExecutorProfile = () => {
+const ExecutorProfile = ({ hideUserCard = false }) => {
   const { user, initDataRaw } = useUser();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,30 +21,31 @@ const ExecutorProfile = () => {
   const achievements = data?.achievements ?? [];
 
   const earnedCount = achievements.filter(a => a.earned).length;
-  const nextAchievement = achievements.find(a => !a.earned && a.ConditionType === 'orders_completed');
+  const nextAchievement = achievements.find(a => !a.earned && a.condition_type === 'orders_completed');
   const progress = nextAchievement
-    ? Math.min((ordersCompleted / nextAchievement.Threshold) * 100, 100)
+    ? Math.min((ordersCompleted / nextAchievement.threshold) * 100, 100)
     : 100;
 
-  const avatarUrl = user?.PhotoURL || user?.photo_url;
-  const name = [user?.FirstName || user?.first_name, user?.LastName || user?.last_name]
-    .filter(Boolean).join(' ') || 'Исполнитель';
+  const avatarUrl = user?.photo_url;
+  const name = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || 'Исполнитель';
 
   return (
     <div className="executor-profile">
-      <div className="executor-profile__card">
-        {avatarUrl ? (
-          <img className="executor-profile__avatar" src={avatarUrl} alt={name} />
-        ) : (
-          <div className="executor-profile__avatar executor-profile__avatar--placeholder">
-            {name.charAt(0)}
+      {!hideUserCard && (
+        <div className="executor-profile__card">
+          {avatarUrl ? (
+            <img className="executor-profile__avatar" src={avatarUrl} alt={name} />
+          ) : (
+            <div className="executor-profile__avatar executor-profile__avatar--placeholder">
+              {name.charAt(0)}
+            </div>
+          )}
+          <div className="executor-profile__info">
+            <h2 className="executor-profile__name">{name}</h2>
+            <span className="executor-profile__role">Исполнитель</span>
           </div>
-        )}
-        <div className="executor-profile__info">
-          <h2 className="executor-profile__name">{name}</h2>
-          <span className="executor-profile__role">Исполнитель</span>
         </div>
-      </div>
+      )}
 
       <div className="executor-profile__stats">
         <div className="executor-profile__stat">
@@ -64,14 +65,11 @@ const ExecutorProfile = () => {
       {nextAchievement && (
         <div className="executor-profile__progress-block">
           <div className="executor-profile__progress-label">
-            <span>До «{nextAchievement.Name}»</span>
-            <span>{ordersCompleted} / {nextAchievement.Threshold}</span>
+            <span>До «{nextAchievement.name}»</span>
+            <span>{ordersCompleted} / {nextAchievement.threshold}</span>
           </div>
           <div className="executor-profile__progress-bar">
-            <div
-              className="executor-profile__progress-fill"
-              style={{ width: `${progress}%` }}
-            />
+            <div className="executor-profile__progress-fill" style={{ width: `${progress}%` }} />
           </div>
         </div>
       )}

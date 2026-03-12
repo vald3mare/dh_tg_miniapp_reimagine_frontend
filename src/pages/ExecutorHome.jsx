@@ -15,7 +15,7 @@ const ExecutorHome = () => {
           ? <OrderListSkeleton count={3} />
           : error
             ? <p style={{ padding: '16px', color: '#888' }}>Ошибка: {error}</p>
-            : <OrderList orders={orders} showTitle={true} limit={5} />
+            : <OrderList orders={orders} showTitle={false} limit={5} />
         }
       </div>
     </PageTransition>

@@ -36,18 +36,18 @@ const AdminOrders = () => {
             <div className="admin-list-item" key={order.ID} style={{ flexWrap: 'wrap', gap: 8 }}>
               <div className="admin-list-item__info">
                 <div className="admin-list-item__name">
-                  {order.ServiceType || 'Услуга'}
-                  {order.Price > 0 && <span style={{ color: '#EA6CCB', marginLeft: 8 }}>{order.Price}₽</span>}
+                  {order.service_type || 'Услуга'}
+                  {order.price > 0 && <span style={{ color: '#EA6CCB', marginLeft: 8 }}>{order.price}₽</span>}
                 </div>
                 <div className="admin-list-item__sub">
-                  {order.CustomerName && `${order.CustomerName} · `}
-                  {order.Description || '—'}
+                  {order.customer_name && `${order.customer_name} · `}
+                  {order.description || '—'}
                 </div>
               </div>
               <select
                 className="admin-input admin-input--small"
                 style={{ width: 'auto' }}
-                value={order.Status}
+                value={order.status}
                 onChange={e => handleStatusChange(order.ID, e.target.value)}
               >
                 {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
