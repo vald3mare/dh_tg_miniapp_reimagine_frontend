@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useUser } from './context/UserContext';
 import CartDrawer from './components/CartDrawer/CartDrawer';
@@ -8,6 +8,7 @@ import ExecutorBottomNav from './components/ExecutorBottomNav/ExecutorBottomNav'
 import AdminNav from './components/AdminNav/AdminNav';
 
 import Welcome from './pages/Welcome';
+import RolePicker from './pages/RolePicker';
 import Home from './pages/Home';
 import Catalog from './pages/Catalog';
 import Profile from './pages/Profile';
@@ -25,17 +26,52 @@ import AdminOrders from './pages/admin/AdminOrders';
 const EXECUTOR_PATHS = ['/executor/home', '/executor/orders', '/executor/profile'];
 const ADMIN_PATHS    = ['/admin', '/admin/catalog', '/admin/achievements', '/admin/users', '/admin/orders'];
 
-// Простой guard: редиректит если роль не совпадает
+// Guard: проверяет effectiveRole (выбранную) или primaryRole
 const RoleGuard = ({ allowed, children }) => {
-  const { role, loading } = useUser();
+  const { role, effectiveRole, loading } = useUser();
   if (loading) return null;
-  if (!allowed.includes(role)) return <Navigate to="/" replace />;
+  const check = effectiveRole || role;
+  if (!allowed.includes(check)) return <Navigate to="/" replace />;
   return children;
+};
+
+// Кнопка смены роли — показывается только у мульти-ролевых пользователей
+const SwitchRoleButton = () => {
+  const { roles, clearActiveRole } = useUser();
+  const navigate = useNavigate();
+  if (roles.length <= 1) return null;
+
+  const handleSwitch = () => {
+    clearActiveRole();
+    navigate('/role-picker', { replace: true });
+  };
+
+  return (
+    <button
+      onClick={handleSwitch}
+      style={{
+        position: 'fixed', bottom: 72, right: 16,
+        zIndex: 200,
+        background: '#476CEE',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '50%',
+        width: 44, height: 44,
+        fontSize: 20,
+        cursor: 'pointer',
+        boxShadow: '0 4px 16px rgba(71,108,238,0.4)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}
+      title="Сменить роль"
+    >
+      ⇄
+    </button>
+  );
 };
 
 const App = () => {
   const location = useLocation();
-  const { role } = useUser();
+  const { effectiveRole, role } = useUser();
 
   const isAdmin    = ADMIN_PATHS.some(p => location.pathname === p);
   const isExecutor = EXECUTOR_PATHS.some(p => location.pathname.startsWith(p));
@@ -45,8 +81,9 @@ const App = () => {
     <div className="app-container">
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          {/* Welcome — определяет роль */}
+          {/* Welcome & RolePicker */}
           <Route path="/" element={<Welcome />} />
+          <Route path="/role-picker" element={<RolePicker />} />
 
           {/* Заказчики */}
           <Route path="/home"    element={<Home />} />
@@ -77,11 +114,12 @@ const App = () => {
         </Routes>
       </AnimatePresence>
 
-      {showNav && (
+      {showNav && location.pathname !== '/role-picker' && (
         isAdmin    ? <AdminNav /> :
         isExecutor ? <ExecutorBottomNav /> :
                      <BottomNav />
       )}
+      <SwitchRoleButton />
       <CartDrawer />
     </div>
   );

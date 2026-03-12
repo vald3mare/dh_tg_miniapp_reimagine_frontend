@@ -1,0 +1,104 @@
+.role-picker {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px 40px;
+  background: #476CEE;
+}
+
+.role-picker__header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.role-picker__logo {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.role-picker__title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.role-picker__sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.role-picker__cards {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.role-picker__card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 20px;
+  background: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.2s;
+}
+
+.role-picker__card:active {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.role-picker__card-emoji {
+  font-size: 36px;
+  flex-shrink: 0;
+}
+
+.role-picker__card-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.role-picker__card-label {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.role-picker__card-desc {
+  font-size: 13px;
+  color: #888;
+  line-height: 1.4;
+}
+
+.role-picker__card-arrow {
+  font-size: 20px;
+  color: #aaa;
+  flex-shrink: 0;
+}
+
+/* Акцентный цвет по роли */
+.role-picker__card--admin .role-picker__card-label {
+  color: #476CEE;
+}
+
+.role-picker__card--executor .role-picker__card-label {
+  color: #27ae60;
+}
+
+.role-picker__card--customer .role-picker__card-label {
+  color: #e67e22;
+}

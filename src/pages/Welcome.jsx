@@ -21,13 +21,14 @@ const childVariants = {
 
 const Welcome = () => {
   const navigate = useNavigate();
-  const { user, initDataRaw, role, loading } = useUser();
+  const { user, initDataRaw, roles, effectiveRole, loading } = useUser();
 
-  // Если пользователь уже авторизован — редиректим сразу по роли
+  // Если пользователь уже авторизован — редиректим по эффективной роли
   if (!loading && user) {
-    if (role === 'admin')    return <Navigate to="/admin" replace />;
-    if (role === 'executor') return <Navigate to="/executor/home" replace />;
-    if (role === 'customer') return <Navigate to="/home" replace />;
+    if (roles.length > 1 && !effectiveRole) return <Navigate to="/role-picker" replace />;
+    if (effectiveRole === 'admin')    return <Navigate to="/admin" replace />;
+    if (effectiveRole === 'executor') return <Navigate to="/executor/home" replace />;
+    if (effectiveRole === 'customer') return <Navigate to="/home" replace />;
   }
 
   const handleCustomer = () => {
