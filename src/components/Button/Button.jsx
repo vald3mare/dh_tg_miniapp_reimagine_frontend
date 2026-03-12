@@ -1,24 +1,25 @@
 import './Button.css';
-import { motion } from "motion/react"
-import React from 'react'
+import { motion } from 'motion/react';
 
 const Button = (props) => {
   const {
     text = '',
     className = '',
     childVariants = '',
-  } = props
+    onClick,
+    disabled = false,
+  } = props;
 
   return (
-    <>
-      <motion.button 
-        className={className}
-        variants={childVariants}
-      >
-        {text}
-      </motion.button>
-    </>
-  )
-}
+    <motion.button
+      className={className}
+      variants={childVariants}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {text}
+    </motion.button>
+  );
+};
 
 export default Button;

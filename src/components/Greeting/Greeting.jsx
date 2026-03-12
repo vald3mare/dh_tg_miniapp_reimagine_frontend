@@ -33,7 +33,7 @@ const Greeting = () => {
                 duration: 0.7,
             }}
         />
-        <div className='dog-image'>
+        {/*<div className='dog-image'>
             <motion.img 
                 src={dogUrl} 
                 alt="dog-image"
@@ -43,7 +43,7 @@ const Greeting = () => {
                     duration: 0.9,
                 }}
             />
-        </div>
+        </div>*/}
     </div>
   )
 }

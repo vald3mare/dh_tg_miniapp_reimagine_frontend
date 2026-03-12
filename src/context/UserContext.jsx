@@ -1,54 +1,52 @@
-// src/context/UserContext.js (обновленный)
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { retrieveRawInitData } from '@tma.js/sdk';
+import { fetchProfile } from '../api';
 
-const UserContext = createContext(null);
+const UserContext = createContext({
+  user: null,
+  loading: true,
+  error: null,
+  initDataRaw: null,
+});
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [initDataRaw, setInitDataRaw] = useState(null);
 
   useEffect(() => {
-    let initDataRaw;
+    let raw;
     try {
-      initDataRaw = retrieveRawInitData();
+      raw = retrieveRawInitData();
     } catch (err) {
-      console.warn('Не удалось получить initDataRaw. Возможно, приложение запущено вне Telegram Mini App.', err);
+      console.warn('Вне Telegram Mini App:', err);
+      setLoading(false);
       return;
     }
 
-    if (!initDataRaw) {
+    if (!raw) {
       console.warn('initDataRaw пустая.');
+      setLoading(false);
       return;
     }
 
-    const PROFILE_ENDPOINT = 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net';
+    setInitDataRaw(raw);
 
-    fetch(PROFILE_ENDPOINT, {
-      method: 'GET',
-      headers: {
-        'Authorization': `tma ${initDataRaw}`
-      },
-    })
-    .then(response => {
-      if (!response.ok) {
-        // Для отладки: логируем текст ответа, если не JSON
-        return response.text().then(text => {
-          throw new Error(`Ошибка ${response.status}: ${text}`);
-        });
-      }
-      return response.json();
-    })
-    .then(data => {
-      setUser(data.user); // Или data, в зависимости от структуры
-    })
-    .catch((err) => {
-      console.error('Ошибка при получении профиля:', err);
-      setUser(null);
-    });
+    fetchProfile(raw)
+      .then(data => {
+        setUser(data.user);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Ошибка при получении профиля:', err);
+        setError(err.message);
+        setLoading(false);
+      });
   }, []);
 
   return (
-    <UserContext.Provider value={user}>
+    <UserContext.Provider value={{ user, loading, error, initDataRaw }}>
       {children}
     </UserContext.Provider>
   );

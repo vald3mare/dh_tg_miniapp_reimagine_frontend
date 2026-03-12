@@ -1,40 +1,73 @@
 import './CatalogList.css';
 import CatalogItem from '../CatalogItem/CatalogItem';
-import { useState } from 'react';
-import { motion, AnimatePresence } from "framer-motion";
-import Rectangle from '../../assets/Rectangle.svg'
+import { useState, useMemo, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useUser } from '../../context/UserContext';
+import { createPayment } from '../../api';
+import Rectangle from '../../assets/Rectangle.svg';
 
 const CatalogList = (props) => {
   const {
     catalog = [],
     expanded = false,
     showTitle = true,
-  } = props
+  } = props;
 
-  const [selectedId, setSelectedId] = useState(null)
+  const { initDataRaw } = useUser();
+  const [selectedId, setSelectedId] = useState(null);
+  const [payingId, setPayingId] = useState(null);
 
-  const normalizedCatalog = catalog.map(item => ({
+  const normalizedCatalog = useMemo(() => catalog.map(item => ({
     id: item.ID,
     name: item.name || 'Без названия',
-    description: item.description || 'Заглушка описания',
-    fullDescription: item.full_description || 'Заглушка',
+    description: item.description || '',
+    fullDescription: item.full_description || '',
     price: item.price != null ? String(item.price) : '',
     backgroundImage: item.image_url || Rectangle,
     type: item.type || '',
-  }));
+  })), [catalog]);
 
   const displayedCatalog = expanded ? normalizedCatalog : normalizedCatalog.slice(0, 2);
+
+  const handleBuy = useCallback(async (itemId) => {
+    if (!initDataRaw) {
+      console.warn('initDataRaw недоступен — пользователь не авторизован');
+      return;
+    }
+    setPayingId(itemId);
+    try {
+      const data = await createPayment(itemId, initDataRaw);
+      if (data.confirmation_url) {
+        // В TMA открываем через встроенный браузер Telegram, в браузере — новая вкладка
+        if (window.Telegram?.WebApp?.openLink) {
+          window.Telegram.WebApp.openLink(data.confirmation_url);
+        } else {
+          window.open(data.confirmation_url, '_blank');
+        }
+      }
+    } catch (err) {
+      console.error('Ошибка создания платежа:', err);
+      if (window.Telegram?.WebApp?.showAlert) {
+        window.Telegram.WebApp.showAlert(`Ошибка оплаты: ${err.message}`);
+      }
+    } finally {
+      setPayingId(null);
+    }
+  }, [initDataRaw]);
+
+  const selectedItem = normalizedCatalog.find(i => i.id === selectedId);
 
   return (
     <div className="catalog-list">
       {showTitle && (
         <div className="catalog-list__header">
           <h2 className="catalog-list__title">Наши услуги</h2>
-          <a href="/catalog" className="catalog-list__link">Каталог</a>
+          <Link to="/catalog" className="catalog-list__link">Каталог</Link>
         </div>
       )}
 
-      <motion.div className="catalog-list__items" layout> 
+      <motion.div className="catalog-list__items" layout>
         {displayedCatalog.map((item) => (
           <motion.div key={item.id} layout>
             <CatalogItem
@@ -44,15 +77,17 @@ const CatalogList = (props) => {
               description={item.description}
               fullDescription={item.fullDescription}
               price={item.price}
-              onClick={() => setSelectedId(item.id)}
               isExpanded={false}
+              isPaying={payingId === item.id}
+              onClick={() => setSelectedId(item.id)}
+              onBuy={() => handleBuy(item.id)}
             />
           </motion.div>
         ))}
       </motion.div>
 
       <AnimatePresence>
-        {selectedId && (
+        {selectedId && selectedItem && (
           <motion.div
             className="backdrop"
             key="backdrop"
@@ -76,17 +111,23 @@ const CatalogList = (props) => {
               style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh', overflow: 'hidden' }}
             >
               <CatalogItem
-                id={selectedId}
-                {...normalizedCatalog.find(i => i.id === selectedId)}
+                id={selectedItem.id}
+                name={selectedItem.name}
+                backgroundImage={selectedItem.backgroundImage}
+                description={selectedItem.description}
+                fullDescription={selectedItem.fullDescription}
+                price={selectedItem.price}
                 isExpanded={true}
+                isPaying={payingId === selectedId}
                 onClose={() => setSelectedId(null)}
+                onBuy={() => handleBuy(selectedId)}
               />
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
-  )
-}
+  );
+};
 
 export default CatalogList;

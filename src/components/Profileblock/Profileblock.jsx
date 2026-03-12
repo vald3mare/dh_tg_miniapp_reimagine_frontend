@@ -1,57 +1,53 @@
 import './Profileblock.css';
 import { motion } from 'framer-motion';
+import { useUser } from '../../context/UserContext';
+import ellipse from '../../assets/profile_skeleton.svg';
 
-const ProfileBlock = (props) => {
-    const {
-      id,
-      title,
-      buttonLink,
-      buttonText,
-      name,
-      description,
-      fullname,
-      tgnickname
-    } = props
+const ProfileBlock = () => {
+  const { user, loading } = useUser();
+
+  const displayName = user
+    ? `${user.FirstName || ''} ${user.LastName || ''}`.trim() || user.Username || 'Имя пользователя'
+    : 'Имя пользователя';
+  const nickname = user?.Username ? `@${user.Username}` : '';
+  const photoSrc = user?.PhotoURL || ellipse;
 
   return (
-    <motion.div 
+    <motion.div
       className="profile"
       layoutId="header"
     >
-      {/* Заголовок профиля (перетекает из хедера) */}
-      <motion.h1 
-        className="profile__title" 
+      <motion.h1
+        className="profile__title"
         layoutId="profile-header-title"
       >
         Профиль
       </motion.h1>
 
-      {/* Аватар (перетекает из хедера) */}
-      <motion.div 
-        className="profile__avatar" 
+      <motion.img
+        className="profile__avatar"
         layoutId="profile-avatar"
+        src={photoSrc}
+        alt="Аватар"
       />
 
       <div className="profile__info">
-        <motion.h2 
-          className="profile__fullname" 
+        <motion.h2
+          className="profile__fullname"
           layoutId="profile-fullname"
         >
-          Имя Фамилия /
+          {loading ? '...' : displayName}
         </motion.h2>
-        <p className="profile__nickname">@tgnickname</p>
+        {nickname && <p className="profile__nickname">{nickname}</p>}
         <p className="profile__subscription">Подписка активна до 31.05.2026</p>
       </div>
 
-      {/* Кнопка внизу (как в вашем дизайне) */}
       <button className="profile__button">
         Управление подпиской
       </button>
 
-      {/* Секция Заказы */}
       <div className="profile__orders">
         <h3 className="profile__orders-title">Заказы</h3>
-        {/* Здесь будут заказы */}
       </div>
     </motion.div>
   );
