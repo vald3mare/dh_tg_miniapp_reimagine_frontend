@@ -1,0 +1,134 @@
+.executor-profile {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 100px;
+}
+
+.executor-profile__card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.executor-profile__avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.executor-profile__avatar--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EA6CCB;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.executor-profile__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.executor-profile__name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.executor-profile__role {
+  font-size: 12px;
+  color: #EA6CCB;
+  font-weight: 500;
+}
+
+.executor-profile__stats {
+  display: flex;
+  gap: 12px;
+}
+
+.executor-profile__stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  gap: 4px;
+}
+
+.executor-profile__stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.executor-profile__stat-label {
+  font-size: 11px;
+  color: #888;
+}
+
+.executor-profile__progress-block {
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.executor-profile__progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+}
+
+.executor-profile__progress-bar {
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.executor-profile__progress-fill {
+  height: 100%;
+  background: #EA6CCB;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.executor-profile__achievements {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.executor-profile__section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.executor-profile__loading,
+.executor-profile__empty {
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+  padding: 16px 0;
+}

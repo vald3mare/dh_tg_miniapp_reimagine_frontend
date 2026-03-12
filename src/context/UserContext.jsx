@@ -7,6 +7,7 @@ const UserContext = createContext({
   loading: true,
   error: null,
   initDataRaw: null,
+  role: 'customer',
 });
 
 export const UserProvider = ({ children }) => {
@@ -45,8 +46,10 @@ export const UserProvider = ({ children }) => {
       });
   }, []);
 
+  const role = user?.Role || user?.role || 'customer';
+
   return (
-    <UserContext.Provider value={{ user, loading, error, initDataRaw }}>
+    <UserContext.Provider value={{ user, loading, error, initDataRaw, role }}>
       {children}
     </UserContext.Provider>
   );

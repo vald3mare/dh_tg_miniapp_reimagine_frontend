@@ -1,8 +1,10 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import Logo from '../components/Logo/Logo';
 import Greeting from '../components/Greeting/Greeting';
 import Button from '../components/Button/Button';
+import { useUser } from '../context/UserContext';
+import { setRole } from '../api';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -19,6 +21,24 @@ const childVariants = {
 
 const Welcome = () => {
   const navigate = useNavigate();
+  const { user, initDataRaw, role, loading } = useUser();
+
+  // Если пользователь уже авторизован — редиректим сразу по роли
+  if (!loading && user) {
+    if (role === 'admin')    return <Navigate to="/admin" replace />;
+    if (role === 'executor') return <Navigate to="/executor/home" replace />;
+    if (role === 'customer') return <Navigate to="/home" replace />;
+  }
+
+  const handleCustomer = () => {
+    if (initDataRaw) setRole('customer', initDataRaw).catch(() => {});
+    navigate('/home');
+  };
+
+  const handleExecutor = () => {
+    if (initDataRaw) setRole('executor', initDataRaw).catch(() => {});
+    navigate('/executor/home');
+  };
 
   return (
     <motion.div
@@ -35,12 +55,13 @@ const Welcome = () => {
           text="Заказчикам"
           className="welcome-btn__button"
           variants={childVariants}
-          onClick={() => navigate('/home')}
+          onClick={handleCustomer}
         />
         <Button
           text="Исполнителям"
           className="welcome-btn__button"
           variants={childVariants}
+          onClick={handleExecutor}
         />
       </div>
     </motion.div>
