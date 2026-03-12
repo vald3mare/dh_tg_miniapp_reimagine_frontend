@@ -2,9 +2,12 @@ import './Profileblock.css';
 import { motion } from 'framer-motion';
 import { useUser } from '../../context/UserContext';
 import ellipse from '../../assets/profile_skeleton.svg';
+import ProfileBlockSkeleton from './ProfileBlockSkeleton';
 
 const ProfileBlock = () => {
   const { user, loading } = useUser();
+
+  if (loading) return <ProfileBlockSkeleton />;
 
   const displayName = user
     ? `${user.FirstName || ''} ${user.LastName || ''}`.trim() || user.Username || 'Имя пользователя'
@@ -15,7 +18,10 @@ const ProfileBlock = () => {
   return (
     <motion.div
       className="profile"
-      layoutId="header"
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 8, transition: { duration: 0.15, ease: 'easeIn' } }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
     >
       <motion.h1
         className="profile__title"
@@ -36,7 +42,7 @@ const ProfileBlock = () => {
           className="profile__fullname"
           layoutId="profile-fullname"
         >
-          {loading ? '...' : displayName}
+          {displayName}
         </motion.h2>
         {nickname && <p className="profile__nickname">{nickname}</p>}
         <p className="profile__subscription">Подписка активна до 31.05.2026</p>

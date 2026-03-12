@@ -26,6 +26,7 @@ const Welcome = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      exit={{ opacity: 0, y: 10, transition: { duration: 0.15, ease: 'easeIn' } }}
     >
       <Logo />
       <Greeting />

@@ -1,22 +1,24 @@
 import Header from '../components/Header/Header';
 import CatalogList from '../components/CatalogList/CatalogList';
+import CatalogListSkeleton from '../components/CatalogList/CatalogListSkeleton';
+import PageTransition from '../components/PageTransition/PageTransition';
 import { useCatalog } from '../hooks/useCatalog';
 
 const Catalog = () => {
   const { catalog, loading, error } = useCatalog();
 
-  if (loading) return <p>Загрузка каталога...</p>;
-  if (error) return <p>Ошибка: {error}</p>;
-
   return (
-    <div className='catalog-page'>
-      <Header />
-      <CatalogList
-        catalog={catalog}
-        expanded={true}
-        showTitle={false}
-      />
-    </div>
+    <PageTransition>
+      <div className='catalog-page'>
+        <Header />
+        {loading
+          ? <CatalogListSkeleton count={4} showTitle={false} />
+          : error
+            ? <p>Ошибка: {error}</p>
+            : <CatalogList catalog={catalog} expanded={true} showTitle={false} />
+        }
+      </div>
+    </PageTransition>
   );
 };
 
