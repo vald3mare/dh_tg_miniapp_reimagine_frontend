@@ -5,15 +5,18 @@ import App from './App.jsx'
 import './App.css'
 import { UserProvider } from './context/UserContext';
 import { CartProvider } from './context/CartContext';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <UserProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </UserProvider>
+      <ErrorBoundary>
+        <UserProvider>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </UserProvider>
+      </ErrorBoundary>
     </BrowserRouter>
   </StrictMode>
 );

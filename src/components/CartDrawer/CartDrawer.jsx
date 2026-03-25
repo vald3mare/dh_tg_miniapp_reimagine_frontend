@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
 import { useUser } from '../../context/UserContext';
+import { createOrder } from '../../api';
 import Rectangle from '../../assets/Rectangle.svg';
 import './CartDrawer.css';
 
@@ -15,31 +16,26 @@ const CartDrawer = () => {
   const [contact, setContact] = useState(user?.username ? `@${user.username}` : '');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async () => {
     if (!name.trim()) return;
     setSubmitting(true);
+    setError(null);
     try {
       const serviceType = items.map(i => i.name).join(', ');
       const description = items.map(i => `${i.name} x${i.quantity}`).join('; ');
-      const BASE_URL = import.meta.env.VITE_API_URL || 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net';
-      await fetch(`${BASE_URL}/orders`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          service_type: serviceType,
-          description,
-          price: total,
-          customer_name: name.trim(),
-          customer_contact: contact.trim(),
-        }),
+      await createOrder({
+        service_type: serviceType,
+        description,
+        price: total,
+        customer_name: name.trim(),
+        customer_contact: contact.trim(),
       });
       setSubmitted(true);
       clearCart();
-    } catch {
-      // fallthrough — показываем успех в любом случае
-      setSubmitted(true);
-      clearCart();
+    } catch (err) {
+      setError(err.message || 'Не удалось отправить заявку — попробуйте ещё раз');
     } finally {
       setSubmitting(false);
     }
@@ -48,6 +44,7 @@ const CartDrawer = () => {
   const handleClose = () => {
     closeCart();
     setSubmitted(false);
+    setError(null);
   };
 
   return (
@@ -100,6 +97,7 @@ const CartDrawer = () => {
                           className="cart-item__img"
                           src={item.image || Rectangle}
                           alt={item.name}
+                          loading="lazy"
                         />
                         <div className="cart-item__info">
                           <p className="cart-item__name">{item.name}</p>
@@ -146,6 +144,9 @@ const CartDrawer = () => {
                   >
                     {submitting ? 'ОТПРАВЛЯЕМ...' : 'SUBMIT'}
                   </button>
+                  {error && (
+                    <p className="cart-drawer__error">⚠️ {error}</p>
+                  )}
                 </div>
               </>
             )}

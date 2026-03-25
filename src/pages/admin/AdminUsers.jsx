@@ -4,6 +4,7 @@ import { useUser } from '../../context/UserContext';
 import { admin } from '../../api';
 import PageTransition from '../../components/PageTransition/PageTransition';
 import './admin.css';
+import { tgAlert } from '../../utils/tg';
 
 const ROLES = ['customer', 'executor', 'admin'];
 
@@ -42,9 +43,7 @@ const AdminUsers = () => {
       await admin.grantAchievement(grantModal.ID, parseInt(selectedAch), initDataRaw);
       setGrantModal(null);
     } catch (e) {
-      window.Telegram?.WebApp?.showAlert
-        ? window.Telegram.WebApp.showAlert(e.message)
-        : alert(e.message);
+      tgAlert(e.message);
     } finally {
       setSaving(false);
     }

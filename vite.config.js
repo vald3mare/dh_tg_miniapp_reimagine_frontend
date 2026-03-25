@@ -16,10 +16,7 @@ export default defineConfig({
   plugins: [react(), basicSsl()],
   optimizeDeps: {
     include: [
-      '@emotion/react',
-      '@emotion/styled',
-      '@mui/material/Tooltip', // если используешь Tooltip или другие проблемные компоненты
-      '@mui/icons-material',   // на всякий случай
+      '@mui/icons-material',
     ],
   }
 })

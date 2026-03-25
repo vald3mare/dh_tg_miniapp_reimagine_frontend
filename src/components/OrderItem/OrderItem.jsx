@@ -3,6 +3,16 @@ import { motion } from 'framer-motion';
 import { useUser } from '../../context/UserContext';
 import { acceptOrder } from '../../api';
 import './OrderItem.css';
+import { tgAlert } from '../../utils/tg';
+
+// Выносим константу на уровень модуля — не пересоздаётся на каждый рендер
+const SERVICE_EMOJI = {
+  'Выгул': '🐕',
+  'Зооняня': '🏠',
+  'Кинолог': '🎓',
+  'Передержка': '🛏️',
+  'Ветеринар': '💊',
+};
 
 const OrderItem = ({ order, onAccepted }) => {
   const { initDataRaw } = useUser();
@@ -16,23 +26,13 @@ const OrderItem = ({ order, onAccepted }) => {
       onAccepted?.(order.ID);
     } catch (err) {
       console.error('Ошибка при принятии заявки:', err);
-      if (window.Telegram?.WebApp?.showAlert) {
-        window.Telegram.WebApp.showAlert(`Ошибка: ${err.message}`);
-      }
+      tgAlert(`Ошибка: ${err.message}`);
     } finally {
       setAccepting(false);
     }
   };
 
-  const serviceEmoji = {
-    'Выгул': '🐕',
-    'Зооняня': '🏠',
-    'Кинолог': '🎓',
-    'Передержка': '🛏️',
-    'Ветеринар': '💊',
-  };
-
-  const emoji = Object.entries(serviceEmoji).find(([k]) =>
+  const emoji = Object.entries(SERVICE_EMOJI).find(([k]) =>
     order.ServiceType?.includes(k)
   )?.[1] || '🐾';
 

@@ -1,11 +1,13 @@
 import './CatalogList.css';
 import CatalogItem from '../CatalogItem/CatalogItem';
+import CatalogModal from './CatalogModal';
 import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useUser } from '../../context/UserContext';
 import { useCart } from '../../context/CartContext';
 import { createPayment } from '../../api';
+import { tgAlert, tgOpenLink } from '../../utils/tg';
 import Rectangle from '../../assets/Rectangle.svg';
 
 const CatalogList = (props) => {
@@ -41,17 +43,11 @@ const CatalogList = (props) => {
     try {
       const data = await createPayment(itemId, initDataRaw);
       if (data.confirmation_url) {
-        if (window.Telegram?.WebApp?.openLink) {
-          window.Telegram.WebApp.openLink(data.confirmation_url);
-        } else {
-          window.location.href = data.confirmation_url;
-        }
+        tgOpenLink(data.confirmation_url);
       }
     } catch (err) {
       console.error('Ошибка создания платежа:', err);
-      if (window.Telegram?.WebApp?.showAlert) {
-        window.Telegram.WebApp.showAlert(`Ошибка оплаты: ${err.message}`);
-      }
+      tgAlert(`Ошибка оплаты: ${err.message}`);
     } finally {
       setPayingId(null);
     }
@@ -88,47 +84,13 @@ const CatalogList = (props) => {
         ))}
       </motion.div>
 
-      <AnimatePresence>
-        {selectedId && selectedItem && (
-          <motion.div
-            className="backdrop"
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={() => setSelectedId(null)}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0,0,0,0.6)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000,
-            }}
-          >
-            <motion.div
-              onClick={(e) => e.stopPropagation()}
-              style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh', overflow: 'hidden' }}
-            >
-              <CatalogItem
-                id={selectedItem.id}
-                name={selectedItem.name}
-                backgroundImage={selectedItem.backgroundImage}
-                description={selectedItem.description}
-                fullDescription={selectedItem.fullDescription}
-                price={selectedItem.price}
-                isExpanded={true}
-                isPaying={payingId === selectedId}
-                onClose={() => setSelectedId(null)}
-                onBuy={() => handleBuy(selectedId)}
-                onAddToCart={() => { addToCart({ id: selectedItem.id, name: selectedItem.name, price: parseFloat(selectedItem.price) || 0, image: selectedItem.backgroundImage }); setSelectedId(null); }}
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <CatalogModal
+        item={selectedItem}
+        payingId={payingId}
+        onClose={() => setSelectedId(null)}
+        onBuy={handleBuy}
+        onAddToCart={(item) => { addToCart({ id: item.id, name: item.name, price: parseFloat(item.price) || 0, image: item.backgroundImage }); setSelectedId(null); }}
+      />
     </div>
   );
 };

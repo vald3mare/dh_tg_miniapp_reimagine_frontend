@@ -1,66 +1,34 @@
-import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useUser } from '../../context/UserContext';
 import { admin } from '../../api';
 import PageTransition from '../../components/PageTransition/PageTransition';
+import useAdminForm from '../../hooks/useAdminForm';
 import './admin.css';
 
 const EMPTY_FORM = { name: '', description: '', full_description: '', price: '', image_url: '', type: 'service' };
 
 const AdminCatalog = () => {
   const { initDataRaw } = useUser();
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState(null); // null | 'create' | item-object
-  const [deleteTarget, setDeleteTarget] = useState(null);
-  const [form, setForm] = useState(EMPTY_FORM);
-  const [saving, setSaving] = useState(false);
-
-  const load = () => {
-    if (!initDataRaw) return;
-    admin.getCatalog(initDataRaw).then(d => { setItems(d.items || []); setLoading(false); });
-  };
-
-  useEffect(() => { load(); }, [initDataRaw]);
-
-  const openCreate = () => { setForm(EMPTY_FORM); setModal('create'); };
-  const openEdit = (item) => {
-    setForm({
+  const {
+    items, loading, modal, deleteTarget, form, saving,
+    setForm, setModal, setDeleteTarget,
+    openCreate, openEdit, handleSave, handleDelete,
+  } = useAdminForm(initDataRaw, {
+    emptyForm: EMPTY_FORM,
+    fetchItems: (tok) => admin.getCatalog(tok).then(d => d.items || []),
+    createItem: (body, tok) => admin.createCatalogItem(body, tok),
+    updateItem: (id, body, tok) => admin.updateCatalogItem(id, body, tok),
+    deleteItem: (id, tok) => admin.deleteCatalogItem(id, tok),
+    toForm: (item) => ({
       name: item.name || '',
       description: item.description || '',
       full_description: item.full_description || '',
       price: item.price ?? '',
       image_url: item.image_url || '',
       type: item.type || 'service',
-    });
-    setModal(item);
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      const body = { ...form, price: parseFloat(form.price) || 0 };
-      if (modal === 'create') {
-        await admin.createCatalogItem(body, initDataRaw);
-      } else {
-        await admin.updateCatalogItem(modal.ID, body, initDataRaw);
-      }
-      setModal(null);
-      load();
-    } catch (e) {
-      window.Telegram?.WebApp?.showAlert
-        ? window.Telegram.WebApp.showAlert(e.message)
-        : alert(e.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    await admin.deleteCatalogItem(id, initDataRaw);
-    setDeleteTarget(null);
-    load();
-  };
+    }),
+    toBody: (form) => ({ ...form, price: parseFloat(form.price) || 0 }),
+  });
 
   return (
     <PageTransition>

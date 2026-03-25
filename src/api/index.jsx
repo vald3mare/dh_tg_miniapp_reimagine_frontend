@@ -53,6 +53,21 @@ export async function setRole(role, initDataRaw) {
   return data;
 }
 
+/**
+ * Создаёт заявку из корзины покупателя (публичный эндпоинт).
+ * Не требует авторизации — используется из CartDrawer.
+ */
+export async function createOrder(orderData) {
+  const res = await fetch(`${BASE_URL}/orders`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderData),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `Ошибка отправки заявки: ${res.status}`);
+  return data;
+}
+
 /** Список открытых заявок для ленты исполнителей */
 export async function fetchOrders() {
   const res = await fetch(`${BASE_URL}/executor/orders`);

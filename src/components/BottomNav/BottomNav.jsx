@@ -8,22 +8,22 @@ import PersonIcon from '@mui/icons-material/Person'
 
 import './BottomNav.css'
 
-const TABS = [
+const CUSTOMER_TABS = [
   { path: '/home',     label: 'Главная', icon: HomeIcon },
   { path: '/catalog',  label: 'Каталог', icon: PetsIcon },
   { path: '/tariffs',  label: 'Тарифы',  icon: CreditCardIcon },
   { path: '/profile',  label: 'Профиль', icon: PersonIcon },
 ]
 
-const BottomNav = () => {
+const BottomNav = ({ tabs = CUSTOMER_TABS, pillId = 'active-pill' }) => {
   const navigate  = useNavigate()
   const location  = useLocation()
-  const activeIdx = TABS.findIndex(t => t.path === location.pathname)
+  const activeIdx = tabs.findIndex(t => t.path === location.pathname)
 
   return (
     <div className="bottom-nav-wrapper">
       <nav className="bottom-nav">
-        {TABS.map((tab, index) => {
+        {tabs.map((tab, index) => {
           const Icon     = tab.icon
           const isActive = index === activeIdx
 
@@ -39,7 +39,7 @@ const BottomNav = () => {
               {isActive && (
                 <motion.div
                   className="bottom-nav-pill"
-                  layoutId="active-pill"
+                  layoutId={pillId}
                   transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                 />
               )}

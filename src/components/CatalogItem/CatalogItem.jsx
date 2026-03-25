@@ -49,7 +49,7 @@ const CatalogItem = (props) => {
           </div>
 
           <div className="catalog-item__image-wrapper">
-            <img src={backgroundImage} alt={name} className="catalog-item__image" />
+            <img src={backgroundImage} alt={name} className="catalog-item__image" loading="lazy" />
           </div>
 
           <div className="catalog-item__body">

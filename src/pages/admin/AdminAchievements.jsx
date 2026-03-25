@@ -1,66 +1,34 @@
-import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useUser } from '../../context/UserContext';
 import { admin } from '../../api';
 import PageTransition from '../../components/PageTransition/PageTransition';
+import useAdminForm from '../../hooks/useAdminForm';
 import './admin.css';
 
 const EMPTY_FORM = { key: '', name: '', description: '', icon_emoji: '🏆', condition_type: 'orders_completed', threshold: '' };
 
 const AdminAchievements = () => {
   const { initDataRaw } = useUser();
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState(null);
-  const [deleteTarget, setDeleteTarget] = useState(null);
-  const [form, setForm] = useState(EMPTY_FORM);
-  const [saving, setSaving] = useState(false);
-
-  const load = () => {
-    if (!initDataRaw) return;
-    admin.getAchievements(initDataRaw).then(d => { setItems(d.achievements || []); setLoading(false); });
-  };
-
-  useEffect(() => { load(); }, [initDataRaw]);
-
-  const openCreate = () => { setForm(EMPTY_FORM); setModal('create'); };
-  const openEdit = (item) => {
-    setForm({
+  const {
+    items, loading, modal, deleteTarget, form, saving,
+    setForm, setModal, setDeleteTarget,
+    openCreate, openEdit, handleSave, handleDelete,
+  } = useAdminForm(initDataRaw, {
+    emptyForm: EMPTY_FORM,
+    fetchItems: (tok) => admin.getAchievements(tok).then(d => d.achievements || []),
+    createItem: (body, tok) => admin.createAchievement(body, tok),
+    updateItem: (id, body, tok) => admin.updateAchievement(id, body, tok),
+    deleteItem: (id, tok) => admin.deleteAchievement(id, tok),
+    toForm: (item) => ({
       key: item.key || '',
       name: item.name || '',
       description: item.description || '',
       icon_emoji: item.icon_emoji || '🏆',
       condition_type: item.condition_type || 'orders_completed',
       threshold: item.threshold ?? '',
-    });
-    setModal(item);
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      const body = { ...form, threshold: parseInt(form.threshold) || 0 };
-      if (modal === 'create') {
-        await admin.createAchievement(body, initDataRaw);
-      } else {
-        await admin.updateAchievement(modal.ID, body, initDataRaw);
-      }
-      setModal(null);
-      load();
-    } catch (e) {
-      window.Telegram?.WebApp?.showAlert
-        ? window.Telegram.WebApp.showAlert(e.message)
-        : alert(e.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    await admin.deleteAchievement(id, initDataRaw);
-    setDeleteTarget(null);
-    load();
-  };
+    }),
+    toBody: (form) => ({ ...form, threshold: parseInt(form.threshold) || 0 }),
+  });
 
   return (
     <PageTransition>

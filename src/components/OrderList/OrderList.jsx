@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import OrderItem from '../OrderItem/OrderItem';
 import './OrderList.css';
 
 const OrderList = ({ orders = [], showTitle = true, limit }) => {
   const [localOrders, setLocalOrders] = useState(orders);
+
+  // Синхронизируем с пропом при обновлении данных от родителя
+  useEffect(() => {
+    setLocalOrders(orders);
+  }, [orders]);
 
   const displayed = limit ? localOrders.slice(0, limit) : localOrders;
 

@@ -247,6 +247,14 @@
 
 .cart-drawer__submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
+.cart-drawer__error {
+  font-size: 13px;
+  color: #e53935;
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+}
+
 /* Success */
 .cart-success {
   display: flex;
