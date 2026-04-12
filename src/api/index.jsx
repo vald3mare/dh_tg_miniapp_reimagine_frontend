@@ -122,6 +122,42 @@ export async function fetchCustomerOrders(initDataRaw) {
   return res.json();
 }
 
+/**
+ * Создаёт заявку от авторизованного клиента (TMA).
+ * data: { service_type, description?, price?, scheduled_at? }
+ */
+export async function customerCreateOrder(data, initDataRaw) {
+  const res = await fetch(`${BASE_URL}/customer/orders`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `tma ${initDataRaw}`,
+    },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json.error || `Ошибка: ${res.status}`);
+  return json;
+}
+
+/**
+ * Исполнитель обновляет статус своей заявки.
+ * status: 'in_progress' | 'done'
+ */
+export async function updateExecutorOrderStatus(id, status, initDataRaw) {
+  const res = await fetch(`${BASE_URL}/executor/orders/${id}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `tma ${initDataRaw}`,
+    },
+    body: JSON.stringify({ status }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `Ошибка: ${res.status}`);
+  return data;
+}
+
 /** Ачивки текущего исполнителя */
 export async function fetchAchievements(initDataRaw) {
   const res = await fetch(`${BASE_URL}/executor/achievements`, {
@@ -166,4 +202,8 @@ export const admin = {
   // orders
   getOrders:             (r)          => adminRequest('/orders', 'GET', null, r),
   updateOrderStatus:     (id, status, r) => adminRequest(`/orders/${id}/status`, 'PUT', { status }, r),
+  // executor applications
+  getApplications:       (r, status)  => adminRequest(`/applications${status ? `?status=${status}` : ''}`, 'GET', null, r),
+  approveApplication:    (id, r)      => adminRequest(`/applications/${id}/approve`, 'POST', {}, r),
+  rejectApplication:     (id, note, r)=> adminRequest(`/applications/${id}/reject`, 'POST', { note }, r),
 };

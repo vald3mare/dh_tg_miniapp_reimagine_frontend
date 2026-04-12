@@ -10,12 +10,13 @@ import ProfileBlockSkeleton from './ProfileBlockSkeleton';
 import ellipse from '../../assets/profile_skeleton.svg';
 import './Profileblock.css';
 
-/* Статусы заказов → русский + цвет */
+/* Статусы заказов → русский + цвет (соответствуют backend: open/accepted/in_progress/done/canceled) */
 const STATUS_MAP = {
-  pending:    { label: 'Ожидает',    color: '#FD7E14' },
-  in_progress:{ label: 'В работе',   color: '#476CEE' },
-  completed:  { label: 'Выполнен',   color: '#40C057' },
-  cancelled:  { label: 'Отменён',    color: '#FA5252' },
+  open:        { label: 'Ожидает',    color: '#FD7E14' },
+  accepted:    { label: 'Принят',     color: '#476CEE' },
+  in_progress: { label: 'В работе',   color: '#228BE6' },
+  done:        { label: 'Выполнен',   color: '#40C057' },
+  canceled:    { label: 'Отменён',    color: '#FA5252' },
 };
 
 const SERVICE_EMOJI = {
