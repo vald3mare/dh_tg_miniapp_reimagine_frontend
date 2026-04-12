@@ -1,0 +1,154 @@
+/* EditProfileModal — Vivid Paws */
+
+/* Затемнение фона */
+.edit-profile-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Блок: нижний шит */
+.edit-profile-modal {
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 24px 24px 0 0;
+  padding: 12px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Элемент: drag handle */
+.edit-profile-modal__handle {
+  width: 40px;
+  height: 4px;
+  background: #DEE2E6;
+  border-radius: 2px;
+  align-self: center;
+  margin-bottom: 4px;
+}
+
+/* Элемент: заголовок */
+.edit-profile-modal__title {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1A1A2E;
+  text-align: center;
+}
+
+/* Элемент: строка с аватаром */
+.edit-profile-modal__avatar-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Элемент: аватар-кружок */
+.edit-profile-modal__avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: #E8EDFF;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.edit-profile-modal__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Элемент: эмодзи-заглушка */
+.edit-profile-modal__avatar-placeholder {
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Элемент: оверлей камеры при наведении */
+.edit-profile-modal__avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.edit-profile-modal__avatar:hover .edit-profile-modal__avatar-overlay,
+.edit-profile-modal__avatar:active .edit-profile-modal__avatar-overlay {
+  opacity: 1;
+}
+
+/* Элемент: кнопка смены фото */
+.edit-profile-modal__change-photo-btn {
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #476CEE;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Элемент: label обёртка поля */
+.edit-profile-modal__label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #868E96;
+}
+
+/* Элемент: input */
+.edit-profile-modal__input {
+  height: 48px;
+  border: 1.5px solid #DEE2E6;
+  border-radius: 12px;
+  padding: 0 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #1A1A2E;
+  outline: none;
+  transition: border-color 0.15s;
+  background: #FFFFFF;
+}
+.edit-profile-modal__input:focus {
+  border-color: #476CEE;
+}
+
+/* Элемент: кнопка сохранить */
+.edit-profile-modal__save-btn {
+  height: 52px;
+  background: #476CEE;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: opacity 0.15s;
+}
+.edit-profile-modal__save-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

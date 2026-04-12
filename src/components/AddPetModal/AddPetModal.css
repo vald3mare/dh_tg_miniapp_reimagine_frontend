@@ -1,0 +1,143 @@
+/* AddPetModal — Vivid Paws */
+
+.add-pet-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Блок: шит снизу */
+.add-pet-modal {
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 24px 24px 0 0;
+  padding: 12px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 90dvh;
+  overflow-y: auto;
+}
+
+.add-pet-modal__handle {
+  width: 40px;
+  height: 4px;
+  background: #DEE2E6;
+  border-radius: 2px;
+  align-self: center;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.add-pet-modal__title {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1A1A2E;
+  text-align: center;
+}
+
+/* Элемент: подзаголовок секции */
+.add-pet-modal__section-label {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #868E96;
+}
+
+/* Элемент: сетка типов питомца */
+.add-pet-modal__type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+/* Элемент: кнопка типа */
+.add-pet-modal__type-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  background: #F8F9FA;
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+/* Модификатор: активный тип */
+.add-pet-modal__type-btn--active {
+  background: #E8EDFF;
+  border-color: #476CEE;
+}
+
+.add-pet-modal__type-emoji {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.add-pet-modal__type-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #1A1A2E;
+}
+
+/* Элемент: label */
+.add-pet-modal__label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #868E96;
+}
+
+/* Элемент: текст «опционально» */
+.add-pet-modal__optional {
+  font-weight: 400;
+  font-size: 12px;
+}
+
+/* Элемент: input */
+.add-pet-modal__input {
+  height: 48px;
+  border: 1.5px solid #DEE2E6;
+  border-radius: 12px;
+  padding: 0 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #1A1A2E;
+  outline: none;
+  background: #FFFFFF;
+  transition: border-color 0.15s;
+}
+.add-pet-modal__input:focus {
+  border-color: #476CEE;
+}
+
+/* Элемент: кнопка добавить */
+.add-pet-modal__add-btn {
+  height: 52px;
+  background: #EA6CCB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: opacity 0.15s;
+}
+.add-pet-modal__add-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

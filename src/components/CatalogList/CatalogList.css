@@ -1,61 +1,72 @@
-/* CatalogList.css */
-/* Блок: catalog-list */
+/* CatalogList — Vivid Paws */
+
+/* Блок */
 .catalog-list {
+  /*background: #FFFFFF;*/
+  border-radius: 16px;
+  padding: 16px 10px 16px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  /*width: 100%;*/
-  margin: 0 auto;
-  margin-top: 25px;
-  padding: 10px;
-  background-color: white;
-  border-radius: 15px;
 }
 
-/* Элементы */
+/* Элемент: шапка секции */
 .catalog-list__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
+/* Элемент: заголовок секции */
 .catalog-list__title {
-  font-size: 24px;
-  font-weight: bold;
   margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #1A1A2E;
 }
 
+/* Элемент: ссылка «Каталог» */
 .catalog-list__link {
-  font-size: 16px;
-  color: gray;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #476CEE;
   text-decoration: none;
 }
 
+/* ── Сетка (страница каталога, expanded=true) ── */
 .catalog-list__items {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px 5px;
+  gap: 10px;
   width: 100%;
-  will-change: transform;
 }
 
-/* Адаптивность */
-@media (max-width: 600px) {
-  .catalog-list__items {
-    grid-template-columns: repeat(1, 1fr);
-  }
+/* ── Карусель (главная страница) ── */
+.catalog-list__items--carousel {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  /*
+   * Скрываем нативный скроллбар, но скролл остаётся доступным.
+   * Жест свайпа работает штатно — без JS.
+   */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 4px;  /* чтобы тень border не обрезалась */
 }
 
-@media (min-width: 601px) and (max-width: 1024px) {
-  .catalog-list__items {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.catalog-list__items--carousel::-webkit-scrollbar {
+  display: none;
 }
 
-@media (min-width: 1025px) {
-  .catalog-list__items {
-    grid-template-columns: repeat(3, 1fr);
-  }
+/* Карточки в карусели — фиксированная ширина + snap */
+.catalog-list__items--carousel .catalog-item {
+  flex-shrink: 0;
+  width: 196px;
+  scroll-snap-align: start;
 }

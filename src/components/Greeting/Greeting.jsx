@@ -3,7 +3,7 @@ import { motion } from "motion/react"
 import Button from '../Button/Button';
 import '../Button/Button.css'
 
-const dogUrl = 'https://s3.twcstorage.ru/dh-s3-storage/Dog.png';
+const dogUrl = '/images/dog.svg';
 
 const childVariants = {
     hidden: { opacity: 0, y: 20 },

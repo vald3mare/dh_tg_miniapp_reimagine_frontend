@@ -1,0 +1,256 @@
+/* Welcome Page — Vivid Paws */
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  font-family: 'Inter', sans-serif;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Центрируем на десктопе, ограничиваем ширину */
+  /*max-width: 480px;*/
+  margin: 0 auto;
+  /* Скрываем скроллбар на всех браузерах */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.welcome::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Blue hero ── */
+.welcome__hero {
+  position: relative;
+  flex: 1 0 auto; /* растягивается, но НЕ сжимается — при нехватке места идёт скролл */
+  background: #476CEE;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 37px 20px 0;
+}
+
+/* Blobs — единственное исключение с absolute */
+.welcome__blob {
+  position: absolute;
+  border-radius: 50%;
+  background: #EDDFF6;
+  pointer-events: none;
+}
+.welcome__blob--left {
+  width: 340px;
+  height: 340px;
+  top: 49px;
+  left: -220px;
+  opacity: 0.18;
+}
+.welcome__blob--right {
+  width: 492px;
+  height: 492px;
+  top: 284px;
+  left: 209px;
+  opacity: 0.18;
+}
+.welcome__blob--top-right {
+  width: 143px;
+  height: 143px;
+  top: 29px;
+  left: 323px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Логотип */
+.welcome__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 1;
+}
+.welcome__paw {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+.welcome__brand {
+  margin: 0;
+  font-family: 'Manrope', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.7);
+  text-underline-offset: 3px;
+}
+
+/* Приветствие */
+.welcome__greeting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 48px;
+  z-index: 1;
+}
+.welcome__greeting-title {
+  margin: 0;
+  font-family: 'Manrope', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  line-height: normal;
+  color: #ffffff;
+  text-align: center;
+}
+.welcome__greeting-subtitle {
+  margin: 0;
+  margin-top: 4px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: normal;
+  color: #ffffff;
+  text-align: center;
+}
+.welcome__greeting-subtitle .accent {
+  color: #EA6CCB;
+  position: relative;
+  display: inline-block;
+}
+.welcome__greeting-subtitle .accent::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #EA6CCB;
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: underlineGrow 0.4s ease forwards;
+  animation-delay: 0.75s;
+}
+
+@keyframes underlineGrow {
+  to { transform: scaleX(1); }
+}
+
+/* Разделитель */
+.welcome__divider {
+  width: 86px;
+  height: 3px;
+  background: #EA6CCB;
+  border-radius: 2px;
+  margin-top: 20px;
+  align-self: flex-start;
+  margin-left: 18px;
+  z-index: 1;
+}
+
+/* Иллюстрация собаки */
+.welcome__dog-wrap {
+  /*
+   * flex: 1 1 auto — контейнер растёт, занимая свободное место hero,
+   * но ограничен min/max, чтобы не быть ни слишком маленьким (маленькие экраны),
+   * ни слишком большим (iPad и т.п.)
+   *
+   * React docs рекомендуют полагаться на CSS для адаптивности вместо JS-логики:
+   * https://react.dev/learn/responding-to-events#is-it-ok-to-use-css
+   */
+  flex: 1 1 auto;
+  min-height: 200px;
+  max-height: 580px;
+  width: clamp(220px, 72%, 520px); /* адаптивная ширина, пропорции держит object-fit */
+  margin-top: 12px;
+  z-index: 1;
+}
+.welcome__dog {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.welcome__dog-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120px;
+}
+
+/* ── White bottom section ── */
+.welcome__bottom {
+  flex: 0 0 auto;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 30px 32px;
+}
+
+/* "Я здесь как" */
+.welcome__prompt {
+  margin: 0 0 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #1A1A2E;
+}
+
+/* Кнопки */
+.welcome__btn {
+  width: 100%;
+  height: 52px;
+  border-radius: 15px;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s ease;
+}
+.welcome__btn:active {
+  opacity: 0.85;
+}
+.welcome__btn--primary {
+  background: #EA6CCB;
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+.welcome__btn--ghost {
+  background: #ffffff;
+  border: 1.5px solid #476CEE;
+  color: #476CEE;
+  opacity: 0.5;
+}
+
+/* Badge */
+.welcome__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  margin-top: 18px;
+  background: #FFC1F0;
+  border-radius: 100px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  color: #D44FB3;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+/* Рекламный текст */
+.welcome__ad-text {
+  margin: 8px 0 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #B1B1B1;
+}

@@ -1,7 +1,7 @@
 import './Logo.css';
 import { motion } from "motion/react"
 
-const logoUrl = 'https://s3.twcstorage.ru/dh-s3-storage/icons8-paw-100%201.svg';
+const logoUrl = '/images/paw.svg';
 
 const childVariants = {
     hidden: { opacity: 0, y: 20 },

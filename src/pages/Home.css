@@ -1,0 +1,14 @@
+/* Home Page — Vivid Paws */
+
+/* Home Page — Vivid Paws */
+
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 100dvh;
+  background: #F8F9FA;       /* светлый фон страницы, карточки белые поверх */
+  padding: 0px 0px 90px;   /* снизу отступ под bottom nav */
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}

@@ -1,82 +1,350 @@
-/* Profile.css */
+/* Profileblock — Vivid Paws */
+
+/* ── Корневой блок ── */
 .profile {
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 20px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 0 100px;
+  max-width: 480px;
   margin: 0 auto;
-  max-width: 100%;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
-/* Заголовок */
-.profile__title {
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  margin: 0 0 25px 0;
-  color: #000;
+/* ── Карточка профиля ── */
+.profile__card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 20px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
-/* Аватар */
+/* Обёртка аватара */
+.profile__avatar-wrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #E8EDFF;
+}
+
+/* Изображение аватара */
 .profile__avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+/* Блок с именем */
+.profile__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.profile__name {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1A1A2E;
+  text-align: center;
+}
+
+.profile__username {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #868E96;
+}
+
+.profile__city {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #868E96;
+}
+
+/* Кнопка «Изменить» */
+.profile__edit-btn {
+  margin-top: 4px;
+  height: 36px;
+  padding: 0 18px;
+  background: #F1F3F5;
+  border: none;
+  border-radius: 100px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #476CEE;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.profile__edit-btn:active {
+  background: #E8EDFF;
+}
+
+/* ── Секции ── */
+.profile__section {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile__section-title {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1A1A2E;
+}
+
+.profile__section-link {
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #476CEE;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ── Горизонтальный скролл питомцев ── */
+.profile__pets-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.profile__pets-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Подсказка если питомцев нет */
+.profile__empty-hint {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #ADB5BD;
+  text-align: center;
+}
+
+/* ── Карточка питомца ── */
+.pet-card {
+  position: relative;
+  flex-shrink: 0;
+  width: 90px;
+  background: #F8F9FA;
+  border-radius: 16px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  scroll-snap-align: start;
+  border: 1.5px solid transparent;
+}
+
+/* Кнопка удаления */
+.pet-card__remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #DEE2E6;
+  border: none;
+  font-size: 12px;
+  line-height: 1;
+  color: #868E96;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: #e0e0e0;
-  margin: 0 auto 20px;
+  padding: 0;
+  transition: background 0.15s;
+}
+.pet-card__remove:active {
+  background: #FA5252;
+  color: #FFFFFF;
 }
 
-/* Инфо */
-.profile__info {
-  text-align: center;
-  margin-bottom: 30px;
+.pet-card__emoji {
+  font-size: 32px;
+  line-height: 1;
 }
 
-.profile__fullname {
-  font-size: 22px;
-  font-weight: bold;
-  margin: 0 0 4px 0;
-  color: #000;
-}
-
-.profile__nickname {
-  font-size: 16px;
-  color: #666;
-  margin: 0 0 15px 0;
-}
-
-.profile__subscription {
-  font-size: 14px;
-  color: #666;
-}
-
-/* Кнопка */
-.profile__button {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(90deg, #FF69B4, #EA6CCB);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  font-size: 16px;
+.pet-card__name {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
   font-weight: 600;
+  color: #1A1A2E;
+  text-align: center;
+  word-break: break-word;
+}
+
+.pet-card__breed {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #868E96;
+  text-align: center;
+}
+
+/* Карточка «Добавить» */
+.pet-card--add {
+  background: #F1F3F5;
+  border: 1.5px dashed #CED4DA;
   cursor: pointer;
-  margin-bottom: 30px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.pet-card--add:active {
+  background: #E8EDFF;
+  border-color: #476CEE;
 }
 
-/* Заказы */
-.profile__orders {
-  padding-top: 20px;
-  border-top: 1px solid #eee;
+.pet-card__plus {
+  font-size: 28px;
+  line-height: 1;
+  color: #ADB5BD;
 }
 
-.profile__orders-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #000;
+/* ── Список заказов ── */
+.profile__orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Карточка одного заказа */
+.profile-order {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  background: #F8F9FA;
+  border-radius: 14px;
+}
+
+.profile-order__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.profile-order__emoji {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.profile-order__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.profile-order__type {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1A2E;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-order__date {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #868E96;
+}
+
+.profile-order__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.profile-order__price {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1A1A2E;
+}
+
+.profile-order__status {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+
+/* Пустое состояние заказов */
+.profile__orders-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 0 4px;
+}
+
+.profile__orders-empty-icon {
+  font-size: 40px;
+}
+
+.profile__orders-empty p {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1A2E;
+  text-align: center;
+}
+
+.profile__orders-empty-sub {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #ADB5BD !important;
+}
+
+/* Лоадер заказов */
+.profile__loading-hint {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #ADB5BD;
+  text-align: center;
+  padding: 8px 0;
 }

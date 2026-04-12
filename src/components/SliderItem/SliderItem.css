@@ -1,12 +1,98 @@
+/* SliderItem — Vivid Paws banner card */
+
+/* Блок */
 .slider-item {
   flex: 0 0 100%;
-  flex-direction: column;
+  height: 100%;
+  background: #476CEE;
   display: flex;
+  align-items: center;
+  padding: 20px 18px;
+  position: relative;
+  overflow: hidden;
+  gap: 12px;
+}
+
+/* Декоративные блобы — исключение из правила «без absolute»,
+   они чисто декоративные и не влияют на layout */
+.slider-item__blob {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
+
+.slider-item__blob--lg {
+  width: 100px;
+  height: 100px;
+  top: 20px;
+  right: -10px;
+}
+
+.slider-item__blob--sm {
+  width: 60px;
+  height: 60px;
+  bottom: -10px;
+  right: 50px;
+}
+
+/* Элемент: текстовый блок слева */
+.slider-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1;
+  min-width: 0;
+}
+
+/* Элемент: заголовок */
+.slider-item__title {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 28px;
+  color: #FFFFFF;
+  white-space: pre-line; /* \n в тексте превращается в перенос */
+}
+
+/* Элемент: подпись */
+.slider-item__subtitle {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Элемент: CTA-кнопка */
+.slider-item__btn {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  /*align-items: center;
-  user-select: none;
-  box-sizing: border-box;
-  /*background-color: white;*/
-  background-size: cover;
-  border-radius: 15px;
+  width: 126px;
+  height: 36px;
+  background: #FFFFFF;
+  border-radius: 100px;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #476CEE;
+  text-decoration: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Элемент: плейсхолдер иллюстрации */
+.slider-item__image {
+  width: 116px;
+  height: 116px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  z-index: 1;
 }

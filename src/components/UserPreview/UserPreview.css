@@ -1,39 +1,55 @@
+/* UserPreview — Vivid Paws */
+
+/* Блок */
 .user-preview {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  min-width: 0; /* предотвращает overflow длинного имени */
 }
 
+/* Элемент: строка с аватаром и именем */
 .user-preview__inner {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 10px;
 }
 
+/* Элемент: аватар */
 .user-preview__icon {
-  display: block;
   width: 40px;
   height: 40px;
-  border-radius: 100%;
+  border-radius: 20px;
+  background: #E8EDFF;
   object-fit: cover;
-  position: relative;
-  border: none;
+  flex-shrink: 0;
 }
 
+/* Элемент: текстовый блок */
+.user-preview__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* Элемент: имя */
 .user-preview__name {
-  margin-left: 5px;
-  font-size: 21px;
-  font-weight: bold;
-  color: #000;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #1A1A2E;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.user-preview__name::after {
-  content: ' >';
-  color: #666;
-}
-
-.user-preview__city {
-  font-size: 18px;
-  font-weight: 500;
-  color: #666;
+/* Элемент: город / username */
+.user-preview__sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #868E96;
+  white-space: nowrap;
 }

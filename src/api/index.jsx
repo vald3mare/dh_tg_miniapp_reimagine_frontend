@@ -13,10 +13,28 @@ export async function fetchProfile(initDataRaw) {
   return res.json();
 }
 
+/*
+ * _catalogPromise — дедупликатор одновременных запросов.
+ * Если fetchCatalog() вызвать несколько раз подряд (например, Home + Catalog
+ * монтируются одновременно), к бэкенду улетит ровно один запрос.
+ * Promise сбрасывается после settle, чтобы следующий вызов мог повторить запрос.
+ */
+let _catalogPromise = null;
+
+export function prefetchCatalog() {
+  if (!_catalogPromise) {
+    _catalogPromise = fetch(`${BASE_URL}/catalog`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Ошибка каталога: ${res.status}`);
+        return res.json();
+      })
+      .finally(() => { _catalogPromise = null; });
+  }
+  return _catalogPromise;
+}
+
 export async function fetchCatalog() {
-  const res = await fetch(`${BASE_URL}/catalog`);
-  if (!res.ok) throw new Error(`Ошибка каталога: ${res.status}`);
-  return res.json();
+  return prefetchCatalog();
 }
 
 /**
@@ -86,12 +104,21 @@ export async function acceptOrder(id, initDataRaw) {
   return data;
 }
 
-/** Мои принятые заявки */
+/** Мои принятые заявки (исполнитель) */
 export async function fetchMyOrders(initDataRaw) {
   const res = await fetch(`${BASE_URL}/executor/orders/my`, {
     headers: { Authorization: `tma ${initDataRaw}` },
   });
   if (!res.ok) throw new Error(`Ошибка: ${res.status}`);
+  return res.json();
+}
+
+/** Мои заказы (покупатель) */
+export async function fetchCustomerOrders(initDataRaw) {
+  const res = await fetch(`${BASE_URL}/orders/my`, {
+    headers: { Authorization: `tma ${initDataRaw}` },
+  });
+  if (!res.ok) throw new Error(`Ошибка заказов: ${res.status}`);
   return res.json();
 }
 

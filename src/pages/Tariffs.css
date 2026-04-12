@@ -1,0 +1,12 @@
+/* Tariffs Page — Vivid Paws */
+
+.tariffs-page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 100dvh;
+  background: #F8F9FA;
+  padding: 10px 10px 90px;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}

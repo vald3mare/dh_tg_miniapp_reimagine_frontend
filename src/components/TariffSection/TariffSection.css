@@ -1,0 +1,251 @@
+/* TariffSection — Vivid Paws */
+
+/* ── Блок-секция ── */
+.tariff-section {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 16px;
+  filter: drop-shadow(0 4px 16px rgba(71, 108, 238, 0.25));
+}
+
+/* Элемент: заголовок */
+.tariff-section__title {
+  margin: 0 0 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #1A1A2E;
+}
+
+/* ── Компактная сетка (главная) ── */
+.tariff-section__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+/* ── Карусель (страница тарифов) ── */
+.tariff-section__carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 4px;
+}
+.tariff-section__carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* ══════════════════════════════════════
+   Блок: tariff-card
+   ══════════════════════════════════════ */
+
+/* База для всех вариантов */
+.tariff-card {
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* ── Компактная карточка (главная, 2 шт. в сетке) ── */
+.tariff-card--compact {
+  height: 160px;
+}
+
+/* ── Полная карточка (карусель) ── */
+.tariff-section__carousel .tariff-card {
+  width: 260px;
+  scroll-snap-align: start;
+  min-height: 360px;
+}
+
+/* ── Цветовые модификаторы ── */
+.tariff-card--pale {
+  background: #E8EDFF;
+}
+.tariff-card--blue {
+  background: #476CEE;
+}
+.tariff-card--pink {
+  background: #EA6CCB;
+}
+.tariff-card--dark {
+  background: #1A1A2E;
+}
+
+/* ── Элемент: шапка (только full-карточка) ── */
+.tariff-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+/* ── Элемент: бейдж «Хит продаж» ── */
+.tariff-card__badge {
+  align-self: flex-start;
+  padding: 3px 8px;
+  background: #FFD43B;
+  border-radius: 100px;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  color: #5C4200;
+  white-space: nowrap;
+  /* В компактном режиме — добавляем отступ снизу через margin */
+  margin-bottom: 4px;
+}
+
+/* ── Элемент: название тарифа ── */
+.tariff-card__name {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 22px;
+}
+
+.tariff-card--pale  .tariff-card__name { color: #1A1A2E; }
+.tariff-card--blue  .tariff-card__name { color: #FFFFFF; }
+.tariff-card--pink  .tariff-card__name { color: #FFFFFF; }
+.tariff-card--dark  .tariff-card__name { color: #FFFFFF; }
+
+/* Компактное имя — чуть меньше, добавляем отступ сверху если нет бейджа */
+.tariff-card__name--compact {
+  margin: 0;
+}
+
+/* ── Разделитель ── */
+.tariff-card__divider {
+  height: 1px;
+  margin: 0 0 12px;
+  border-radius: 1px;
+}
+.tariff-card--pale .tariff-card__divider  { background: rgba(71, 108, 238, 0.2); }
+.tariff-card--blue .tariff-card__divider  { background: rgba(255, 255, 255, 0.2); }
+.tariff-card--pink .tariff-card__divider  { background: rgba(255, 255, 255, 0.25); }
+.tariff-card--dark .tariff-card__divider  { background: rgba(255, 255, 255, 0.12); }
+
+/* ── Элемент: список фич ── */
+.tariff-card__features {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+/* ── Элемент: одна фича ── */
+.tariff-card__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.tariff-card--pale .tariff-card__feature { color: #476CEE; }
+.tariff-card--blue .tariff-card__feature { color: rgba(255, 255, 255, 0.9); }
+.tariff-card--pink .tariff-card__feature { color: rgba(255, 255, 255, 0.9); }
+.tariff-card--dark .tariff-card__feature { color: rgba(255, 255, 255, 0.8); }
+
+/* ── Элемент: иконка галочки ── */
+.tariff-card__check {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.tariff-card--pale .tariff-card__check { background: #476CEE;             color: #FFFFFF; }
+.tariff-card--blue .tariff-card__check { background: rgba(255,255,255,0.25); color: #FFFFFF; }
+.tariff-card--pink .tariff-card__check { background: rgba(255,255,255,0.25); color: #FFFFFF; }
+.tariff-card--dark .tariff-card__check { background: #EA6CCB;              color: #FFFFFF; }
+
+/* ── Элемент: футер (цена + кнопка) ── */
+.tariff-card__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* ── Элемент: блок с ценой ── */
+.tariff-card__pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+/* ── Элемент: цена ── */
+.tariff-card__price {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 28px;
+}
+
+.tariff-card--pale .tariff-card__price { color: #1A1A2E; }
+.tariff-card--blue .tariff-card__price { color: #FFFFFF; }
+.tariff-card--pink .tariff-card__price { color: #FFFFFF; }
+.tariff-card--dark .tariff-card__price { color: #FFFFFF; }
+
+/* Компактная версия цены */
+.tariff-card__price--compact {
+  font-size: 20px;
+  margin: 4px 0 0;
+}
+
+/* ── Элемент: период ── */
+.tariff-card__period {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.tariff-card--pale .tariff-card__period { color: rgba(26, 26, 46, 0.5); }
+.tariff-card--blue .tariff-card__period { color: rgba(255, 255, 255, 0.6); }
+.tariff-card--pink .tariff-card__period { color: rgba(255, 255, 255, 0.6); }
+.tariff-card--dark .tariff-card__period { color: rgba(255, 255, 255, 0.5); }
+
+/* ── Элемент: кнопка ── */
+.tariff-card__btn {
+  align-self: flex-start;
+  height: 38px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 100px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  /* В компактном режиме — занимаем всю ширину */
+}
+
+.tariff-card--compact .tariff-card__btn {
+  width: 100%;
+  margin-top: auto;
+}
+
+.tariff-card--pale .tariff-card__btn { background: #476CEE; color: #FFFFFF; }
+.tariff-card--blue .tariff-card__btn { background: #FFFFFF;  color: #476CEE; }
+.tariff-card--pink .tariff-card__btn { background: #FFFFFF;  color: #EA6CCB; }
+.tariff-card--dark .tariff-card__btn { background: #EA6CCB;  color: #FFFFFF; }

@@ -1,6 +1,8 @@
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { useEffect } from 'react';
 import { useUser } from './context/UserContext';
+import { prefetchCatalog } from './api';
 import CartDrawer from './components/CartDrawer/CartDrawer';
 
 import BottomNav from './components/BottomNav/BottomNav';
@@ -11,6 +13,7 @@ import Welcome from './pages/Welcome';
 import RolePicker from './pages/RolePicker';
 import Home from './pages/Home';
 import Catalog from './pages/Catalog';
+import Tariffs from './pages/Tariffs';
 import Profile from './pages/Profile';
 
 import ExecutorHome from './pages/ExecutorHome';
@@ -73,6 +76,14 @@ const App = () => {
   const location = useLocation();
   const { effectiveRole, role } = useUser();
 
+  /*
+   * Prefetch каталога при старте приложения — запрос улетает сразу,
+   * ещё пока юзер видит Welcome/RolePicker страницу.
+   * К моменту перехода на /home данные уже готовы или почти готовы.
+   * sessionStorage кеш в useCatalog сделает повторные заходы мгновенными.
+   */
+  useEffect(() => { prefetchCatalog(); }, []);
+
   const isAdmin    = ADMIN_PATHS.some(p => location.pathname === p);
   const isExecutor = EXECUTOR_PATHS.some(p => location.pathname.startsWith(p));
   const showNav    = location.pathname !== '/';
@@ -88,6 +99,7 @@ const App = () => {
           {/* Заказчики */}
           <Route path="/home"    element={<Home />} />
           <Route path="/catalog" element={<Catalog />} />
+          <Route path="/tariffs" element={<Tariffs />} />
           <Route path="/profile" element={<Profile />} />
 
           {/* Исполнители */}
