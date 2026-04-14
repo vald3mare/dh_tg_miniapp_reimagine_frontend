@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useUser } from '../context/UserContext';
 import { setRole } from '../api';
+import { hapticMedium } from '../utils/tg';
 import './Welcome.css';
 
 const PAW_ICON_URL  = '/images/paw.svg';
@@ -23,6 +25,8 @@ const childVariants = {
 const Welcome = () => {
   const navigate = useNavigate();
   const { user, initDataRaw, roles, effectiveRole, loading } = useUser();
+
+  useEffect(() => { hapticMedium(); }, []);
 
   if (!loading && user) {
     if (roles.length > 1 && !effectiveRole) return <Navigate to="/role-picker" replace />;

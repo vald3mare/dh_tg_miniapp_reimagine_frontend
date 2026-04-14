@@ -7,6 +7,15 @@ import { UserProvider } from './context/UserContext';
 import { CartProvider } from './context/CartContext';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
+// ── Инициализация Telegram Mini App ──────────────────────────────────────────
+const twa = window.Telegram?.WebApp;
+if (twa) {
+  twa.ready();
+  twa.expand();                                         // полноэкранный режим
+  twa.enableClosingConfirmation();                      // «Закрыть приложение?» при свайпе
+  twa.disableVerticalSwipes?.();                        // убираем свайп-вниз (API 7.7+)
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>

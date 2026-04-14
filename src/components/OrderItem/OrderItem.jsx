@@ -33,7 +33,7 @@ const OrderItem = ({ order, onAccepted }) => {
   };
 
   const emoji = Object.entries(SERVICE_EMOJI).find(([k]) =>
-    order.ServiceType?.includes(k)
+    order.service_type?.includes(k)
   )?.[1] || '🐾';
 
   return (
@@ -45,23 +45,23 @@ const OrderItem = ({ order, onAccepted }) => {
     >
       <div className="order-item__header">
         <span className="order-item__emoji">{emoji}</span>
-        <span className="order-item__type">{order.ServiceType || 'Услуга'}</span>
-        {order.Price > 0 && (
-          <span className="order-item__price">{order.Price}₽</span>
+        <span className="order-item__type">{order.service_type || 'Услуга'}</span>
+        {order.price > 0 && (
+          <span className="order-item__price">{order.price}₽</span>
         )}
       </div>
 
-      {order.Description && (
-        <p className="order-item__description">{order.Description}</p>
+      {order.description && (
+        <p className="order-item__description">{order.description}</p>
       )}
 
-      {order.CustomerName && (
-        <p className="order-item__customer">Клиент: {order.CustomerName}</p>
+      {order.customer_name && (
+        <p className="order-item__customer">Клиент: {order.customer_name}</p>
       )}
 
-      {order.ScheduledAt && (
+      {order.scheduled_at && (
         <p className="order-item__date">
-          {new Date(order.ScheduledAt).toLocaleDateString('ru-RU', {
+          {new Date(order.scheduled_at).toLocaleDateString('ru-RU', {
             day: 'numeric',
             month: 'long',
             hour: '2-digit',

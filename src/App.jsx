@@ -25,9 +25,10 @@ import AdminCatalog from './pages/admin/AdminCatalog';
 import AdminAchievements from './pages/admin/AdminAchievements';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminOrders from './pages/admin/AdminOrders';
+import AdminApplications from './pages/admin/AdminApplications';
 
 const EXECUTOR_PATHS = ['/executor/home', '/executor/orders', '/executor/profile'];
-const ADMIN_PATHS    = ['/admin', '/admin/catalog', '/admin/achievements', '/admin/users', '/admin/orders'];
+const ADMIN_PATHS    = ['/admin', '/admin/catalog', '/admin/achievements', '/admin/users', '/admin/orders', '/admin/applications'];
 
 // Guard: проверяет effectiveRole (выбранную) или primaryRole
 const RoleGuard = ({ allowed, children }) => {
@@ -122,6 +123,9 @@ const App = () => {
           } />
           <Route path="/admin/orders" element={
             <RoleGuard allowed={['admin']}><AdminOrders /></RoleGuard>
+          } />
+          <Route path="/admin/applications" element={
+            <RoleGuard allowed={['admin']}><AdminApplications /></RoleGuard>
           } />
         </Routes>
       </AnimatePresence>

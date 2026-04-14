@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
 import { useUser } from '../../context/UserContext';
-import { createOrder } from '../../api';
+import { customerCreateOrder } from '../../api';
 import Rectangle from '../../assets/Rectangle.svg';
 import './CartDrawer.css';
 
 const CartDrawer = () => {
   const { items, isOpen, closeCart, removeFromCart, updateQuantity, clearCart, total } = useCart();
-  const { user } = useUser();
+  const { user, initDataRaw } = useUser();
 
   const [name, setName] = useState(
     user ? (`${user.first_name || ''} ${user.last_name || ''}`).trim() : ''
@@ -25,13 +25,13 @@ const CartDrawer = () => {
     try {
       const serviceType = items.map(i => i.name).join(', ');
       const description = items.map(i => `${i.name} x${i.quantity}`).join('; ');
-      await createOrder({
+      await customerCreateOrder({
         service_type: serviceType,
         description,
         price: total,
         customer_name: name.trim(),
         customer_contact: contact.trim(),
-      });
+      }, initDataRaw);
       setSubmitted(true);
       clearCart();
     } catch (err) {

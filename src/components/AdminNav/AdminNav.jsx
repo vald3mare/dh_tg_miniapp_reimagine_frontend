@@ -5,14 +5,16 @@ import PetsIcon from '@mui/icons-material/Pets';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import PeopleIcon from '@mui/icons-material/People';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import '../BottomNav/BottomNav.css';
 
 const TABS = [
-  { path: '/admin',              label: 'Стата',   icon: BarChartIcon },
-  { path: '/admin/catalog',      label: 'Каталог', icon: PetsIcon },
-  { path: '/admin/achievements', label: 'Ачивки',  icon: EmojiEventsIcon },
-  { path: '/admin/users',        label: 'Юзеры',   icon: PeopleIcon },
-  { path: '/admin/orders',       label: 'Заявки',  icon: ListAltIcon },
+  { path: '/admin',                label: 'Стата',      icon: BarChartIcon     },
+  { path: '/admin/catalog',        label: 'Каталог',    icon: PetsIcon         },
+  { path: '/admin/achievements',   label: 'Ачивки',     icon: EmojiEventsIcon  },
+  { path: '/admin/users',          label: 'Юзеры',      icon: PeopleIcon       },
+  { path: '/admin/orders',         label: 'Заявки',     icon: ListAltIcon      },
+  { path: '/admin/applications',   label: 'Исполн.',    icon: AssignmentIndIcon },
 ];
 
 const AdminNav = () => {

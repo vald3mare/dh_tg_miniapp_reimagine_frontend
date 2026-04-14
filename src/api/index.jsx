@@ -167,6 +167,50 @@ export async function fetchAchievements(initDataRaw) {
   return res.json();
 }
 
+// ── Profile settings ──────────────────────────────────────────────────────
+
+export async function updateProfileSettings(patch, initDataRaw) {
+  const res = await fetch(`${BASE_URL}/profile/settings`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', Authorization: `tma ${initDataRaw}` },
+    body: JSON.stringify(patch),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `Ошибка: ${res.status}`);
+  return data;
+}
+
+// ── Pets ───────────────────────────────────────────────────────────────────
+
+export async function fetchPets(initDataRaw) {
+  const res = await fetch(`${BASE_URL}/profile/pets`, {
+    headers: { Authorization: `tma ${initDataRaw}` },
+  });
+  if (!res.ok) throw new Error(`Ошибка питомцев: ${res.status}`);
+  return res.json();
+}
+
+export async function addPet(pet, initDataRaw) {
+  const res = await fetch(`${BASE_URL}/profile/pets`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `tma ${initDataRaw}` },
+    body: JSON.stringify(pet),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `Ошибка: ${res.status}`);
+  return data;
+}
+
+export async function deletePet(id, initDataRaw) {
+  const res = await fetch(`${BASE_URL}/profile/pets/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `tma ${initDataRaw}` },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `Ошибка: ${res.status}`);
+  return data;
+}
+
 // ── Admin API ──────────────────────────────────────────────────────────────
 
 async function adminRequest(path, method = 'GET', body, initDataRaw) {

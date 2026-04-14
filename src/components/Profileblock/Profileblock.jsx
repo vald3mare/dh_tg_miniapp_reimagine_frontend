@@ -27,7 +27,7 @@ const SERVICE_EMOJI = {
 /* ── Карточка заказа ── */
 const OrderCard = ({ order }) => {
   const emoji = Object.entries(SERVICE_EMOJI).find(([k]) =>
-    order.ServiceType?.includes(k)
+    order.service_type?.includes(k)
   )?.[1] ?? '🐾';
   const status = STATUS_MAP[order.status] ?? { label: order.status ?? 'Новый', color: '#868E96' };
 
@@ -36,10 +36,10 @@ const OrderCard = ({ order }) => {
       <div className="profile-order__left">
         <span className="profile-order__emoji">{emoji}</span>
         <div className="profile-order__info">
-          <p className="profile-order__type">{order.ServiceType || 'Услуга'}</p>
-          {order.ScheduledAt && (
+          <p className="profile-order__type">{order.service_type || 'Услуга'}</p>
+          {order.scheduled_at && (
             <p className="profile-order__date">
-              {new Date(order.ScheduledAt).toLocaleDateString('ru-RU', {
+              {new Date(order.scheduled_at).toLocaleDateString('ru-RU', {
                 day: 'numeric', month: 'short',
               })}
             </p>
@@ -47,8 +47,8 @@ const OrderCard = ({ order }) => {
         </div>
       </div>
       <div className="profile-order__right">
-        {order.Price > 0 && (
-          <p className="profile-order__price">{order.Price} ₽</p>
+        {order.price > 0 && (
+          <p className="profile-order__price">{order.price} ₽</p>
         )}
         <span
           className="profile-order__status"
