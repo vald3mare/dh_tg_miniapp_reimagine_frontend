@@ -24,7 +24,7 @@ const childVariants = {
 
 const Welcome = () => {
   const navigate = useNavigate();
-  const { user, initDataRaw } = useUser();
+  const { user, loading, error, retry, initDataRaw } = useUser();
 
   const handleCustomer = () => {
     hapticMedium();
@@ -76,23 +76,42 @@ const Welcome = () => {
 
       {/* ── White bottom section ── */}
       <m.div className="welcome__bottom" variants={childVariants}>
-        <p className="welcome__prompt">Я здесь как</p>
-
-        <m.button
-          className="welcome__btn welcome__btn--primary"
-          whileTap={{ scale: 0.97 }}
-          onClick={handleCustomer}
-        >
-          Хозяин питомца
-        </m.button>
-
-        <m.button
-          className="welcome__btn welcome__btn--ghost"
-          whileTap={{ scale: 0.95 }}
-          onClick={handleExecutor}
-        >
-          Исполнитель
-        </m.button>
+        {error ? (
+          <>
+            <p style={{ color: '#888', fontSize: 14, marginBottom: 12, textAlign: 'center' }}>
+              {error === 'timeout' ? 'Сервер долго не отвечает…' : 'Не удалось загрузить профиль'}
+            </p>
+            <m.button
+              className="welcome__btn welcome__btn--primary"
+              whileTap={{ scale: 0.97 }}
+              onClick={retry}
+            >
+              Попробовать снова
+            </m.button>
+          </>
+        ) : loading ? (
+          <p style={{ color: '#aaa', fontSize: 14, textAlign: 'center', padding: '24px 0' }}>
+            Загрузка…
+          </p>
+        ) : (
+          <>
+            <p className="welcome__prompt">Я здесь как</p>
+            <m.button
+              className="welcome__btn welcome__btn--primary"
+              whileTap={{ scale: 0.97 }}
+              onClick={handleCustomer}
+            >
+              Хозяин питомца
+            </m.button>
+            <m.button
+              className="welcome__btn welcome__btn--ghost"
+              whileTap={{ scale: 0.95 }}
+              onClick={handleExecutor}
+            >
+              Исполнитель
+            </m.button>
+          </>
+        )}
 
         <span className="welcome__badge">Популярное</span>
         <p className="welcome__ad-text">

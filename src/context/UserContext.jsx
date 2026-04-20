@@ -23,6 +23,8 @@ export const UserProvider = ({ children }) => {
   const [activeRole, setActiveRoleState] = useState(null);
   const userRef = useRef(null); // стабильная ссылка на user для useCallback без stale closure
 
+  const [retryCount, setRetryCount] = useState(0);
+
   useEffect(() => {
     let raw;
     try {
@@ -40,6 +42,8 @@ export const UserProvider = ({ children }) => {
     }
 
     setInitDataRaw(raw);
+    setLoading(true);
+    setError(null);
 
     fetchProfile(raw)
       .then(data => {
@@ -49,10 +53,12 @@ export const UserProvider = ({ children }) => {
       })
       .catch(err => {
         console.error('Ошибка при получении профиля:', err);
-        setError(err.message);
+        setError(err.name === 'AbortError' ? 'timeout' : err.message);
         setLoading(false);
       });
-  }, []);
+  }, [retryCount]);
+
+  const retry = useCallback(() => setRetryCount(n => n + 1), []);
 
   useEffect(() => {
     if (!user) return;
@@ -85,8 +91,8 @@ export const UserProvider = ({ children }) => {
     user, loading, error, initDataRaw,
     role, roles,
     activeRole, effectiveRole,
-    setActiveRole, clearActiveRole,
-  }), [user, loading, error, initDataRaw, role, roles, activeRole, effectiveRole, setActiveRole, clearActiveRole]);
+    setActiveRole, clearActiveRole, retry,
+  }), [user, loading, error, initDataRaw, role, roles, activeRole, effectiveRole, setActiveRole, clearActiveRole, retry]);
 
   return (
     <UserContext.Provider value={value}>

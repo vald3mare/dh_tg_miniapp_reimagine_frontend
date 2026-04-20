@@ -5,12 +5,22 @@ const BASE_URL = import.meta.env.VITE_API_URL || 'https://vald3mare-dh-tg-miniap
  * Менять хост нужно только в .env (VITE_API_URL).
  */
 
-export async function fetchProfile(initDataRaw) {
-  const res = await fetch(`${BASE_URL}/profile`, {
-    headers: { Authorization: `tma ${initDataRaw}` },
-  });
-  if (!res.ok) throw new Error(`Ошибка профиля: ${res.status}`);
-  return res.json();
+export async function fetchProfile(initDataRaw, { signal } = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 10_000);
+  const merged = signal
+    ? (() => { signal.addEventListener('abort', () => controller.abort()); return controller.signal; })()
+    : controller.signal;
+  try {
+    const res = await fetch(`${BASE_URL}/profile`, {
+      headers: { Authorization: `tma ${initDataRaw}` },
+      signal: merged,
+    });
+    if (!res.ok) throw new Error(`Ошибка профиля: ${res.status}`);
+    return res.json();
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 /*
