@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'motion/react'
+import * as m from 'motion/react-m';
 import { useUser } from '../../context/UserContext';
 import { usePets } from '../../hooks/usePets';
 import { useProfileOverrides } from '../../hooks/useProfileOverrides';
@@ -114,7 +115,7 @@ const ProfileBlock = () => {
       {/* ── Карточка профиля ── */}
       <div className="profile__card">
         <div className="profile__avatar-wrap">
-          <motion.img
+          <m.img
             className="profile__avatar"
             src={avatarSrc}
             alt="Аватар"
@@ -123,9 +124,9 @@ const ProfileBlock = () => {
         </div>
 
         <div className="profile__info">
-          <motion.h2 className="profile__name" layoutId="profile-fullname">
+          <m.h2 className="profile__name" layoutId="profile-fullname">
             {displayName}
-          </motion.h2>
+          </m.h2>
           {username && <p className="profile__username">{username}</p>}
           {city && (
             <p className="profile__city">📍 {city}</p>
@@ -156,7 +157,7 @@ const ProfileBlock = () => {
         <div className="profile__pets-scroll">
           <AnimatePresence>
             {pets.map(pet => (
-              <motion.div
+              <m.div
                 key={pet.id}
                 initial={{ opacity: 0, scale: 0.85 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -164,7 +165,7 @@ const ProfileBlock = () => {
                 transition={{ duration: 0.2 }}
               >
                 <PetCard pet={pet} onRemove={removePet} />
-              </motion.div>
+              </m.div>
             ))}
           </AnimatePresence>
           <AddPetCard onClick={() => setAddPetOpen(true)} />

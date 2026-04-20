@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import './CatalogItem.css';
-import { motion } from 'framer-motion';
+import * as m from 'motion/react-m';
 
 /*
  * Палитра фонов для image-area: назначается по id карточки (id % length),
@@ -33,7 +33,7 @@ const CatalogItem = ({
   const placeholderBg = PLACEHOLDER_COLORS[id % PLACEHOLDER_COLORS.length] ?? '#E8EDFF';
 
   return (
-    <motion.div
+    <m.div
       layoutId={`catalog-card-${id}`}
       className={`catalog-item${isExpanded ? ' catalog-item--expanded' : ''}`}
       onClick={!isExpanded ? onClick : undefined}
@@ -53,14 +53,14 @@ const CatalogItem = ({
               {description.length > 60 ? `${description.slice(0, 60)}…` : description}
             </p>
             <div className="catalog-item__footer">
-              <motion.button
+              <m.button
                 className="catalog-item__add-btn"
                 onClick={(e) => { e.stopPropagation(); onAddToCart(); }}
                 whileTap={{ scale: 0.92 }}
                 transition={{ type: 'spring', stiffness: 600, damping: 28 }}
               >
                 В корзину
-              </motion.button>
+              </m.button>
               <span className="catalog-item__price">{price} ₽</span>
             </div>
           </div>
@@ -70,7 +70,7 @@ const CatalogItem = ({
       {/* ── Раскрытая карточка (в модальном окне) ── */}
       {isExpanded && (
         <>
-          <motion.button
+          <m.button
             className="catalog-item__close"
             onClick={onClose}
             aria-label="Закрыть"
@@ -78,7 +78,7 @@ const CatalogItem = ({
             transition={{ type: 'spring', stiffness: 500, damping: 25 }}
           >
             ×
-          </motion.button>
+          </m.button>
           <div
             className="catalog-item__image-area catalog-item__image-area--expanded"
             style={{ background: placeholderBg }}
@@ -92,7 +92,7 @@ const CatalogItem = ({
               ))}
             </div>
             <div className="catalog-item__actions">
-              <motion.button
+              <m.button
                 className="catalog-item__buy-btn"
                 onClick={onBuy}
                 disabled={isPaying}
@@ -100,8 +100,8 @@ const CatalogItem = ({
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               >
                 {isPaying ? 'Оформляем…' : 'Купить в 1 клик'}
-              </motion.button>
-              <motion.button
+              </m.button>
+              <m.button
                 className="catalog-item__cart-btn"
                 onClick={onAddToCart}
                 aria-label="В корзину"
@@ -109,12 +109,12 @@ const CatalogItem = ({
                 transition={{ type: 'spring', stiffness: 500, damping: 25 }}
               >
                 🛒
-              </motion.button>
+              </m.button>
             </div>
           </div>
         </>
       )}
-    </motion.div>
+    </m.div>
   );
 };
 

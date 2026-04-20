@@ -1,8 +1,8 @@
 import './Button.css';
-import { motion } from 'framer-motion';
+import * as m from 'motion/react-m';
 
 const Button = ({ text = '', className = '', childVariants = '', onClick, disabled = false }) => (
-  <motion.button
+  <m.button
     className={className}
     variants={childVariants}
     onClick={onClick}
@@ -11,7 +11,7 @@ const Button = ({ text = '', className = '', childVariants = '', onClick, disabl
     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
   >
     {text}
-  </motion.button>
+  </m.button>
 );
 
 export default Button;

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'motion/react'
+import * as m from 'motion/react-m';
 import { useCart } from '../../context/CartContext';
 import { useUser } from '../../context/UserContext';
 import { customerCreateOrder } from '../../api';
@@ -13,7 +14,7 @@ const C_BIG            = 2 * Math.PI * RADIUS_BIG;
 const C_SMALL          = 2 * Math.PI * RADIUS_SMALL;
 
 const Btn = ({ className, onClick, disabled, children, tapScale = 0.93, rotate = 0 }) => (
-  <motion.button
+  <m.button
     className={className}
     onClick={onClick}
     disabled={disabled}
@@ -21,7 +22,7 @@ const Btn = ({ className, onClick, disabled, children, tapScale = 0.93, rotate =
     transition={{ type: 'spring', stiffness: 500, damping: 28 }}
   >
     {children}
-  </motion.button>
+  </m.button>
 );
 
 const CartDrawer = () => {
@@ -137,14 +138,14 @@ const CartDrawer = () => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <m.div
           className="cart-overlay"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={handleClose}
         >
-          <motion.div
+          <m.div
             className="cart-drawer"
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
@@ -171,7 +172,7 @@ const CartDrawer = () => {
                 <div className="cart-drawer__items">
                   <AnimatePresence>
                     {showUndoBanner && (
-                      <motion.div
+                      <m.div
                         className="cart-undo-banner"
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -196,7 +197,7 @@ const CartDrawer = () => {
                         <Btn className="cart-undo-banner__btn" onClick={handleUndo} tapScale={0.92}>
                           Отменить
                         </Btn>
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
 
@@ -230,7 +231,7 @@ const CartDrawer = () => {
 
                   <AnimatePresence initial={false}>
                     {items.map(item => (
-                      <motion.div
+                      <m.div
                         className="cart-item"
                         key={item.id}
                         layout
@@ -251,7 +252,7 @@ const CartDrawer = () => {
                         </div>
                         <p className="cart-item__price">{(item.price * item.quantity).toLocaleString('ru-RU')}₽</p>
                         <Btn className="cart-item__remove" onClick={() => handleRemove(item.id)} tapScale={0.8} rotate={90}>✕</Btn>
-                      </motion.div>
+                      </m.div>
                     ))}
                   </AnimatePresence>
                 </div>
@@ -278,8 +279,8 @@ const CartDrawer = () => {
                 </div>
               </>
             )}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

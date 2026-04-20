@@ -1,6 +1,6 @@
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
-import { useEffect } from 'react';
+import { AnimatePresence } from 'motion/react';
+import { useEffect, lazy, Suspense } from 'react';
 import { useUser } from './context/UserContext';
 import { prefetchCatalog } from './api';
 import CartDrawer from './components/CartDrawer/CartDrawer';
@@ -16,16 +16,17 @@ import Catalog from './pages/Catalog';
 import Tariffs from './pages/Tariffs';
 import Profile from './pages/Profile';
 
-import ExecutorHome from './pages/ExecutorHome';
-import ExecutorOrders from './pages/ExecutorOrders';
-import ExecutorProfilePage from './pages/ExecutorProfilePage';
+// Executor + Admin страницы — lazy loaded, грузятся только при первом переходе
+const ExecutorHome        = lazy(() => import('./pages/ExecutorHome'));
+const ExecutorOrders      = lazy(() => import('./pages/ExecutorOrders'));
+const ExecutorProfilePage = lazy(() => import('./pages/ExecutorProfilePage'));
 
-import AdminStats from './pages/admin/AdminStats';
-import AdminCatalog from './pages/admin/AdminCatalog';
-import AdminAchievements from './pages/admin/AdminAchievements';
-import AdminUsers from './pages/admin/AdminUsers';
-import AdminOrders from './pages/admin/AdminOrders';
-import AdminApplications from './pages/admin/AdminApplications';
+const AdminStats        = lazy(() => import('./pages/admin/AdminStats'));
+const AdminCatalog      = lazy(() => import('./pages/admin/AdminCatalog'));
+const AdminAchievements = lazy(() => import('./pages/admin/AdminAchievements'));
+const AdminUsers        = lazy(() => import('./pages/admin/AdminUsers'));
+const AdminOrders       = lazy(() => import('./pages/admin/AdminOrders'));
+const AdminApplications = lazy(() => import('./pages/admin/AdminApplications'));
 
 const EXECUTOR_PATHS = ['/executor/home', '/executor/orders', '/executor/profile'];
 const ADMIN_PATHS    = ['/admin', '/admin/catalog', '/admin/achievements', '/admin/users', '/admin/orders', '/admin/applications'];
@@ -104,28 +105,28 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
 
           {/* Исполнители */}
-          <Route path="/executor/home"    element={<ExecutorHome />} />
-          <Route path="/executor/orders"  element={<ExecutorOrders />} />
-          <Route path="/executor/profile" element={<ExecutorProfilePage />} />
+          <Route path="/executor/home"    element={<Suspense fallback={null}><ExecutorHome /></Suspense>} />
+          <Route path="/executor/orders"  element={<Suspense fallback={null}><ExecutorOrders /></Suspense>} />
+          <Route path="/executor/profile" element={<Suspense fallback={null}><ExecutorProfilePage /></Suspense>} />
 
-          {/* Админка */}
+          {/* Админка — lazy loaded, грузится только при первом переходе */}
           <Route path="/admin" element={
-            <RoleGuard allowed={['admin']}><AdminStats /></RoleGuard>
+            <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminStats /></Suspense></RoleGuard>
           } />
           <Route path="/admin/catalog" element={
-            <RoleGuard allowed={['admin']}><AdminCatalog /></RoleGuard>
+            <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminCatalog /></Suspense></RoleGuard>
           } />
           <Route path="/admin/achievements" element={
-            <RoleGuard allowed={['admin']}><AdminAchievements /></RoleGuard>
+            <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminAchievements /></Suspense></RoleGuard>
           } />
           <Route path="/admin/users" element={
-            <RoleGuard allowed={['admin']}><AdminUsers /></RoleGuard>
+            <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminUsers /></Suspense></RoleGuard>
           } />
           <Route path="/admin/orders" element={
-            <RoleGuard allowed={['admin']}><AdminOrders /></RoleGuard>
+            <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminOrders /></Suspense></RoleGuard>
           } />
           <Route path="/admin/applications" element={
-            <RoleGuard allowed={['admin']}><AdminApplications /></RoleGuard>
+            <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminApplications /></Suspense></RoleGuard>
           } />
         </Routes>
       </AnimatePresence>

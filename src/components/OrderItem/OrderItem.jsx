@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import * as m from 'motion/react-m';
 import { useUser } from '../../context/UserContext';
 import { acceptOrder } from '../../api';
 import './OrderItem.css';
@@ -37,7 +37,7 @@ const OrderItem = ({ order, onAccepted }) => {
   )?.[1] || '🐾';
 
   return (
-    <motion.div
+    <m.div
       className="order-item"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
@@ -70,15 +70,15 @@ const OrderItem = ({ order, onAccepted }) => {
         </p>
       )}
 
-      <motion.button
+      <m.button
         className="order-item__btn"
         onClick={handleAccept}
         disabled={accepting}
         whileTap={{ scale: 0.95 }}
       >
         {accepting ? 'Принимаем...' : 'Взять заявку'}
-      </motion.button>
-    </motion.div>
+      </m.button>
+    </m.div>
   );
 };
 

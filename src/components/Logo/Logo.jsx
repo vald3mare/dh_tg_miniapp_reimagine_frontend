@@ -11,13 +11,13 @@ const childVariants = {
 const Logo = () => {
   return (
     <div className='logo'>
-        <motion.img 
+        <m.img 
             className='logo__image'
             src={logoUrl}
             alt="logo"
             variants={childVariants}
         />
-        <motion.h2 className='logo__title' variants={childVariants}><span>СОБАЧЬЕ СЧАСТЬЕ</span></motion.h2>
+        <m.h2 className='logo__title' variants={childVariants}><span>СОБАЧЬЕ СЧАСТЬЕ</span></m.h2>
     </div>
   )
 }

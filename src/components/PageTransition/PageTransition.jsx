@@ -1,14 +1,14 @@
-import { motion } from 'framer-motion'
+import * as m from 'motion/react-m'
 
 const PageTransition = ({ children }) => (
-  <motion.div
+  <m.div
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: 10, transition: { duration: 0.15, ease: 'easeIn' } }}
     transition={{ duration: 0.25, ease: 'easeOut' }}
   >
     {children}
-  </motion.div>
+  </m.div>
 )
 
 export default PageTransition

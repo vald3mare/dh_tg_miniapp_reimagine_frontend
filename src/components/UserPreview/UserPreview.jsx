@@ -1,7 +1,7 @@
 import './UserPreview.css';
 import ellipse from '../../assets/profile_skeleton.svg';
 import { useUser } from '../../context/UserContext';
-import { motion } from 'framer-motion';
+import * as m from 'motion/react-m';
 
 /*
  * layoutId здесь сохранён для анимации перехода Home → Profile.
@@ -25,19 +25,19 @@ const UserPreview = () => {
   return (
     <div className="user-preview">
       <div className="user-preview__inner">
-        <motion.img
+        <m.img
           className="user-preview__icon"
           src={photoSrc}
           alt="Фото пользователя"
           layoutId="profile-avatar"
         />
         <div className="user-preview__info">
-          <motion.span
+          <m.span
             className="user-preview__name"
             layoutId="profile-fullname"
           >
             {displayName}
-          </motion.span>
+          </m.span>
           <span className="user-preview__sub">{displaySub}</span>
         </div>
       </div>

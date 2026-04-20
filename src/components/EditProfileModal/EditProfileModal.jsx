@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'motion/react'
+import * as m from 'motion/react-m';
 import './EditProfileModal.css';
 
 /*
@@ -56,14 +57,14 @@ const EditProfileModal = ({ open, onClose, initialName, initialCity, initialAvat
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
+        <m.div
           className="edit-profile-modal__backdrop"
           variants={BACKDROP}
           initial="hidden" animate="visible" exit="hidden"
           transition={{ duration: 0.2 }}
           onClick={onClose}
         >
-          <motion.div
+          <m.div
             className="edit-profile-modal"
             variants={SHEET}
             initial="hidden" animate="visible" exit="exit"
@@ -133,8 +134,8 @@ const EditProfileModal = ({ open, onClose, initialName, initialCity, initialAvat
             >
               Сохранить
             </button>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import * as m from 'motion/react-m';
 import { useUser } from '../context/UserContext';
 import './RolePicker.css';
 
@@ -50,23 +50,23 @@ const RolePicker = () => {
   const availableRoles = Object.keys(ROLE_CONFIG).filter(r => roles.includes(r));
 
   return (
-    <motion.div
+    <m.div
       className="role-picker"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
-      <motion.div className="role-picker__header" variants={cardVariants}>
+      <m.div className="role-picker__header" variants={cardVariants}>
         <span className="role-picker__logo">🐶</span>
         <h1 className="role-picker__title">Выберите режим</h1>
         <p className="role-picker__sub">У вас несколько ролей — выберите, в каком режиме войти</p>
-      </motion.div>
+      </m.div>
 
       <div className="role-picker__cards">
         {availableRoles.map((roleKey) => {
           const cfg = ROLE_CONFIG[roleKey];
           return (
-            <motion.button
+            <m.button
               key={roleKey}
               className={`role-picker__card role-picker__card--${roleKey}`}
               variants={cardVariants}
@@ -79,11 +79,11 @@ const RolePicker = () => {
                 <span className="role-picker__card-desc">{cfg.desc}</span>
               </div>
               <span className="role-picker__card-arrow">→</span>
-            </motion.button>
+            </m.button>
           );
         })}
       </div>
-    </motion.div>
+    </m.div>
   );
 };
 

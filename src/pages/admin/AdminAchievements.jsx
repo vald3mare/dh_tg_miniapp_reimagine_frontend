@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'motion/react'
+import * as m from 'motion/react-m';
 import { useUser } from '../../context/UserContext';
 import { admin } from '../../api';
 import PageTransition from '../../components/PageTransition/PageTransition';
@@ -61,9 +62,9 @@ const AdminAchievements = () => {
 
       <AnimatePresence>
         {modal && (
-          <motion.div className="admin-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          <m.div className="admin-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={() => setModal(null)}>
-            <motion.div className="admin-modal" initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }}
+            <m.div className="admin-modal" initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }}
               onClick={e => e.stopPropagation()}>
               <p className="admin-modal__title">{modal === 'create' ? 'Новая ачивка' : 'Редактировать'}</p>
               <div className="admin-form">
@@ -91,16 +92,16 @@ const AdminAchievements = () => {
                   </button>
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {deleteTarget && (
-          <motion.div className="admin-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          <m.div className="admin-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={() => setDeleteTarget(null)}>
-            <motion.div className="admin-modal" initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }}
+            <m.div className="admin-modal" initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }}
               onClick={e => e.stopPropagation()}>
               <p className="admin-modal__title">Удалить ачивку?</p>
               <p style={{ margin: 0, fontSize: 14, color: '#555' }}>«{deleteTarget.name}»</p>
@@ -108,8 +109,8 @@ const AdminAchievements = () => {
                 <button className="admin-btn admin-btn--outline" style={{ flex: 1 }} onClick={() => setDeleteTarget(null)}>Отмена</button>
                 <button className="admin-btn admin-btn--danger" style={{ flex: 1 }} onClick={() => handleDelete(deleteTarget.ID)}>Удалить</button>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </PageTransition>

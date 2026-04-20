@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import * as m from 'motion/react-m'
 
 import HomeIcon from '@mui/icons-material/Home'
 import PetsIcon from '@mui/icons-material/Pets'
@@ -34,7 +34,7 @@ const BottomNav = ({ tabs = CUSTOMER_TABS, pillId = 'active-pill' }) => {
           const isActive = index === activeIdx
 
           return (
-            <motion.button
+            <m.button
               key={tab.path}
               className="bottom-nav-item"
               onClick={() => navigate(tab.path)}
@@ -43,29 +43,29 @@ const BottomNav = ({ tabs = CUSTOMER_TABS, pillId = 'active-pill' }) => {
               transition={{ type: 'spring', stiffness: 500, damping: 30 }}
             >
               {isActive && (
-                <motion.div
+                <m.div
                   className="bottom-nav-pill"
                   layoutId={pillId}
                   transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                 />
               )}
 
-              <motion.div
+              <m.div
                 className="bottom-nav-icon-wrap"
                 animate={isActive ? ICON_ANIMATE_ACTIVE : ICON_ANIMATE_INACTIVE}
                 transition={isActive ? ICON_TRANSITION_ACTIVE : ICON_TRANSITION_INACTIVE}
               >
                 <Icon className={`icon ${isActive ? 'icon--active' : ''}`} />
-              </motion.div>
+              </m.div>
 
-              <motion.span
+              <m.span
                 animate={{ opacity: isActive ? 1 : 0.45 }}
                 transition={{ duration: 0.2 }}
                 className={`bottom-nav-label ${isActive ? 'bottom-nav-label--active' : ''}`}
               >
                 {tab.label}
-              </motion.span>
-            </motion.button>
+              </m.span>
+            </m.button>
           )
         })}
       </nav>

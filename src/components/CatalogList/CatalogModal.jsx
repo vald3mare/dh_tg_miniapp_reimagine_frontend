@@ -1,10 +1,11 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'motion/react'
+import * as m from 'motion/react-m';
 import CatalogItem from '../CatalogItem/CatalogItem';
 
 const CatalogModal = ({ item, payingId, onClose, onBuy, onAddToCart }) => (
   <AnimatePresence>
     {item && (
-      <motion.div
+      <m.div
         key="backdrop"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -39,7 +40,7 @@ const CatalogModal = ({ item, payingId, onClose, onBuy, onAddToCart }) => (
             onAddToCart={() => onAddToCart(item)}
           />
         </div>
-      </motion.div>
+      </m.div>
     )}
   </AnimatePresence>
 );

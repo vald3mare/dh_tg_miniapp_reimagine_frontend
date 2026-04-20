@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'motion/react'
+import * as m from 'motion/react-m';
 import { useUser } from '../../context/UserContext';
 import { admin } from '../../api';
 import PageTransition from '../../components/PageTransition/PageTransition';
@@ -86,9 +87,9 @@ const AdminUsers = () => {
 
       <AnimatePresence>
         {grantModal && (
-          <motion.div className="admin-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          <m.div className="admin-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={() => setGrantModal(null)}>
-            <motion.div className="admin-modal" initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }}
+            <m.div className="admin-modal" initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }}
               onClick={e => e.stopPropagation()}>
               <p className="admin-modal__title">Выдать ачивку</p>
               <p style={{ margin: 0, fontSize: 13, color: '#555' }}>
@@ -108,8 +109,8 @@ const AdminUsers = () => {
                   {saving ? 'Выдаём...' : 'Выдать'}
                 </button>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </PageTransition>
