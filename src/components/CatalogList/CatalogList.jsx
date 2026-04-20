@@ -2,6 +2,7 @@ import './CatalogList.css';
 import CatalogItem from '../CatalogItem/CatalogItem';
 import CatalogModal from './CatalogModal';
 import { useState, useMemo, useCallback } from 'react';
+import { LayoutGroup } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import { useCart } from '../../context/CartContext';
@@ -69,6 +70,7 @@ const CatalogList = ({
   const selectedItem = normalizedCatalog.find(i => i.id === selectedId);
 
   return (
+    <LayoutGroup id={`catalog-${carousel ? 'carousel' : 'grid'}`}>
     <div className="catalog-list">
       {showTitle && (
         <div className="catalog-list__header">
@@ -107,6 +109,7 @@ const CatalogList = ({
         }}
       />
     </div>
+    </LayoutGroup>
   );
 };
 

@@ -37,13 +37,14 @@ export const CartProvider = ({ children }) => {
   };
 
   const clearCart = () => setItems([]);
+  const restoreItems = (snapshot) => setItems(snapshot);
 
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   return (
     <CartContext.Provider value={{
       items, isOpen, total,
-      addToCart, removeFromCart, updateQuantity, clearCart,
+      addToCart, removeFromCart, updateQuantity, clearCart, restoreItems,
       openCart: () => setIsOpen(true),
       closeCart: () => setIsOpen(false),
     }}>

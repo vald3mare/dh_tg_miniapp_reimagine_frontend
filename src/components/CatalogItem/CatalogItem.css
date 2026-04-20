@@ -7,7 +7,7 @@
   background: #FFFFFF;
   border: 1px solid #DEE2E6;
   border-radius: 20px;
-  overflow: hidden;           /* безопасно — layoutId убран */
+  overflow: clip;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -92,7 +92,7 @@
 .catalog-item--expanded {
   background: #FFFFFF;
   border-radius: 20px;
-  overflow: hidden;           /* теперь безопасно — layoutId убран */
+  overflow: clip;
   border: 1px solid #DEE2E6;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   cursor: default;
@@ -153,6 +153,24 @@
 .catalog-item__actions {
   display: flex;
   gap: 12px;
+}
+
+/* Элемент: основная кнопка покупки */
+.catalog-item__buy-btn {
+  flex: 1;
+  height: 52px;
+  border-radius: 14px;
+  border: none;
+  background: #EA6CCB;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.catalog-item__buy-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .catalog-item__cart-btn {

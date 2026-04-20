@@ -11,6 +11,7 @@ body {
   padding: 0;
   height: 100%;
   overflow-x: hidden;
+  overscroll-behavior: none;   /* блокирует pull-to-close в Telegram */
   /* Скрываем скроллбар глобально, но скролл работает */
   scrollbar-width: none;       /* Firefox */
   -ms-overflow-style: none;    /* IE/Edge */

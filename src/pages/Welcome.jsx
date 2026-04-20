@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useUser } from '../context/UserContext';
 import { setRole } from '../api';
@@ -22,25 +21,19 @@ const childVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
 };
 
+
 const Welcome = () => {
   const navigate = useNavigate();
-  const { user, initDataRaw, roles, effectiveRole, loading } = useUser();
-
-  useEffect(() => { hapticMedium(); }, []);
-
-  if (!loading && user) {
-    if (roles.length > 1 && !effectiveRole) return <Navigate to="/role-picker" replace />;
-    if (effectiveRole === 'admin')    return <Navigate to="/admin" replace />;
-    if (effectiveRole === 'executor') return <Navigate to="/executor/home" replace />;
-    if (effectiveRole === 'customer') return <Navigate to="/home" replace />;
-  }
+  const { user, initDataRaw } = useUser();
 
   const handleCustomer = () => {
+    hapticMedium();
     if (initDataRaw) setRole('customer', initDataRaw).catch(() => {});
     navigate('/home');
   };
 
   const handleExecutor = () => {
+    hapticMedium();
     if (initDataRaw) setRole('executor', initDataRaw).catch(() => {});
     navigate('/executor/home');
   };

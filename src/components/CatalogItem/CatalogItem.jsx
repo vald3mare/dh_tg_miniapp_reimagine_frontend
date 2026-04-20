@@ -1,6 +1,5 @@
 import './CatalogItem.css';
 import { motion } from 'framer-motion';
-import Button from '../Button/Button';
 
 /*
  * Палитра фонов для image-area: назначается по id карточки (id % length),
@@ -34,19 +33,11 @@ const CatalogItem = ({
 
   return (
     <motion.div
+      layoutId={`catalog-card-${id}`}
       className={`catalog-item${isExpanded ? ' catalog-item--expanded' : ''}`}
-      /*
-       * layoutId убран — shared layout animation переносит элемент через всё
-       * DOM-дерево, и любой overflow:hidden на промежуточных контейнерах
-       * обрезает карточку во время перехода (артефакт «срезанных углов»).
-       *
-       * Вместо этого анимация открытия/закрытия сделана в CatalogModal
-       * через scale + opacity — без переноса между DOM-позициями.
-       * Это быстрее, предсказуемее и без артефактов на мобиле.
-       */
       onClick={!isExpanded ? onClick : undefined}
       whileTap={!isExpanded ? { scale: 0.97 } : undefined}
-      transition={{ duration: 0.15 }}
+      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
     >
       {/* ── Компактная карточка ── */}
       {!isExpanded && (
@@ -61,12 +52,14 @@ const CatalogItem = ({
               {description.length > 60 ? `${description.slice(0, 60)}…` : description}
             </p>
             <div className="catalog-item__footer">
-              <button
+              <motion.button
                 className="catalog-item__add-btn"
                 onClick={(e) => { e.stopPropagation(); onAddToCart(); }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 28 }}
               >
                 В корзину
-              </button>
+              </motion.button>
               <span className="catalog-item__price">{price} ₽</span>
             </div>
           </div>
@@ -76,9 +69,15 @@ const CatalogItem = ({
       {/* ── Раскрытая карточка (в модальном окне) ── */}
       {isExpanded && (
         <>
-          <button className="catalog-item__close" onClick={onClose} aria-label="Закрыть">
+          <motion.button
+            className="catalog-item__close"
+            onClick={onClose}
+            aria-label="Закрыть"
+            whileTap={{ scale: 0.85, rotate: 90 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+          >
             ×
-          </button>
+          </motion.button>
           <div
             className="catalog-item__image-area catalog-item__image-area--expanded"
             style={{ background: placeholderBg }}
@@ -92,14 +91,24 @@ const CatalogItem = ({
               ))}
             </div>
             <div className="catalog-item__actions">
-              <Button
-                text={isPaying ? 'Оформляем…' : 'Купить в 1 клик'}
+              <motion.button
+                className="catalog-item__buy-btn"
                 onClick={onBuy}
                 disabled={isPaying}
-              />
-              <button className="catalog-item__cart-btn" onClick={onAddToCart} aria-label="В корзину">
+                whileTap={{ scale: 0.96 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              >
+                {isPaying ? 'Оформляем…' : 'Купить в 1 клик'}
+              </motion.button>
+              <motion.button
+                className="catalog-item__cart-btn"
+                onClick={onAddToCart}
+                aria-label="В корзину"
+                whileTap={{ scale: 0.88, rotate: -15 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+              >
                 🛒
-              </button>
+              </motion.button>
             </div>
           </div>
         </>
