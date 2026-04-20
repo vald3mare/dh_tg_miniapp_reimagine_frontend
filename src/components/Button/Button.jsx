@@ -1,5 +1,5 @@
 import './Button.css';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 
 const Button = ({ text = '', className = '', childVariants = '', onClick, disabled = false }) => (
   <motion.button

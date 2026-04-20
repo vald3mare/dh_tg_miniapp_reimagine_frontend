@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 import basicSsl from '@vitejs/plugin-basic-ssl';
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   // server: {
   //   host: 'tma.internal',
   //   https: {
@@ -15,8 +15,14 @@ export default defineConfig({
   // },
   plugins: [react(), basicSsl()],
   optimizeDeps: {
-    include: [
-      '@mui/icons-material',
-    ],
-  }
-})
+    include: ['@mui/icons-material'],
+  },
+  resolve: {
+    alias: mode === 'profiling' ? {
+      'react-dom/client': 'react-dom/profiling',
+    } : {},
+  },
+  build: {
+    minify: mode !== 'profiling',
+  },
+}))

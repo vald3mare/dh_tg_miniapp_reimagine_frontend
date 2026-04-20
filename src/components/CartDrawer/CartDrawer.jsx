@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
 import { useUser } from '../../context/UserContext';
@@ -6,9 +6,11 @@ import { customerCreateOrder } from '../../api';
 import Rectangle from '../../assets/Rectangle.svg';
 import './CartDrawer.css';
 
-const UNDO_DURATION = 3000;
-const RADIUS = 26;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const UNDO_DURATION    = 3000;
+const RADIUS_BIG       = 26;
+const RADIUS_SMALL     = 12;
+const C_BIG            = 2 * Math.PI * RADIUS_BIG;
+const C_SMALL          = 2 * Math.PI * RADIUS_SMALL;
 
 const Btn = ({ className, onClick, disabled, children, tapScale = 0.93, rotate = 0 }) => (
   <motion.button
@@ -26,60 +28,85 @@ const CartDrawer = () => {
   const { items, isOpen, closeCart, removeFromCart, updateQuantity, clearCart, restoreItems, total } = useCart();
   const { user, initDataRaw } = useUser();
 
-  const [name, setName]         = useState(user ? (`${user.first_name || ''} ${user.last_name || ''}`).trim() : '');
-  const [contact, setContact]   = useState(user?.username ? `@${user.username}` : '');
+  const [name, setName]           = useState(user ? (`${user.first_name || ''} ${user.last_name || ''}`).trim() : '');
+  const [contact, setContact]     = useState(user?.username ? `@${user.username}` : '');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError]       = useState(null);
+  const [error, setError]         = useState(null);
 
   const [undoSnapshot, setUndoSnapshot] = useState(null);
-  const [undoProgress, setUndoProgress] = useState(1);
-  const timerRef = useRef(null);
+  const [secondsLeft, setSecondsLeft]   = useState(3);
 
-  /* Запускаем обратный отсчёт когда появляется снапшот */
+  // Refs для прямого обновления SVG — без React ре-рендера каждый кадр
+  const rafRef         = useRef(null);
+  const circleBigRef   = useRef(null);
+  const circleSmallRef = useRef(null);
+
   useEffect(() => {
     if (!undoSnapshot) return;
 
     const start = Date.now();
-    setUndoProgress(1);
+    let lastSecs = Math.ceil(UNDO_DURATION / 1000);
+    setSecondsLeft(lastSecs);
 
-    timerRef.current = setInterval(() => {
+    const tick = () => {
       const elapsed = Date.now() - start;
-      const prog = Math.max(0, 1 - elapsed / UNDO_DURATION);
-      setUndoProgress(prog);
+      const prog    = Math.max(0, 1 - elapsed / UNDO_DURATION);
+
+      // Обновляем SVG напрямую — ноль React ре-рендеров
+      if (circleBigRef.current)   circleBigRef.current.style.strokeDashoffset   = C_BIG   * (1 - prog);
+      if (circleSmallRef.current) circleSmallRef.current.style.strokeDashoffset = C_SMALL * (1 - prog);
+
+      // React state обновляем только при смене секунды (3 раза за всё время)
+      const secs = Math.ceil(prog * (UNDO_DURATION / 1000));
+      if (secs !== lastSecs) {
+        lastSecs = secs;
+        setSecondsLeft(secs);
+      }
+
       if (elapsed >= UNDO_DURATION) {
-        clearInterval(timerRef.current);
         const wasLast = undoSnapshot.wasLast;
         setUndoSnapshot(null);
         if (wasLast) closeCart();
+        return;
       }
-    }, 50);
 
-    return () => clearInterval(timerRef.current);
-  }, [undoSnapshot]);
+      rafRef.current = requestAnimationFrame(tick);
+    };
 
-  const handleRemove = (itemId) => {
-    clearInterval(timerRef.current);
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [undoSnapshot, closeCart]);
+
+  const handleRemove = useCallback((itemId) => {
+    cancelAnimationFrame(rafRef.current);
     setUndoSnapshot({ items: [...items], wasLast: items.length === 1 });
     removeFromCart(itemId);
-  };
+  }, [items, removeFromCart]);
 
-  const handleUpdateQty = (itemId, qty) => {
+  const handleUpdateQty = useCallback((itemId, qty) => {
     if (qty <= 0) {
-      clearInterval(timerRef.current);
+      cancelAnimationFrame(rafRef.current);
       setUndoSnapshot({ items: [...items], wasLast: items.length === 1 });
     }
     updateQuantity(itemId, qty);
-  };
+  }, [items, updateQuantity]);
 
-  const handleUndo = () => {
-    clearInterval(timerRef.current);
+  const handleUndo = useCallback(() => {
+    cancelAnimationFrame(rafRef.current);
     restoreItems(undoSnapshot.items);
     setUndoSnapshot(null);
-    setUndoProgress(1);
-  };
+  }, [undoSnapshot, restoreItems]);
 
-  const handleSubmit = async () => {
+  const handleClose = useCallback(() => {
+    cancelAnimationFrame(rafRef.current);
+    setUndoSnapshot(null);
+    closeCart();
+    setSubmitted(false);
+    setError(null);
+  }, [closeCart]);
+
+  const handleSubmit = useCallback(async () => {
     if (!name.trim()) return;
     setSubmitting(true);
     setError(null);
@@ -100,22 +127,12 @@ const CartDrawer = () => {
     } finally {
       setSubmitting(false);
     }
-  };
+  }, [name, contact, items, total, initDataRaw, clearCart]);
 
-  const handleClose = () => {
-    clearInterval(timerRef.current);
-    setUndoSnapshot(null);
-    closeCart();
-    setSubmitted(false);
-    setError(null);
-  };
-
-  const hasUndo      = undoSnapshot !== null;
-  const showUndoFull = hasUndo && items.length === 0;   // последний — большой по центру
-  const showUndoBanner = hasUndo && items.length > 0;   // не последний — компактная полоска
-  const showEmpty    = !hasUndo && items.length === 0;
-  const secondsLeft  = Math.ceil(undoProgress * (UNDO_DURATION / 1000));
-  const dashOffset   = CIRCUMFERENCE * (1 - undoProgress);
+  const hasUndo        = undoSnapshot !== null;
+  const showUndoFull   = hasUndo && items.length === 0;
+  const showUndoBanner = hasUndo && items.length > 0;
+  const showEmpty      = !hasUndo && items.length === 0;
 
   return (
     <AnimatePresence>
@@ -135,13 +152,11 @@ const CartDrawer = () => {
             transition={{ type: 'spring', stiffness: 320, damping: 34 }}
             onClick={e => e.stopPropagation()}
           >
-            {/* Шапка */}
             <div className="cart-drawer__header">
               <h2 className="cart-drawer__title">ВАШ ЗАКАЗ 🐾</h2>
               <Btn className="cart-drawer__close" onClick={handleClose} tapScale={0.85} rotate={90}>×</Btn>
             </div>
 
-            {/* Успешная отправка */}
             {submitted ? (
               <div className="cart-success">
                 <p className="cart-success__badge">⭐ Форма отправлена</p>
@@ -153,9 +168,7 @@ const CartDrawer = () => {
               </div>
             ) : (
               <>
-                {/* Список товаров */}
                 <div className="cart-drawer__items">
-                  {/* Компактный баннер для не-последнего товара */}
                   <AnimatePresence>
                     {showUndoBanner && (
                       <motion.div
@@ -167,14 +180,14 @@ const CartDrawer = () => {
                       >
                         <div className="cart-undo-banner__circle-wrap">
                           <svg width="32" height="32" style={{ transform: 'rotate(-90deg)' }}>
-                            <circle cx="16" cy="16" r="12" fill="none" stroke="#f0e0f7" strokeWidth="3" />
+                            <circle cx="16" cy="16" r={RADIUS_SMALL} fill="none" stroke="#f0e0f7" strokeWidth="3" />
                             <circle
-                              cx="16" cy="16" r="12"
+                              ref={circleSmallRef}
+                              cx="16" cy="16" r={RADIUS_SMALL}
                               fill="none" stroke="#EA6CCB" strokeWidth="3"
                               strokeLinecap="round"
-                              strokeDasharray={2 * Math.PI * 12}
-                              strokeDashoffset={2 * Math.PI * 12 * (1 - undoProgress)}
-                              style={{ transition: 'stroke-dashoffset 0.05s linear' }}
+                              strokeDasharray={C_SMALL}
+                              strokeDashoffset={0}
                             />
                           </svg>
                           <span className="cart-undo-banner__seconds">{secondsLeft}</span>
@@ -187,30 +200,24 @@ const CartDrawer = () => {
                     )}
                   </AnimatePresence>
 
-                  {/* Большой undo для последнего товара */}
                   {showUndoFull && (
                     <div className="cart-undo">
                       <div className="cart-undo__circle-wrap">
                         <svg width="72" height="72" style={{ transform: 'rotate(-90deg)' }}>
+                          <circle cx="36" cy="36" r={RADIUS_BIG} fill="none" stroke="#f0f0f0" strokeWidth="4" />
                           <circle
-                            cx="36" cy="36" r={RADIUS}
-                            fill="none" stroke="#f0f0f0" strokeWidth="4"
-                          />
-                          <circle
-                            cx="36" cy="36" r={RADIUS}
+                            ref={circleBigRef}
+                            cx="36" cy="36" r={RADIUS_BIG}
                             fill="none" stroke="#EA6CCB" strokeWidth="4"
                             strokeLinecap="round"
-                            strokeDasharray={CIRCUMFERENCE}
-                            strokeDashoffset={dashOffset}
-                            style={{ transition: 'stroke-dashoffset 0.05s linear' }}
+                            strokeDasharray={C_BIG}
+                            strokeDashoffset={0}
                           />
                         </svg>
                         <span className="cart-undo__seconds">{secondsLeft}</span>
                       </div>
                       <p className="cart-undo__label">Последний товар удалён</p>
-                      <Btn className="cart-undo__btn" onClick={handleUndo} tapScale={0.95}>
-                        Отменить
-                      </Btn>
+                      <Btn className="cart-undo__btn" onClick={handleUndo} tapScale={0.95}>Отменить</Btn>
                     </div>
                   )}
 
@@ -226,48 +233,29 @@ const CartDrawer = () => {
                       <motion.div
                         className="cart-item"
                         key={item.id}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                        transition={{ duration: 0.22, ease: 'easeInOut' }}
-                        style={{ overflow: 'hidden' }}
+                        layout
+                        initial={{ opacity: 0, scale: 0.94 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.94 }}
+                        transition={{ duration: 0.18, ease: 'easeOut' }}
                       >
-                        <img
-                          className="cart-item__img"
-                          src={item.image || Rectangle}
-                          alt={item.name}
-                          loading="lazy"
-                        />
+                        <img className="cart-item__img" src={item.image || Rectangle} alt={item.name} loading="lazy" />
                         <div className="cart-item__info">
                           <p className="cart-item__name">{item.name}</p>
                           <p className="cart-item__sku">Арт: {String(item.id).padStart(3, '0')}</p>
                         </div>
                         <div className="cart-item__qty">
-                          <Btn
-                            className="cart-item__qty-btn"
-                            onClick={() => handleUpdateQty(item.id, item.quantity - 1)}
-                            tapScale={0.82}
-                          >−</Btn>
+                          <Btn className="cart-item__qty-btn" onClick={() => handleUpdateQty(item.id, item.quantity - 1)} tapScale={0.82}>−</Btn>
                           <span>{item.quantity}</span>
-                          <Btn
-                            className="cart-item__qty-btn"
-                            onClick={() => handleUpdateQty(item.id, item.quantity + 1)}
-                            tapScale={0.82}
-                          >+</Btn>
+                          <Btn className="cart-item__qty-btn" onClick={() => handleUpdateQty(item.id, item.quantity + 1)} tapScale={0.82}>+</Btn>
                         </div>
                         <p className="cart-item__price">{(item.price * item.quantity).toLocaleString('ru-RU')}₽</p>
-                        <Btn
-                          className="cart-item__remove"
-                          onClick={() => handleRemove(item.id)}
-                          tapScale={0.8}
-                          rotate={90}
-                        >✕</Btn>
+                        <Btn className="cart-item__remove" onClick={() => handleRemove(item.id)} tapScale={0.8} rotate={90}>✕</Btn>
                       </motion.div>
                     ))}
                   </AnimatePresence>
                 </div>
 
-                {/* Форма */}
                 <div className="cart-drawer__form-section">
                   <div className="cart-drawer__total-row">
                     <span className="cart-drawer__total-label">Итоговая цена:</span>
@@ -276,18 +264,8 @@ const CartDrawer = () => {
                   <p className="cart-drawer__form-title">
                     ЗАПОЛНИТЕ ФОРМУ, МЫ СВЯЖЕМСЯ<br />С ВАМИ В БЛИЖАЙШЕЕ ВРЕМЯ
                   </p>
-                  <input
-                    className="cart-drawer__input"
-                    placeholder="Как вас зовут?"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                  />
-                  <input
-                    className="cart-drawer__input"
-                    placeholder="@никнейм в тг"
-                    value={contact}
-                    onChange={e => setContact(e.target.value)}
-                  />
+                  <input className="cart-drawer__input" placeholder="Как вас зовут?" value={name} onChange={e => setName(e.target.value)} />
+                  <input className="cart-drawer__input" placeholder="@никнейм в тг" value={contact} onChange={e => setContact(e.target.value)} />
                   <Btn
                     className="cart-drawer__submit"
                     onClick={handleSubmit}
@@ -296,9 +274,7 @@ const CartDrawer = () => {
                   >
                     {submitting ? 'ОТПРАВЛЯЕМ...' : 'SUBMIT'}
                   </Btn>
-                  {error && (
-                    <p className="cart-drawer__error">⚠️ {error}</p>
-                  )}
+                  {error && <p className="cart-drawer__error">⚠️ {error}</p>}
                 </div>
               </>
             )}

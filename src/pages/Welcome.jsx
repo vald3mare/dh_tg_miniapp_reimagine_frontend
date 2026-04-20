@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useUser } from '../context/UserContext';
 import { setRole } from '../api';
 import { hapticMedium } from '../utils/tg';

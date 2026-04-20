@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { retrieveRawInitData } from '@tma.js/sdk';
 import { fetchProfile } from '../api';
 
@@ -21,6 +21,7 @@ export const UserProvider = ({ children }) => {
   const [error, setError]             = useState(null);
   const [initDataRaw, setInitDataRaw] = useState(null);
   const [activeRole, setActiveRoleState] = useState(null);
+  const userRef = useRef(null); // стабильная ссылка на user для useCallback без stale closure
 
   useEffect(() => {
     let raw;
@@ -42,6 +43,7 @@ export const UserProvider = ({ children }) => {
 
     fetchProfile(raw)
       .then(data => {
+        userRef.current = data.user;
         setUser(data.user);
         setLoading(false);
       })
@@ -59,24 +61,15 @@ export const UserProvider = ({ children }) => {
   }, [user?.telegram_id]);
 
   const setActiveRole = useCallback((r) => {
-    setActiveRoleState(prev => {
-      if (prev === r) return prev;
-      return r;
-    });
-    // Side-effect: write to localStorage. user.telegram_id is captured via ref pattern
-    // to avoid stale closure — we access it at call time via the setter.
-    setUser(u => {
-      if (u) localStorage.setItem(`dh_active_role_${u.telegram_id}`, r);
-      return u;
-    });
+    const u = userRef.current;
+    if (u) localStorage.setItem(`dh_active_role_${u.telegram_id}`, r);
+    setActiveRoleState(r);
   }, []);
 
   const clearActiveRole = useCallback(() => {
+    const u = userRef.current;
+    if (u) localStorage.removeItem(`dh_active_role_${u.telegram_id}`);
     setActiveRoleState(null);
-    setUser(u => {
-      if (u) localStorage.removeItem(`dh_active_role_${u.telegram_id}`);
-      return u;
-    });
   }, []);
 
   const role = user?.role || 'customer';

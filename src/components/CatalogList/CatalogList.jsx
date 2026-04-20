@@ -2,7 +2,6 @@ import './CatalogList.css';
 import CatalogItem from '../CatalogItem/CatalogItem';
 import CatalogModal from './CatalogModal';
 import { useState, useMemo, useCallback } from 'react';
-import { LayoutGroup } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import { useCart } from '../../context/CartContext';
@@ -10,14 +9,7 @@ import { createPayment } from '../../api';
 import { tgAlert, tgOpenLink } from '../../utils/tg';
 import Rectangle from '../../assets/Rectangle.svg';
 
-/*
- * motion.div с layout-пропом убран — он вызывал пересчёт layout всего дерева
- * при любом изменении стейта (selectedId, payingId), что давало заметный лаг
- * на мобильных устройствах.
- * Теперь используются обычные div; анимация открытия карточки работает
- * через layoutId в самом CatalogItem (shared element transition).
- * react.dev/learn/keeping-components-pure — рендер должен быть быстрым и без побочных эффектов.
- */
+
 const CatalogList = ({
   catalog = [],
   expanded = false,
@@ -70,7 +62,6 @@ const CatalogList = ({
   const selectedItem = normalizedCatalog.find(i => i.id === selectedId);
 
   return (
-    <LayoutGroup id={`catalog-${carousel ? 'carousel' : 'grid'}`}>
     <div className="catalog-list">
       {showTitle && (
         <div className="catalog-list__header">
@@ -109,7 +100,6 @@ const CatalogList = ({
         }}
       />
     </div>
-    </LayoutGroup>
   );
 };
 

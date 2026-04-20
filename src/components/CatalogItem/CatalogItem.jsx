@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import './CatalogItem.css';
 import { motion } from 'framer-motion';
 
@@ -117,4 +118,4 @@ const CatalogItem = ({
   );
 };
 
-export default CatalogItem;
+export default memo(CatalogItem);
