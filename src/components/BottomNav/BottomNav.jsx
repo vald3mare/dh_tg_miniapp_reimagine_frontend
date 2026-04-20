@@ -8,6 +8,12 @@ import PersonIcon from '@mui/icons-material/Person'
 
 import './BottomNav.css'
 
+// Стабильные константы вне компонента — framer-motion не перезапускает анимацию
+const ICON_ANIMATE_ACTIVE   = { scale: [1, 1.1, 1.08], y: [0, -2, 0] };
+const ICON_ANIMATE_INACTIVE = { scale: 1, y: 0 };
+const ICON_TRANSITION_ACTIVE   = { duration: 0.35, ease: 'easeOut' };
+const ICON_TRANSITION_INACTIVE = { type: 'spring', stiffness: 400, damping: 28 };
+
 const CUSTOMER_TABS = [
   { path: '/home',     label: 'Главная', icon: HomeIcon },
   { path: '/catalog',  label: 'Каталог', icon: PetsIcon },
@@ -46,16 +52,8 @@ const BottomNav = ({ tabs = CUSTOMER_TABS, pillId = 'active-pill' }) => {
 
               <motion.div
                 className="bottom-nav-icon-wrap"
-                animate={
-                  isActive
-                    ? { scale: [1, 1.1, 1.08], y: [0, -2, 0] }
-                    : { scale: 1, y: 0 }
-                }
-                transition={
-                  isActive
-                    ? { duration: 0.35, ease: 'easeOut' }
-                    : { type: 'spring', stiffness: 400, damping: 28 }
-                }
+                animate={isActive ? ICON_ANIMATE_ACTIVE : ICON_ANIMATE_INACTIVE}
+                transition={isActive ? ICON_TRANSITION_ACTIVE : ICON_TRANSITION_INACTIVE}
               >
                 <Icon className={`icon ${isActive ? 'icon--active' : ''}`} />
               </motion.div>

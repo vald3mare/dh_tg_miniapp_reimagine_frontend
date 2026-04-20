@@ -8,6 +8,11 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import '../BottomNav/BottomNav.css';
 
+const ICON_ANIMATE_ACTIVE     = { scale: [1, 1.1, 1.08], y: [0, -2, 0] };
+const ICON_ANIMATE_INACTIVE   = { scale: 1, y: 0 };
+const ICON_TRANSITION_ACTIVE  = { duration: 0.35, ease: 'easeOut' };
+const ICON_TRANSITION_INACTIVE = { type: 'spring', stiffness: 400, damping: 28 };
+
 const TABS = [
   { path: '/admin',                label: 'Стата',      icon: BarChartIcon     },
   { path: '/admin/catalog',        label: 'Каталог',    icon: PetsIcon         },
@@ -47,8 +52,8 @@ const AdminNav = () => {
               )}
               <motion.div
                 className="bottom-nav-icon-wrap"
-                animate={isActive ? { scale: [1, 1.1, 1.08], y: [0, -2, 0] } : { scale: 1, y: 0 }}
-                transition={isActive ? { duration: 0.35, ease: 'easeOut' } : { type: 'spring', stiffness: 400, damping: 28 }}
+                animate={isActive ? ICON_ANIMATE_ACTIVE : ICON_ANIMATE_INACTIVE}
+                transition={isActive ? ICON_TRANSITION_ACTIVE : ICON_TRANSITION_INACTIVE}
               >
                 <Icon className={`icon ${isActive ? 'icon--active' : ''}`} />
               </motion.div>
