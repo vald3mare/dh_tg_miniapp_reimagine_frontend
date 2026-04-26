@@ -33,9 +33,12 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   const updateQuantity = useCallback((id, qty) => {
-    if (qty <= 0) { removeFromCart(id); return; }
-    setItems(prev => prev.map(i => i.id === id ? { ...i, quantity: qty } : i));
-  }, [removeFromCart]);
+    setItems(prev =>
+      qty <= 0
+        ? prev.filter(i => i.id !== id)
+        : prev.map(i => i.id === id ? { ...i, quantity: qty } : i)
+    );
+  }, []);
 
   const clearCart    = useCallback(() => setItems([]), []);
   const restoreItems = useCallback((snapshot) => setItems(snapshot), []);

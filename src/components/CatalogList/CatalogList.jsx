@@ -1,7 +1,7 @@
 import './CatalogList.css';
 import CatalogItem from '../CatalogItem/CatalogItem';
 import CatalogModal from './CatalogModal';
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import { useCart } from '../../context/CartContext';
@@ -9,6 +9,23 @@ import { createPayment } from '../../api';
 import { tgAlert, tgOpenLink } from '../../utils/tg';
 import Rectangle from '../../assets/Rectangle.svg';
 
+
+// Wrapper мемоизирован: перерисовывается только когда меняется конкретный item или isPaying
+const CatalogRow = memo(({ item, isPaying, onSelect, onBuy, onAddToCart }) => (
+  <CatalogItem
+    id={item.id}
+    name={item.name}
+    backgroundImage={item.backgroundImage}
+    description={item.description}
+    fullDescription={item.fullDescription}
+    price={item.price}
+    isExpanded={false}
+    isPaying={isPaying}
+    onClick={() => onSelect(item.id)}
+    onBuy={() => onBuy(item.id)}
+    onAddToCart={() => onAddToCart(item)}
+  />
+));
 
 const CatalogList = ({
   catalog = [],
@@ -59,6 +76,13 @@ const CatalogList = ({
     });
   }, [addToCart]);
 
+  const handleSelect    = useCallback((id) => setSelectedId(id), []);
+  const handleModalClose = useCallback(() => setSelectedId(null), []);
+  const handleModalAddToCart = useCallback((item) => {
+    handleAddToCart(item);
+    setSelectedId(null);
+  }, [handleAddToCart]);
+
   const selectedItem = normalizedCatalog.find(i => i.id === selectedId);
 
   return (
@@ -72,19 +96,13 @@ const CatalogList = ({
 
       <div className={`catalog-list__items${carousel ? ' catalog-list__items--carousel' : ''}`}>
         {displayedCatalog.map((item) => (
-          <CatalogItem
+          <CatalogRow
             key={item.id}
-            id={item.id}
-            name={item.name}
-            backgroundImage={item.backgroundImage}
-            description={item.description}
-            fullDescription={item.fullDescription}
-            price={item.price}
-            isExpanded={false}
+            item={item}
             isPaying={payingId === item.id}
-            onClick={() => setSelectedId(item.id)}
-            onBuy={() => handleBuy(item.id)}
-            onAddToCart={() => handleAddToCart(item)}
+            onSelect={handleSelect}
+            onBuy={handleBuy}
+            onAddToCart={handleAddToCart}
           />
         ))}
       </div>
@@ -92,15 +110,12 @@ const CatalogList = ({
       <CatalogModal
         item={selectedItem}
         payingId={payingId}
-        onClose={() => setSelectedId(null)}
+        onClose={handleModalClose}
         onBuy={handleBuy}
-        onAddToCart={(item) => {
-          handleAddToCart(item);
-          setSelectedId(null);
-        }}
+        onAddToCart={handleModalAddToCart}
       />
     </div>
   );
 };
 
-export default CatalogList;
+export default memo(CatalogList);

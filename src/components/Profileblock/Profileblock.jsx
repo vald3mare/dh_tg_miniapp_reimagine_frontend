@@ -25,6 +25,11 @@ const SERVICE_EMOJI = {
   'Передержка': '🛏️', 'Ветеринар': '💊',
 };
 
+const PET_INITIAL  = { opacity: 0, scale: 0.85 };
+const PET_ANIMATE  = { opacity: 1, scale: 1 };
+const PET_EXIT     = { opacity: 0, scale: 0.85 };
+const PET_TRANSITION = { duration: 0.2 };
+
 /* ── Карточка заказа ── */
 const OrderCard = ({ order }) => {
   const emoji = Object.entries(SERVICE_EMOJI).find(([k]) =>
@@ -115,18 +120,15 @@ const ProfileBlock = () => {
       {/* ── Карточка профиля ── */}
       <div className="profile__card">
         <div className="profile__avatar-wrap">
-          <m.img
+          <img
             className="profile__avatar"
             src={avatarSrc}
             alt="Аватар"
-            layoutId="profile-avatar"
           />
         </div>
 
         <div className="profile__info">
-          <m.h2 className="profile__name" layoutId="profile-fullname">
-            {displayName}
-          </m.h2>
+          <h2 className="profile__name">{displayName}</h2>
           {username && <p className="profile__username">{username}</p>}
           {city && (
             <p className="profile__city">📍 {city}</p>
@@ -159,10 +161,10 @@ const ProfileBlock = () => {
             {pets.map(pet => (
               <m.div
                 key={pet.id}
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.85 }}
-                transition={{ duration: 0.2 }}
+                initial={PET_INITIAL}
+                animate={PET_ANIMATE}
+                exit={PET_EXIT}
+                transition={PET_TRANSITION}
               >
                 <PetCard pet={pet} onRemove={removePet} />
               </m.div>
