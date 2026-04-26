@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import * as m from 'motion/react-m'
 
@@ -13,6 +14,9 @@ const ICON_ANIMATE_ACTIVE   = { scale: [1, 1.1, 1.08], y: [0, -2, 0] };
 const ICON_ANIMATE_INACTIVE = { scale: 1, y: 0 };
 const ICON_TRANSITION_ACTIVE   = { duration: 0.35, ease: 'easeOut' };
 const ICON_TRANSITION_INACTIVE = { type: 'spring', stiffness: 400, damping: 28 };
+const LABEL_ANIMATE_ACTIVE     = { opacity: 1 };
+const LABEL_ANIMATE_INACTIVE   = { opacity: 0.45 };
+const LABEL_TRANSITION         = { duration: 0.2 };
 
 const CUSTOMER_TABS = [
   { path: '/home',     label: 'Главная', icon: HomeIcon },
@@ -59,8 +63,8 @@ const BottomNav = ({ tabs = CUSTOMER_TABS, pillId = 'active-pill' }) => {
               </m.div>
 
               <m.span
-                animate={{ opacity: isActive ? 1 : 0.45 }}
-                transition={{ duration: 0.2 }}
+                animate={isActive ? LABEL_ANIMATE_ACTIVE : LABEL_ANIMATE_INACTIVE}
+                transition={LABEL_TRANSITION}
                 className={`bottom-nav-label ${isActive ? 'bottom-nav-label--active' : ''}`}
               >
                 {tab.label}
@@ -73,4 +77,4 @@ const BottomNav = ({ tabs = CUSTOMER_TABS, pillId = 'active-pill' }) => {
   )
 }
 
-export default BottomNav
+export default memo(BottomNav)

@@ -15,7 +15,7 @@ export function useCustomerOrders(initDataRaw) {
 
     fetchCustomerOrders(initDataRaw)
       .then(data => setOrders(data.orders ?? []))
-      .catch(() => setOrders([]))    // тихо игнорируем ошибку — покажем пустой список
+      .catch((err) => { console.warn('[useCustomerOrders]', err); setOrders([]); })
       .finally(() => setLoading(false));
   }, [initDataRaw]);
 

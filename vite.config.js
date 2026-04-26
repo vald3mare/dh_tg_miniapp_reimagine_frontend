@@ -18,9 +18,10 @@ export default defineConfig(({ mode }) => ({
     include: ['@mui/icons-material'],
   },
   resolve: {
-    alias: mode === 'profiling' ? {
-      'react-dom/client': 'react-dom/profiling',
-    } : {},
+    alias: {
+      '@m': 'motion/react-m',
+      ...(mode === 'profiling' ? { 'react-dom/client': 'react-dom/profiling' } : {}),
+    },
   },
   build: {
     minify: mode !== 'profiling',

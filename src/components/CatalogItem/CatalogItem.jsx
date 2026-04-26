@@ -56,6 +56,7 @@ const CatalogItem = ({
               <m.button
                 className="catalog-item__add-btn"
                 onClick={(e) => { e.stopPropagation(); onAddToCart(); }}
+                onPointerDown={(e) => e.stopPropagation()}
                 whileTap={{ scale: 0.92 }}
                 transition={{ type: 'spring', stiffness: 600, damping: 28 }}
               >

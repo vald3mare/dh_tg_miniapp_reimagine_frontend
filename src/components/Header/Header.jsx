@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import UserPreview from '../UserPreview/UserPreview';
 import ShoppingCart from '../ShoppingCart/ShoppingCart';
 import Notify from '../Notify/Notify';
@@ -23,4 +24,4 @@ const Header = () => (
   </header>
 );
 
-export default Header;
+export default memo(Header);
