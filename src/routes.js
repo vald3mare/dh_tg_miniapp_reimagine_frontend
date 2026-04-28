@@ -1,0 +1,17 @@
+export const ROUTES = {
+  WELCOME:             '/',
+  ROLE_PICKER:         '/role-picker',
+  HOME:                '/home',
+  CATALOG:             '/catalog',
+  TARIFFS:             '/tariffs',
+  PROFILE:             '/profile',
+  EXECUTOR_HOME:       '/executor/home',
+  EXECUTOR_ORDERS:     '/executor/orders',
+  EXECUTOR_PROFILE:    '/executor/profile',
+  ADMIN:               '/admin',
+  ADMIN_CATALOG:       '/admin/catalog',
+  ADMIN_ACHIEVEMENTS:  '/admin/achievements',
+  ADMIN_USERS:         '/admin/users',
+  ADMIN_ORDERS:        '/admin/orders',
+  ADMIN_APPLICATIONS:  '/admin/applications',
+};

@@ -86,8 +86,8 @@ const TariffCardFull = ({ tariff }) => (
     <div className="tariff-card__divider" />
 
     <ul className="tariff-card__features">
-      {tariff.features.map((f) => (
-        <li key={f} className="tariff-card__feature">
+      {tariff.features.map((f, i) => (
+        <li key={`${tariff.id}-${i}`} className="tariff-card__feature">
           <span className="tariff-card__check" aria-hidden="true">✓</span>
           {f}
         </li>

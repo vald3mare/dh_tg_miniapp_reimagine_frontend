@@ -61,7 +61,7 @@ const AdminStats = () => {
               <div className="admin-section">
                 <p className="admin-section__title">Топ услуг</p>
                 {stats.top_services.map((s, i) => (
-                  <StatRow key={i} label={s.name} value={`${s.count} шт`} />
+                  <StatRow key={s.name ?? `service-${i}`} label={s.name} value={`${s.count} шт`} />
                 ))}
               </div>
             )}

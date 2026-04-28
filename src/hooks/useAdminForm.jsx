@@ -1,41 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { tgAlert } from '../utils/tg';
 
-/**
- * Shared CRUD state for admin pages that have a list + create/edit modal + delete confirm.
- *
- * @param {string|null} initDataRaw  - Telegram init data for API auth
- * @param {object} opts
- * @param {object}   opts.emptyForm   - blank form state
- * @param {Function} opts.fetchItems  - (initDataRaw) => Promise<item[]>
- * @param {Function} opts.createItem  - (body, initDataRaw) => Promise
- * @param {Function} opts.updateItem  - (id, body, initDataRaw) => Promise
- * @param {Function} opts.deleteItem  - (id, initDataRaw) => Promise
- * @param {Function} opts.toForm      - (item) => form object
- * @param {Function} [opts.toBody]    - (form) => body object, default identity
- */
 const useAdminForm = (initDataRaw, { emptyForm, fetchItems, createItem, updateItem, deleteItem, toForm, toBody = f => f }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState(null);       // null | 'create' | item-object
+  const [modal, setModal] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
 
-  const load = () => {
+  // Ref keeps fetchItems fresh without making load() unstable
+  const fetchItemsRef = useRef(fetchItems);
+  fetchItemsRef.current = fetchItems;
+
+  const load = useCallback(() => {
     if (!initDataRaw) return;
-    fetchItems(initDataRaw).then(list => {
+    fetchItemsRef.current(initDataRaw).then(list => {
       setItems(list);
       setLoading(false);
     });
-  };
+  }, [initDataRaw]);
 
-  useEffect(() => { load(); }, [initDataRaw]);
+  useEffect(() => { load(); }, [load]);
 
-  const openCreate = () => { setForm(emptyForm); setModal('create'); };
-  const openEdit = (item) => { setForm(toForm(item)); setModal(item); };
+  const openCreate = useCallback(() => { setForm(emptyForm); setModal('create'); }, [emptyForm]);
+  const openEdit = useCallback((item) => { setForm(toForm(item)); setModal(item); }, [toForm]);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     setSaving(true);
     try {
       const body = toBody(form);
@@ -51,13 +42,13 @@ const useAdminForm = (initDataRaw, { emptyForm, fetchItems, createItem, updateIt
     } finally {
       setSaving(false);
     }
-  };
+  }, [form, modal, initDataRaw, toBody, createItem, updateItem, load]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = useCallback(async (id) => {
     await deleteItem(id, initDataRaw);
     setDeleteTarget(null);
     load();
-  };
+  }, [deleteItem, initDataRaw, load]);
 
   return { items, loading, modal, deleteTarget, form, saving, setForm, setModal, setDeleteTarget, openCreate, openEdit, handleSave, handleDelete };
 };

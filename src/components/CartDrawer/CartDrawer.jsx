@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { AnimatePresence } from 'motion/react'
 import * as m from 'motion/react-m';
 import { useCart } from '../../context/CartContext';
@@ -13,27 +13,35 @@ const RADIUS_SMALL     = 12;
 const C_BIG            = 2 * Math.PI * RADIUS_BIG;
 const C_SMALL          = 2 * Math.PI * RADIUS_SMALL;
 
-const Btn = ({ className, onClick, disabled, children, tapScale = 0.93, rotate = 0 }) => (
+const BTN_TRANSITION = { type: 'spring', stiffness: 500, damping: 28 };
+
+const Btn = memo(({ className, onClick, disabled, children, tapScale = 0.93, rotate = 0 }) => (
   <m.button
     className={className}
     onClick={onClick}
     disabled={disabled}
     whileTap={{ scale: tapScale, rotate }}
-    transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+    transition={BTN_TRANSITION}
   >
     {children}
   </m.button>
-);
+));
 
 const CartDrawer = () => {
   const { items, isOpen, closeCart, removeFromCart, updateQuantity, clearCart, restoreItems, total } = useCart();
   const { user, initDataRaw } = useUser();
 
-  const [name, setName]           = useState(user ? (`${user.first_name || ''} ${user.last_name || ''}`).trim() : '');
-  const [contact, setContact]     = useState(user?.username ? `@${user.username}` : '');
+  const [name, setName]           = useState('');
+  const [contact, setContact]     = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError]         = useState(null);
+
+  useEffect(() => {
+    if (!user) return;
+    setName(prev => prev || (`${user.first_name || ''} ${user.last_name || ''}`).trim());
+    setContact(prev => prev || (user.username ? `@${user.username}` : ''));
+  }, [user]);
 
   const [undoSnapshot, setUndoSnapshot] = useState(null);
   const [secondsLeft, setSecondsLeft]   = useState(3);

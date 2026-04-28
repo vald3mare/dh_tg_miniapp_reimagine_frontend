@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useUser } from '../../context/UserContext';
 import { admin } from '../../api';
 import PageTransition from '../../components/PageTransition/PageTransition';
@@ -20,7 +20,7 @@ const FILTERS = [
 /* Модалка с полной анкетой */
 const FormModal = ({ app, onClose }) => {
   let form = null;
-  try { form = JSON.parse(app.form_data_json); } catch {}
+  try { form = JSON.parse(app.form_data_json); } catch (e) { console.error('[FormModal] Invalid form_data_json:', e); }
 
   return (
     <div className="admin-modal-overlay" onClick={onClose}>
@@ -156,15 +156,15 @@ const AdminApplications = () => {
   const [viewApp, setViewApp]     = useState(null);   // модалка анкеты
   const [rejectApp, setRejectApp] = useState(null);   // модалка отклонения
 
-  const load = (f = filter) => {
+  const load = useCallback(() => {
     if (!initDataRaw) return;
     setLoading(true);
-    admin.getApplications(initDataRaw, f)
+    admin.getApplications(initDataRaw, filter)
       .then(d => setApps(d.applications || []))
       .finally(() => setLoading(false));
-  };
+  }, [initDataRaw, filter]);
 
-  useEffect(() => { load(); }, [initDataRaw, filter]);
+  useEffect(() => { load(); }, [load]);
 
   const handleApprove = async (id) => {
     await admin.approveApplication(id, initDataRaw);

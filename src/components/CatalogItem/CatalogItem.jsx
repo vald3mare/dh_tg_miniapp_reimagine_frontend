@@ -8,6 +8,7 @@ import * as m from 'motion/react-m';
  * Когда изображения появятся в /public/images/ — заменяем <div> на <img>.
  */
 const PLACEHOLDER_COLORS = ['#E8EDFF', '#FFE0F7', '#E8F5E9', '#FFF3E0'];
+const DESCRIPTION_MAX_LENGTH = 60;
 
 /*
  * layout-проп убран — он вызывал getBoundingClientRect() на каждый рендер
@@ -50,7 +51,7 @@ const CatalogItem = ({
           <div className="catalog-item__content">
             <p className="catalog-item__name">{name}</p>
             <p className="catalog-item__description">
-              {description.length > 60 ? `${description.slice(0, 60)}…` : description}
+              {description.length > DESCRIPTION_MAX_LENGTH ? `${description.slice(0, DESCRIPTION_MAX_LENGTH)}…` : description}
             </p>
             <div className="catalog-item__footer">
               <m.button

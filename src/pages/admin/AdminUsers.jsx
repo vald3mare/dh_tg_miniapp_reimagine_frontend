@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { AnimatePresence } from 'motion/react'
 import * as m from 'motion/react-m';
 import { useUser } from '../../context/UserContext';
@@ -18,7 +18,7 @@ const AdminUsers = () => {
   const [selectedAch, setSelectedAch] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const load = () => {
+  const load = useCallback(() => {
     if (!initDataRaw) return;
     Promise.all([
       admin.getUsers(initDataRaw),
@@ -28,9 +28,9 @@ const AdminUsers = () => {
       setAchievements(a.achievements || []);
       setLoading(false);
     });
-  };
+  }, [initDataRaw]);
 
-  useEffect(() => { load(); }, [initDataRaw]);
+  useEffect(() => { load(); }, [load]);
 
   const handleRoleChange = async (userId, role) => {
     await admin.setUserRole(userId, role, initDataRaw);

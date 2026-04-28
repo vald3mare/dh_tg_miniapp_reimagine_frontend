@@ -3,6 +3,7 @@ import { AnimatePresence } from 'motion/react';
 import { useEffect, lazy, Suspense } from 'react';
 import { useUser } from './context/UserContext';
 import { prefetchCatalog } from './api';
+import { ROUTES } from './routes';
 import CartDrawer from './components/CartDrawer/CartDrawer';
 
 import BottomNav from './components/BottomNav/BottomNav';
@@ -28,8 +29,8 @@ const AdminUsers        = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminOrders       = lazy(() => import('./pages/admin/AdminOrders'));
 const AdminApplications = lazy(() => import('./pages/admin/AdminApplications'));
 
-const EXECUTOR_PATHS = ['/executor/home', '/executor/orders', '/executor/profile'];
-const ADMIN_PATHS    = ['/admin', '/admin/catalog', '/admin/achievements', '/admin/users', '/admin/orders', '/admin/applications'];
+const EXECUTOR_PATHS = [ROUTES.EXECUTOR_HOME, ROUTES.EXECUTOR_ORDERS, ROUTES.EXECUTOR_PROFILE];
+const ADMIN_PATHS    = [ROUTES.ADMIN, ROUTES.ADMIN_CATALOG, ROUTES.ADMIN_ACHIEVEMENTS, ROUTES.ADMIN_USERS, ROUTES.ADMIN_ORDERS, ROUTES.ADMIN_APPLICATIONS];
 
 // Guard: проверяет effectiveRole (выбранную) или primaryRole
 const RoleGuard = ({ allowed, children }) => {
@@ -88,50 +89,50 @@ const App = () => {
 
   const isAdmin    = ADMIN_PATHS.some(p => location.pathname === p);
   const isExecutor = EXECUTOR_PATHS.some(p => location.pathname.startsWith(p));
-  const showNav    = location.pathname !== '/';
+  const showNav    = location.pathname !== ROUTES.WELCOME;
 
   return (
     <div className="app-container">
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           {/* Welcome & RolePicker */}
-          <Route path="/" element={<Welcome />} />
-          <Route path="/role-picker" element={<RolePicker />} />
+          <Route path={ROUTES.WELCOME}     element={<Welcome />} />
+          <Route path={ROUTES.ROLE_PICKER} element={<RolePicker />} />
 
           {/* Заказчики */}
-          <Route path="/home"    element={<Home />} />
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="/tariffs" element={<Tariffs />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path={ROUTES.HOME}    element={<Home />} />
+          <Route path={ROUTES.CATALOG} element={<Catalog />} />
+          <Route path={ROUTES.TARIFFS} element={<Tariffs />} />
+          <Route path={ROUTES.PROFILE} element={<Profile />} />
 
           {/* Исполнители */}
-          <Route path="/executor/home"    element={<Suspense fallback={null}><ExecutorHome /></Suspense>} />
-          <Route path="/executor/orders"  element={<Suspense fallback={null}><ExecutorOrders /></Suspense>} />
-          <Route path="/executor/profile" element={<Suspense fallback={null}><ExecutorProfilePage /></Suspense>} />
+          <Route path={ROUTES.EXECUTOR_HOME}    element={<Suspense fallback={null}><ExecutorHome /></Suspense>} />
+          <Route path={ROUTES.EXECUTOR_ORDERS}  element={<Suspense fallback={null}><ExecutorOrders /></Suspense>} />
+          <Route path={ROUTES.EXECUTOR_PROFILE} element={<Suspense fallback={null}><ExecutorProfilePage /></Suspense>} />
 
           {/* Админка — lazy loaded, грузится только при первом переходе */}
-          <Route path="/admin" element={
+          <Route path={ROUTES.ADMIN} element={
             <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminStats /></Suspense></RoleGuard>
           } />
-          <Route path="/admin/catalog" element={
+          <Route path={ROUTES.ADMIN_CATALOG} element={
             <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminCatalog /></Suspense></RoleGuard>
           } />
-          <Route path="/admin/achievements" element={
+          <Route path={ROUTES.ADMIN_ACHIEVEMENTS} element={
             <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminAchievements /></Suspense></RoleGuard>
           } />
-          <Route path="/admin/users" element={
+          <Route path={ROUTES.ADMIN_USERS} element={
             <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminUsers /></Suspense></RoleGuard>
           } />
-          <Route path="/admin/orders" element={
+          <Route path={ROUTES.ADMIN_ORDERS} element={
             <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminOrders /></Suspense></RoleGuard>
           } />
-          <Route path="/admin/applications" element={
+          <Route path={ROUTES.ADMIN_APPLICATIONS} element={
             <RoleGuard allowed={['admin']}><Suspense fallback={null}><AdminApplications /></Suspense></RoleGuard>
           } />
         </Routes>
       </AnimatePresence>
 
-      {showNav && location.pathname !== '/role-picker' && (
+      {showNav && location.pathname !== ROUTES.ROLE_PICKER && (
         isAdmin    ? <AdminNav /> :
         isExecutor ? <ExecutorBottomNav /> :
                      <BottomNav />

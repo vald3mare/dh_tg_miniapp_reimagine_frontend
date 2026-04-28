@@ -1,33 +1,8 @@
 import { useState, useRef } from 'react';
 import { AnimatePresence } from 'motion/react'
 import * as m from 'motion/react-m';
+import { resizeToDataUrl } from '../../utils/image';
 import './EditProfileModal.css';
-
-/*
- * resizeToDataUrl — сжимает загружаемое фото до 240×240px перед сохранением в localStorage,
- * чтобы base64-строка не раздувала хранилище.
- * Используем Canvas API: react.dev/learn/referencing-values-with-refs#when-to-use-refs
- */
-function resizeToDataUrl(file, size = 240) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      // Обрезаем по центру (crop square)
-      const side = Math.min(img.width, img.height);
-      const sx = (img.width - side) / 2;
-      const sy = (img.height - side) / 2;
-      ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
-      URL.revokeObjectURL(url);
-      resolve(canvas.toDataURL('image/jpeg', 0.8));
-    };
-    img.src = url;
-  });
-}
 
 const BACKDROP = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
 const SHEET    = {
@@ -45,8 +20,12 @@ const EditProfileModal = ({ open, onClose, initialName, initialCity, initialAvat
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const dataUrl = await resizeToDataUrl(file);
-    setAvatar(dataUrl);
+    try {
+      const dataUrl = await resizeToDataUrl(file);
+      setAvatar(dataUrl);
+    } catch {
+      console.warn('[EditProfileModal] Failed to resize image');
+    }
   };
 
   const handleSave = () => {

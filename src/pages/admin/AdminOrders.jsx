@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useUser } from '../../context/UserContext';
 import { admin } from '../../api';
 import PageTransition from '../../components/PageTransition/PageTransition';
@@ -11,12 +11,12 @@ const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const load = () => {
+  const load = useCallback(() => {
     if (!initDataRaw) return;
     admin.getOrders(initDataRaw).then(d => { setOrders(d.orders || []); setLoading(false); });
-  };
+  }, [initDataRaw]);
 
-  useEffect(() => { load(); }, [initDataRaw]);
+  useEffect(() => { load(); }, [load]);
 
   const handleStatusChange = async (id, status) => {
     await admin.updateOrderStatus(id, status, initDataRaw);

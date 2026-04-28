@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { AnimatePresence } from 'motion/react'
 import * as m from 'motion/react-m';
 import { useUser } from '../../context/UserContext';
@@ -30,6 +31,11 @@ const AdminCatalog = () => {
     }),
     toBody: (form) => ({ ...form, price: parseFloat(form.price) || 0 }),
   });
+
+  const handleFormChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setForm(f => ({ ...f, [name]: value }));
+  }, [setForm]);
 
   return (
     <PageTransition>
@@ -65,18 +71,18 @@ const AdminCatalog = () => {
               onClick={e => e.stopPropagation()}>
               <p className="admin-modal__title">{modal === 'create' ? 'Новая услуга' : 'Редактировать'}</p>
               <div className="admin-form">
-                <input className="admin-input" placeholder="Название" value={form.name}
-                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-                <input className="admin-input" placeholder="Краткое описание" value={form.description}
-                  onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
-                <textarea className="admin-input" placeholder="Полное описание" rows={3} value={form.full_description}
-                  onChange={e => setForm(f => ({ ...f, full_description: e.target.value }))} />
-                <input className="admin-input" placeholder="Цена (₽)" type="number" value={form.price}
-                  onChange={e => setForm(f => ({ ...f, price: e.target.value }))} />
-                <input className="admin-input" placeholder="URL изображения" value={form.image_url}
-                  onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))} />
-                <input className="admin-input" placeholder="Тип (service)" value={form.type}
-                  onChange={e => setForm(f => ({ ...f, type: e.target.value }))} />
+                <input className="admin-input" name="name" placeholder="Название" value={form.name}
+                  onChange={handleFormChange} />
+                <input className="admin-input" name="description" placeholder="Краткое описание" value={form.description}
+                  onChange={handleFormChange} />
+                <textarea className="admin-input" name="full_description" placeholder="Полное описание" rows={3} value={form.full_description}
+                  onChange={handleFormChange} />
+                <input className="admin-input" name="price" placeholder="Цена (₽)" type="number" value={form.price}
+                  onChange={handleFormChange} />
+                <input className="admin-input" name="image_url" placeholder="URL изображения" value={form.image_url}
+                  onChange={handleFormChange} />
+                <input className="admin-input" name="type" placeholder="Тип (service)" value={form.type}
+                  onChange={handleFormChange} />
                 <div className="admin-row">
                   <button className="admin-btn admin-btn--outline" style={{ flex: 1 }} onClick={() => setModal(null)}>Отмена</button>
                   <button className="admin-btn admin-btn--primary" style={{ flex: 1 }} onClick={handleSave} disabled={saving}>

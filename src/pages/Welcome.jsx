@@ -3,6 +3,7 @@ import * as m from 'motion/react-m';
 import { useUser } from '../context/UserContext';
 import { setRole } from '../api';
 import { hapticMedium } from '../utils/tg';
+import { ROUTES } from '../routes';
 import './Welcome.css';
 
 const PAW_ICON_URL  = '/images/paw.svg';
@@ -28,14 +29,14 @@ const Welcome = () => {
 
   const handleCustomer = () => {
     hapticMedium();
-    if (initDataRaw) setRole('customer', initDataRaw).catch(() => {});
-    navigate('/home');
+    if (initDataRaw) setRole('customer', initDataRaw).catch(err => console.warn('[Welcome] setRole customer failed:', err));
+    navigate(ROUTES.HOME);
   };
 
   const handleExecutor = () => {
     hapticMedium();
-    if (initDataRaw) setRole('executor', initDataRaw).catch(() => {});
-    navigate('/executor/home');
+    if (initDataRaw) setRole('executor', initDataRaw).catch(err => console.warn('[Welcome] setRole executor failed:', err));
+    navigate(ROUTES.EXECUTOR_HOME);
   };
 
   return (
@@ -63,8 +64,6 @@ const Welcome = () => {
             <span className="accent">Рады</span>{' Вас видеть!'}
           </p>
         </m.div>
-
-        {/*<div className="welcome__divider" />*/}
 
         <m.div className="welcome__dog-wrap" variants={childVariants}>
           {DOG_IMAGE_URL
