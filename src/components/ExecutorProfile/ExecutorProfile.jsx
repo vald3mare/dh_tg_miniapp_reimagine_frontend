@@ -4,15 +4,33 @@ import { fetchAchievements } from '../../api';
 import AchievementCard from '../AchievementCard/AchievementCard';
 import './ExecutorProfile.css';
 
+const CACHE_KEY = 'exec_achievements_cache';
+const CACHE_TTL = 5 * 60 * 1000;
+
+function readCache() {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const { data, ts } = JSON.parse(raw);
+    return Date.now() - ts < CACHE_TTL ? data : null;
+  } catch { return null; }
+}
+
+function writeCache(data) {
+  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() })); } catch {}
+}
+
 const ExecutorProfile = ({ hideUserCard = false }) => {
   const { user, initDataRaw } = useUser();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(() => readCache());
+  const [loading, setLoading] = useState(!readCache());
 
   useEffect(() => {
     if (!initDataRaw) { setLoading(false); return; }
+    const cached = readCache();
+    if (cached) { setData(cached); setLoading(false); return; }
     fetchAchievements(initDataRaw)
-      .then(d => { setData(d); setLoading(false); })
+      .then(d => { writeCache(d); setData(d); setLoading(false); })
       .catch(() => setLoading(false));
   }, [initDataRaw]);
 

@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import * as m from 'motion/react-m';
 import { useUser } from '../../context/UserContext';
 import { acceptOrder } from '../../api';
 import './OrderItem.css';
 import { tgAlert } from '../../utils/tg';
 
-// Выносим константу на уровень модуля — не пересоздаётся на каждый рендер
 const SERVICE_EMOJI = {
   'Выгул': '🐕',
   'Зооняня': '🏠',
@@ -14,7 +13,12 @@ const SERVICE_EMOJI = {
   'Ветеринар': '💊',
 };
 
-const OrderItem = ({ order, onAccepted }) => {
+const ITEM_INITIAL    = { opacity: 0, y: 12 };
+const ITEM_ANIMATE    = { opacity: 1, y: 0 };
+const ITEM_TRANSITION = { duration: 0.3, ease: 'easeOut' };
+const WHILETAP        = { scale: 0.95 };
+
+const OrderItem = memo(({ order, onAccepted }) => {
   const { initDataRaw } = useUser();
   const [accepting, setAccepting] = useState(false);
 
@@ -39,9 +43,9 @@ const OrderItem = ({ order, onAccepted }) => {
   return (
     <m.div
       className="order-item"
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+      initial={ITEM_INITIAL}
+      animate={ITEM_ANIMATE}
+      transition={ITEM_TRANSITION}
     >
       <div className="order-item__header">
         <span className="order-item__emoji">{emoji}</span>
@@ -74,12 +78,12 @@ const OrderItem = ({ order, onAccepted }) => {
         className="order-item__btn"
         onClick={handleAccept}
         disabled={accepting}
-        whileTap={{ scale: 0.95 }}
+        whileTap={WHILETAP}
       >
         {accepting ? 'Принимаем...' : 'Взять заявку'}
       </m.button>
     </m.div>
   );
-};
+});
 
 export default OrderItem;

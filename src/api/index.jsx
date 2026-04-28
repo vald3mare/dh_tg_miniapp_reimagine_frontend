@@ -1,9 +1,10 @@
 const BASE_URL = import.meta.env.VITE_API_URL || 'https://vald3mare-dh-tg-miniapp-reimagine-backend-e40f.twc1.net';
 
-/**
- * Все обращения к бэкенду идут через этот файл.
- * Менять хост нужно только в .env (VITE_API_URL).
- */
+function fetchWithTimeout(url, opts = {}, ms = 10_000) {
+  const ctrl = new AbortController();
+  const id = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(id));
+}
 
 export async function fetchProfile(initDataRaw, { signal } = {}) {
   const controller = new AbortController();
@@ -98,7 +99,7 @@ export async function createOrder(orderData) {
 
 /** Список открытых заявок для ленты исполнителей */
 export async function fetchOrders() {
-  const res = await fetch(`${BASE_URL}/executor/orders`);
+  const res = await fetchWithTimeout(`${BASE_URL}/executor/orders`);
   if (!res.ok) throw new Error(`Ошибка заявок: ${res.status}`);
   return res.json();
 }
@@ -170,7 +171,7 @@ export async function updateExecutorOrderStatus(id, status, initDataRaw) {
 
 /** Ачивки текущего исполнителя */
 export async function fetchAchievements(initDataRaw) {
-  const res = await fetch(`${BASE_URL}/executor/achievements`, {
+  const res = await fetchWithTimeout(`${BASE_URL}/executor/achievements`, {
     headers: { Authorization: `tma ${initDataRaw}` },
   });
   if (!res.ok) throw new Error(`Ошибка ачивок: ${res.status}`);

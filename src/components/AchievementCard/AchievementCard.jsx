@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import './AchievementCard.css';
 
-const AchievementCard = ({ achievement }) => {
+const AchievementCard = memo(({ achievement }) => {
   const { icon_emoji, name, description, earned, earned_at } = achievement;
 
   return (
@@ -16,6 +17,6 @@ const AchievementCard = ({ achievement }) => {
       {!earned && <span className="achievement-card__lock">🔒</span>}
     </div>
   );
-};
+});
 
 export default AchievementCard;

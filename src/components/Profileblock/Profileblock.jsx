@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState, useCallback } from 'react';
 import { AnimatePresence } from 'motion/react'
 import * as m from 'motion/react-m';
 import { useUser } from '../../context/UserContext';
@@ -31,7 +31,7 @@ const PET_EXIT     = { opacity: 0, scale: 0.85 };
 const PET_TRANSITION = { duration: 0.2 };
 
 /* ── Карточка заказа ── */
-const OrderCard = ({ order }) => {
+const OrderCard = memo(({ order }) => {
   const emoji = Object.entries(SERVICE_EMOJI).find(([k]) =>
     order.service_type?.includes(k)
   )?.[1] ?? '🐾';
@@ -65,10 +65,10 @@ const OrderCard = ({ order }) => {
       </div>
     </div>
   );
-};
+});
 
 /* ── Карточка питомца ── */
-const PetCard = ({ pet, onRemove }) => (
+const PetCard = memo(({ pet, onRemove }) => (
   <div className="pet-card">
     <button
       className="pet-card__remove"
@@ -81,7 +81,7 @@ const PetCard = ({ pet, onRemove }) => (
     <p className="pet-card__name">{pet.name}</p>
     {pet.breed && <p className="pet-card__breed">{pet.breed}</p>}
   </div>
-);
+));
 
 /* ── Карточка «Добавить питомца» ── */
 const AddPetCard = ({ onClick }) => (
@@ -102,6 +102,8 @@ const ProfileBlock = () => {
 
   const [editOpen, setEditOpen]     = useState(false);
   const [addPetOpen, setAddPetOpen] = useState(false);
+
+  const handleRemovePet = useCallback((id) => removePet(id), [removePet]);
 
   if (loading) return <ProfileBlockSkeleton />;
 
@@ -166,7 +168,7 @@ const ProfileBlock = () => {
                 exit={PET_EXIT}
                 transition={PET_TRANSITION}
               >
-                <PetCard pet={pet} onRemove={removePet} />
+                <PetCard pet={pet} onRemove={handleRemovePet} />
               </m.div>
             ))}
           </AnimatePresence>

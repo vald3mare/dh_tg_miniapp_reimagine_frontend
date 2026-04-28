@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, Children, cloneElement } from 'react';
+import { useEffect, useState, useCallback, useMemo, Children, cloneElement } from 'react';
 import { SliderContext } from './SliderContext';
 import SliderList from './SliderList';
 import Dots from './Dots';
@@ -45,8 +45,13 @@ export const Slider = (props) => {
     return () => clearInterval(interval);
   }, [autoPlay, autoPlayTime, slideCount, next]);
 
+  const ctx = useMemo(
+    () => ({ current, slides, prev, next, goTo, slideCount }),
+    [current, slides, prev, next, goTo, slideCount]
+  );
+
   return (
-    <SliderContext.Provider value={{ current, slides, prev, next, goTo, slideCount }}>
+    <SliderContext.Provider value={ctx}>
       <div className="slider" role="region" aria-label="Слайдер">
         <SliderList />
         <Dots />
